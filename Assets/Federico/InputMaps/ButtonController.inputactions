@@ -1,0 +1,76 @@
+{
+    "name": "ButtonController",
+    "maps": [
+        {
+            "name": "Left",
+            "id": "37823874-a4d3-4a09-908f-ab05994a79da",
+            "actions": [
+                {
+                    "name": "X",
+                    "type": "Button",
+                    "id": "6b564f2b-eb33-482a-ba34-2e889919c04f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Y",
+                    "type": "Button",
+                    "id": "1d69c7b0-382f-45fa-a3d6-75c6ef3ac99c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ace0473c-79c0-45a9-8fbf-b00c86bf75c4",
+                    "path": "<OculusTouchController>{LeftHand}/primaryButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fb5fc787-980a-4374-8263-597cc94062ac",
+                    "path": "<XRSimulatedController>{LeftHand}/primaryButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90121da1-139a-4c03-b38b-1ca7fc227cac",
+                    "path": "<OculusTouchController>/secondaryButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Y",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cfca133-b466-40bd-911d-11239b187000",
+                    "path": "<XRSimulatedController>/secondaryButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Y",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

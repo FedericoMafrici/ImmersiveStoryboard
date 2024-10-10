@@ -1,0 +1,184 @@
+{
+    "model": [
+        {
+            "name": "plant",
+            "transitions": [
+                "placed>pick>picked",
+                "picked>place>placed"
+            ],
+            "S_A": [
+                "picked:place",
+                "placed:pick"
+            ]
+        },
+        {
+            "name": "wardrobe",
+            "transitions": [
+                "closed>open>open",
+                "open>close>closed",
+                "closed>explode>open"
+            ],
+            "S_A": [
+                "open:close,tidy",
+                "closed:open"
+            ]
+        },
+        {
+            "name": "fireplace",
+            "transitions": [
+                "extinct>light>burning",
+                "burning>extinguish>extinct"
+            ],
+            "S_A": [
+                "burning:extinguish,warm up by",
+                "extinct:light"
+            ]
+        },
+        {
+            "name": "chool",
+            "transitions": [],
+            "S_A": []
+        },
+        {
+            "name": "carpet",
+            "transitions": [],
+            "S_A": []
+        },
+        {
+            "name": "pot",
+            "transitions": [
+                "empty>fill>full",
+                "full>eat from>empty"
+            ],
+            "S_A": [
+                "full:eat from",
+                "empty:fill"
+            ]
+        },
+        {
+            "name": "jukebox",
+            "transitions": [
+                "muted>play>playing",
+                "playing>mute>muted"
+            ],
+            "S_A": [
+                "playing:mute",
+                "muted:play"
+            ]
+        },
+        {
+            "name": "cat",
+            "transitions": [
+                "alive>kill>dead",
+                "dead>revive>kill",
+                "hungry>feed>satiated",
+                "satiated>>hungry"
+            ],
+            "S_A": [
+                "dead:",
+                "kill:",
+                "satiated:feed",
+                "hungry:feed"
+            ]
+        },
+        {
+            "name": "door",
+            "transitions": [
+                "closed>open>open",
+                "open>close>closed",
+                "intact>break>broken",
+                "broken>repair>intact"
+            ],
+            "S_A": [
+                "closed:open,bump into",
+                "open:close",
+                "intact:break,use",
+                "broken:repair"
+            ]
+        },
+        {
+            "name": "chair",
+            "transitions": [
+                "lifted>drop>fallen",
+                "fallen>raise>lifted"
+            ],
+            "S_A": [
+                "lifted:drop,use",
+                "fallen:raise,kick"
+            ]
+        },
+        {
+            "name": "man",
+            "transitions": [
+                "standing>sit>sitting",
+                "sitting>stand up>standing",
+                "happy>attack>sad",
+                "sad>hug>happy",
+                "standing>play>playing",
+                "playing>stop play>standing",
+                "standing>dance>dancing",
+                "dancing>stop dance>standing"
+            ],
+            "S_A": [
+                "sitting:stand up",
+                "standing:sit,play,dance",
+                "sad:cry,moan",
+                "happy:",
+                "playing:stop play",
+                "dancing:stop dance"
+            ]
+        },
+        {
+            "name": "woman",
+            "transitions": [
+                "standing>sit>sitting",
+                "sitting>stand up>standing",
+                "happy>attack>sad",
+                "sad>hug>happy",
+                "standing>play>playing",
+                "playing>stop play>standing",
+                "standing>dance>dancing",
+                "dancing>stop dance>standing",
+                "standing>work out>working out",
+                "working out>stop work out>standing"
+            ],
+            "S_A": [
+                "standing:sit,play,dance,work out",
+                "sitting:stand up",
+                "sad:cry,moan",
+                "happy:",
+                "playing:stop play",
+                "dancing:stop dance",
+                "working out:stop work out"
+            ]
+        },
+        {
+            "name": "zombie",
+            "transitions": [
+                "standing>sit>sitting",
+                "sitting>stand>standing",
+                "happy>attack>sad",
+                "sad>hug>happy"
+            ],
+            "S_A": [
+                "standing:sit",
+                "sitting:stand"
+            ]
+        },
+        {
+            "name": "washing machine",
+            "transitions": [
+                "empty>fill>full",
+                "full>rifle>empty",
+                "off>turn on>on",
+                "on>turn off>off"
+            ],
+            "S_A": [
+                "full:rifle,compress",
+                "empty:fill",
+                "on:turn off,spectate,admire",
+                "off:turn on"
+            ]
+        }
+    ]
+}

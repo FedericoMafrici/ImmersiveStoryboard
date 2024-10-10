@@ -1,0 +1,51 @@
+man-wardrobe,open,close,tidy, explode
+woman-door,touch,use,paint,close,break,repair
+cat-door,scratch
+man-sink,wash hands in,clean
+zombie-tree,shake,hit,climb on
+woman-wardrobe,open,close,tidy
+cat-fireplace,warm up by
+woman-fireplace,light,extinguish,warm up by
+man-fireplace,light,extinguish,warm up by
+man-chair,sit
+man-plant,admire,water,cure,pick,place
+cat-tree,get nails done on
+woman-jukebox
+man-jukebox
+woman-pot,fill,eat from
+man-pot,fill,eat from
+woman-piano,play
+man-piano,play
+man-tree,shake,hit
+man-cat,pet,feed
+cat-self,clean itself
+cat-ball,roll,play with
+woman-brain,use
+zombie-brain,eat
+zombie-cat,eat
+woman-cat,pet
+cat-man,assault,bite
+man-toilet,use,fall into
+man-door,touch,use,paint,open,close,break,repair
+man-washing machine,fill,rifle,turn on,turn off
+zombie-toilet,use,destroy
+woman-sink,wash in
+zombie-door,open,close,break
+woman-plant,admire,water,cure
+man-woman,talk to,greet,hug,attack
+woman-man,talk to,greet,hug,attack
+woman-zombie,attack
+man-zombie,attack
+zombie-man,attack
+zombie-woman,attack
+man-man,talk to,greet,hug,attack
+woman-woman,talk to,greet,hug,attack
+zombie-zombie,attack
+man-self,smile,wait,jump,stand up,stop play,dance,stop dance,clap
+woman-self,smile,wait,jump,stand up,stop play,dance,stop dance,work out,stop work out
+zombie-self,scream,growl,suffer
+woman-washing machine,fill,rifle,turn on,turn off
+woman-chair,sit
+woman-Cheese,pick,eat
+woman-bench,sit
+man-bench,sit
