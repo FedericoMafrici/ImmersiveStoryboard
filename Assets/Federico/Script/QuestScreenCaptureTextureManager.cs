@@ -139,7 +139,7 @@ namespace Trev3d.Quest.ScreenCapture
 			OnNewFrame.Invoke();
 		}
 
-		public void TakeScreenShot()
+		public void TakeScreenShot(RawImage screenshot)
 		{
 			
 			Texture2D screenshotCopy = new Texture2D(screenTexture.width, screenTexture.height, TextureFormat.RGBA32, false);
@@ -151,7 +151,7 @@ namespace Trev3d.Quest.ScreenCapture
 				Graphics.CopyTexture(flipTexture, screenshotCopy);
 			}
 			// Assegna la copia alla RawImage
-			_screenshot.texture = screenshotCopy;
+			screenshot.texture = screenshotCopy;
 
 			Debug.Log("Screenshot taken and assigned to RawImage");
 		}
