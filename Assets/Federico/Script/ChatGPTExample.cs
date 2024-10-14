@@ -6,8 +6,6 @@ public class ChatGPTExample : MonoBehaviour
 
     void Start()
     {
-        OpenAIChatGPT chatGPT = gameObject.AddComponent<OpenAIChatGPT>();
-        StartCoroutine(chatGPT.GetChatGPTResponse(prompt, OnResponseReceived));
     }
 
     void OnResponseReceived(string response)

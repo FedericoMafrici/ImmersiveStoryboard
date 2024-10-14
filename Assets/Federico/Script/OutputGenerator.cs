@@ -12,7 +12,6 @@ public class OutputGenerator : MonoBehaviour
     [SerializeField] public int sceneCode = -1;
     private ScreenshotManager _screenshotManager;
     private PhraseGenerator _phraseGenerator;
-    private OpenAIChatGPT _openAIChatGpt;
     private List<String> buffer;
     public string riformulato = string.Empty;
     private string _html;
@@ -30,7 +29,6 @@ public class OutputGenerator : MonoBehaviour
         UnityEngine.Debug.Log("Scene code: " + sceneCode);
         _screenshotManager = FindObjectOfType<ScreenshotManager>();
         _phraseGenerator = FindObjectOfType<PhraseGenerator>();
-        _openAIChatGpt = FindObjectOfType<OpenAIChatGPT>();
     }
   public void GenerateFile()
     {
