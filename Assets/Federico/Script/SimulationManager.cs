@@ -162,13 +162,29 @@ public class SimulationManager : MonoBehaviour
 
     void Start()
     {
-        
+       // DebuggingStartStoryBoarding();
     }
 
     public void  Update()
     {
         
     }
+    public void DebuggingStartStoryBoarding( )
+    {
+        if (status == 0)
+        {
+            status = 1;
+            startStoryboarding.Invoke(this, new EventArgs());
+            
+        }
+        else
+        {
+            status = 0;
+            pauseStoryboarding.Invoke(this, new EventArgs());
+          
+        }
+    }
+    
     public void StartStoryBoarding(TMP_Text txtcomponent)
     {
         if (status == 0)

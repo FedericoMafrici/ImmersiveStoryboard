@@ -45,10 +45,10 @@ GameObject:
   - component: {fileID: 4797690262140317339}
   - component: {fileID: 302733042894723199}
   - component: {fileID: 2580414013151353536}
-  - component: {fileID: 3320890362594388745}
   - component: {fileID: 337125836968605306}
   - component: {fileID: 277438987084434683}
   - component: {fileID: 1862997330969448765}
+  - component: {fileID: 3320890362594388745}
   m_Layer: 0
   m_Name: piano
   m_TagString: Untagged
@@ -153,7 +153,7 @@ MonoBehaviour:
   type: piano
   simulation: 0
   isWalking: 0
-  walkMode: 1
+  walkMode: 0
   nearObjects: []
   charAnim: {fileID: 0}
   loadedObject: 0
@@ -182,22 +182,6 @@ MonoBehaviour:
   animator: {fileID: 0}
   surname: 
   nearObjs: []
---- !u!208 &3320890362594388745
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6683974226756806044}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.2}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: -1, y: 0, z: -0.15}
-  m_TimeToStationary: 0.5
 --- !u!114 &337125836968605306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +358,22 @@ MonoBehaviour:
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 0}
   interactionEnabled: 0
+--- !u!208 &3320890362594388745
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6683974226756806044}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -1, y: 0, z: -0.15}
+  m_TimeToStationary: 0.5
 --- !u!1001 &332145839059781570
 PrefabInstance:
   m_ObjectHideFlags: 0

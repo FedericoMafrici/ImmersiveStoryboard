@@ -277,68 +277,6 @@ public class PhraseGenerator : MonoBehaviour
 
 
     }
-
-
-    // MARCO
-    /*public void GenerateMovementPhrase(string subject, string place)
-    {
-        if (forward == "")
-        phrase.text = "The " + subject + " walks on the " + place + ". ";
-        else
-            phrase.text = "The " + subject + " walks on the " + place + " towards the  " + forward + ". ";
-
-        if (buffer.Count > 0 && place != "ground")
-        {
-            if (buffer[buffer.Count - 1].Split('_')[1] != phrase.text) //non la aggiunge al buffer, se  il personaggio cammina pi� volte nello stesso punto senza fare azioni di mezzo
-            {
-                buffer.Add(simulationManager.GetScreenshotCount() + "_" + "The " + subject + " walks on the " + place + ". ");
-                walking = "The " + subject + " walks on the " + place + ", towards the  ";
-            }
-            //elimina l'eventuale frase di vicinanza che precede
-
-            if (buffer.Count > 1)
-            {
-                var contained = false;
-                foreach (string tmp in locomotion)
-                {
-                    if (buffer[buffer.Count - 2].Split('_')[1].Contains(tmp)) //elimina la frase precedente dal buffer, se  il personaggio prima era vicino ad un altro oggetto e non ha fatto azioni ma solo camminato
-                    {
-                        contained = true;
-                    }
-                }
-                if (contained)
-                    buffer.RemoveAt(buffer.Count - 2);
-            }
-
-        }
-        else
-        {
-            if (place != "ground")
-            {
-                buffer.Add(simulationManager.GetScreenshotCount() + "_" + "The " + subject + " walks on the " + place + ". ");
-                walking = "The " + subject + " walks on the " + place + ", towards the  ";
-            }
-        }
-
-    }*/
-
-
-
-
-
-    /*public void CloseDialoguePanel() 
-    {
-        simulationManager.dialogue = false;
-
-        speechOn = false;
-        speechToggle.isOn = false;
-        dialoguePanel.SetActive(false);
-        EndSpeech();
-        dialogueInput.GetComponent<TMP_InputField>().text = "";
-    }*/
-
-
-
     public void StartSpeech()
     {
         //dictationEngine.gameObject.SetActive(true); // dictation
@@ -360,91 +298,7 @@ public class PhraseGenerator : MonoBehaviour
         buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text + "_" + simulationManager.GetScreenshotCountUndo());
         //EndSpeech(); // dictation
     }
-
-    /*public void GenerateNearObjectsPhrase(string name, string surname, List<string> nears)
-    {
-  
-        var sub = "";
-        var p = "";
-        var count = 0;
-        var flag = false;
-
-        if (name == surname)
-        {
-            if (surname != "man")
-            {
-                surname = wordnet.GetSyn(surname, "Noun");
-            }
-            sub = "The " + surname;
-        }
-        else sub = surname;
-
-        p = sub + " "+locomotion[random.Next(locomotion.Length)]+" ";
-
-        if (nears.Count == 0)
-        {
-                                                        //TOLTO FRASE DI ALLONTANAMENTO
-                                                        / asterisco
-                                                        p = sub + alone[random.Next(alone.Length)];
-                                                        //non aggiunge la frase di allontanamento se non � stata fatta alcuna azione sull'oggetto da cui ci si allontana, ovvero la penultima frase in buffer
-                                                        flag = false;
-                                                        foreach (string s in walks)
-                                                        {
-                                                            if (buffer[buffer.Count - 2].Contains(s))
-                                                            {
-                                                                flag = true;
-                                                            }
-                                                        }
-                                                        asterisco /
-            proxim = "";
-        }
-
-        foreach (string n in nears)
-        {
-            count++;
-            if (count == nears.Count && nears.Count != 1)
-            {
-                p += "and the " + n + ". ";
-            }
-            else if (count == nears.Count && nears.Count == 1)
-            {
-                p += "the " + n + ". ";
-            }
-            else
-                p += "the " + n + " ";
-        }
-        if (nears.Count != 0)
-            phrase.text = p;
-                                        /asterisco
-                                        if (buffer.Count > 0)
-                                        {
-            
-                                            var contained = false;
-                                            foreach (string tmp in walks)
-                                            {
-                                                if (buffer[buffer.Count - 1].Split('_')[1].Contains(tmp)) //non la aggiunge al buffer, se  il personaggio prima era vicino ad un altro oggetto, non ha fatto azioni ma solo camminato
-                                                {
-                                                    contained = true;
-                                                    Debug.Log(buffer[buffer.Count - 1].Split('_')[1]);
-                                                }
-                                            }
-                                            if (contained == false)
-                                                buffer.Add(simulationManager.GetTime() + "_" + p);
-            
-
-                                        }asterisco/
-        if (!flag)
-        {
-            //buffer.Add(simulationManager.GetTime() + "_" + p);
-        }
-        else
-        {
-            flag = false;
-        }
-        if (nears.Count != 0)
-        proxim = p;
-    }*/
-
+    
     public string GenerateTimeAdverb()
     {
         var p = "";
@@ -501,13 +355,7 @@ public class PhraseGenerator : MonoBehaviour
         walking = "";
         forward = "";
     }
-
-    /*public List<string> GetBuffer()
-    {
-       
-        return buffer;
-    }*/
-
+    
     public List<string> ClearBuffer()
     {
 
@@ -524,16 +372,6 @@ public class PhraseGenerator : MonoBehaviour
         }
 
         return buffer;
-
-
-        // Marco  -- se le frasi ripetute sono pi� di 2 non vengono cancellate
-        /*for (int i = 1; i < buffer.Count; i++)
-        {
-            if (buffer[i] == buffer[i-1])
-            {
-                buffer.RemoveAt(i);
-            }
-        }
-        return buffer;*/
+        
     }
 }

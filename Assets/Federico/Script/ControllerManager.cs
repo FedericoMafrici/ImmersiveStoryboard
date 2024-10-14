@@ -30,6 +30,8 @@ public class ControllerManager : MonoBehaviour
     private bool possibleInteraction = false;
     public GameObject currSelectedObject;
     
+    public static EventHandler<EventArgs> OnObjectPlaced;
+
    
     
     private void OnEnable()
@@ -315,6 +317,7 @@ public class ControllerManager : MonoBehaviour
          
             // Aggiungi l'oggetto alla lista degli oggetti spawnati
          _SimulationManager.spawnedGameObjects.Add(spawnedObject);
+         OnObjectPlaced.Invoke(this,EventArgs.Empty);
      }
      else
      {

@@ -20,14 +20,14 @@ namespace Trev3d.Quest.ScreenCapture
 
 		private AndroidJavaClass UnityPlayer;
 		private AndroidJavaObject UnityPlayerActivityWithMediaProjector;
-
+		
 		private Texture2D screenTexture;
 		private RenderTexture flipTexture;
 		public Texture2D ScreenCaptureTexture => screenTexture;
 
 		public bool startScreenCaptureOnStart = true;
 		public bool flipTextureOnGPU = false;
-
+		
 		public UnityEvent<Texture2D> OnTextureInitialized = new();
 		public UnityEvent OnScreenCaptureStarted = new();
 		public UnityEvent OnScreenCapturePermissionDeclined = new();

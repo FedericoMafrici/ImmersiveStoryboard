@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Windows;
 //using Syn.WordNet;
 
@@ -18,14 +19,26 @@ public class WordnetManager : MonoBehaviour
         wordNet = new WordNetEngine();
         syns = new List<string>();
         syn = "";
-
+        string path = "";
         Debug.Log("Loading database...");
-        string path = Path.Combine(Application.streamingAssetsPath, "Wordnet"); 
-        #if UNITY_ANDROID
-        path = "file://" + path; 
-        #endif
-        
+#if UNITY_ANDROID && !UNITY_EDITOR
+            StartCoroutine(LoadWordNetFromStreamingAssets());
+#else
+        // In Editor o altre piattaforme, puoi caricare il file direttamente
+        path = Path.Combine(Application.streamingAssetsPath, "Wordnet"); 
         wordNet.LoadFromDirectory(path);
+
+        if (wordNet.AllWords.Count != 0)
+        {
+            _debuggingWindow.SetText("Caricamento avvenuto con successo");
+        }
+        else
+        {
+            _debuggingWindow.SetText("Errore nel caricamento");
+        }
+#endif
+     
+       
         
         if (wordNet.AllWords.Count != 0)
         {
@@ -40,7 +53,32 @@ public class WordnetManager : MonoBehaviour
 
         GetSyn("man", "Noun");
     }
+    // Funzione per caricare il file su Android usando UnityWebRequest
+    private IEnumerator LoadWordNetFromStreamingAssets()
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, "Wordnet");
 
+        // Aggiungi il prefisso "file://" per Android
+        string androidPath = "jar:file://" + path;
+
+        UnityWebRequest request = UnityWebRequest.Get(androidPath);
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Errore nel caricamento di WordNet su Android: " + request.error);
+            _debuggingWindow.SetText("Errore nel caricamento");
+        }
+        else
+        {
+            // Puoi accedere ai dati qui
+            // wordNet.LoadFromDirectory(request.downloadHandler.text); // Se necessario modificare la logica qui
+            Debug.Log("Caricamento avvenuto con successo su Android.");
+            _debuggingWindow.SetText("Caricamento avvenuto con successo su Android");
+        }
+    }
+
+    
     public string GetSyn(string word, string wordType) 
     {
         if (GetComponent<WordnetManager>().enabled) //Se il componente stesso non � attivo (= non ha mai eseguito la Start()), ritorna semplicemente la parola 
