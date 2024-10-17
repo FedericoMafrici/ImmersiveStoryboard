@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.OpenXR.Features.Meta;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit.Attachment;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Transformers;
@@ -17,6 +19,7 @@ public class BoundingBoxManager : MonoBehaviour
     private List<ARBoundingBox> boundingBoxes = new List<ARBoundingBox>();
     
     [SerializeField] private ARBoundingBoxManager bbManager; // Databa
+    public static EventHandler<EventArgs> onBoundingBoxChanged;
     void Start()
     {
     
@@ -44,25 +47,20 @@ public class BoundingBoxManager : MonoBehaviour
     public void CreateCubeFromBoundingBox(ARBoundingBox boundingBox)
     {
         Debug.Log("cubo instanziato");
-        _debuggingWindow.SetText("cubo instanziato per coprire la bounding box");
-        // Crea un nuovo GameObject come cubo
-        GameObject cube = GameObject.Instantiate(_boundingBoxPrefab);
-        cube.transform.localScale = boundingBox.GetComponent<Collider>().bounds.size;
-        // Imposta la posizione del cubo uguale a quella della bounding box
-        cube.transform.position = boundingBox.transform.position;
-        cube.transform.rotation = boundingBox.transform.rotation;
-    }
+        _debuggingWindow.SetText("ho appena instanziato una bounding box");
+        // instanziato l'empty e reperiamo la bounding box per modificare la scala
+        GameObject prefab = GameObject.Instantiate(_boundingBoxPrefab);
+        GameObject wrapper = prefab.transform.GetChild(3).gameObject;
+        // vogliamo spostare tutto il prefab ma scalare solo la bounding box non la label
+        wrapper.transform.localScale = boundingBox.size;
+        prefab.transform.position = boundingBox.transform.position;
+        prefab.transform.rotation = boundingBox.transform.rotation;
 
-    public void StopDetectingBoxes()
-    {
-        foreach (var box in boundingBoxes)
-        {
-            box.GetComponent<ARBoundingBox>().enabled = false;
-        }
-        Destroy(bbManager);
-        
-       _debuggingWindow.SetText("ho distruto il bounding box manager");
+        BoundingBoxScaler scaler = prefab.GetComponent<BoundingBoxScaler>();
+       //facciamo in modo che il prefab possa regolare la sua dimensione in modo appropriato e settare la label
+        scaler.SetBoundingBox(prefab,wrapper,boundingBox);
     }
+    
     void OnDestroy()
     {
         // Rimozione dell'evento
@@ -86,22 +84,32 @@ public class BoundingBoxManager : MonoBehaviour
             renderer.material = boundingBoxMaterial;
         }
     }
+    
     public void OnTrackablesChanged(ARTrackablesChangedEventArgs<ARBoundingBox> changes)
     {
+       
         foreach (var boundingBox in changes.added)
         {
+           
+            _debuggingWindow.SetText("Bounding box trovata la aggiungo");
             OnBoundingBoxDetected(boundingBox);
         }
 
+        if (changes.updated.Count != 0)
+        {
+            onBoundingBoxChanged?.Invoke(this,EventArgs.Empty);
+        }
+        /*
         foreach (var boundingBox in changes.updated)
         {
-            // handle updated bounding boxes
+            
         }
-
+        
         foreach (var boundingBox in changes.removed)
         {
             // handle removed bounding boxes
         }
+        */
     }
     void Update()
     {

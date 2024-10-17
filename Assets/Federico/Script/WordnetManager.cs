@@ -5,6 +5,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Windows;
+using Directory = System.IO.Directory;
+using File = System.IO.File;
+
 //using Syn.WordNet;
 
 public class WordnetManager : MonoBehaviour
@@ -30,55 +33,86 @@ public class WordnetManager : MonoBehaviour
 
         if (wordNet.AllWords.Count != 0)
         {
-            _debuggingWindow.SetText("Caricamento avvenuto con successo");
+      //     _debuggingWindow.SetText("Caricamento Wordnet Database avvenuto con successo");
         }
         else
         {
-            _debuggingWindow.SetText("Errore nel caricamento");
+       //     _debuggingWindow.SetText("Errore nel caricamento");
         }
 #endif
-     
-       
-        
-        if (wordNet.AllWords.Count != 0)
-        {
-            _debuggingWindow.SetText("Caricamento avvenuto con successo");
-            
-        }
-        else
-        {
-            _debuggingWindow.SetText("errore nel caricamento");
-        }
         Debug.Log("Load completed.");
 
         GetSyn("man", "Noun");
     }
     // Funzione per caricare il file su Android usando UnityWebRequest
-    private IEnumerator LoadWordNetFromStreamingAssets()
+   
+    
+  private IEnumerator LoadWordNetFromStreamingAssets()
+{
+    string sourcePath = Path.Combine(Application.streamingAssetsPath, "Wordnet");
+    string targetPath = Path.Combine(Application.persistentDataPath, "Wordnet");
+
+    // Crea la directory di destinazione se non esiste
+    if (!Directory.Exists(targetPath))
     {
-        string path = Path.Combine(Application.streamingAssetsPath, "Wordnet");
+        Directory.CreateDirectory(targetPath);
+    }
 
-        // Aggiungi il prefisso "file://" per Android
-        string androidPath = "jar:file://" + path;
-
-        UnityWebRequest request = UnityWebRequest.Get(androidPath);
+    // Elenco dei file da copiare nella cartella Wordnet
+    string[] wordNetFiles = { "data.adj", "data.adv", "data.noun", "data.verb", "index.adj", "index.adv", "index.noun", "index.verb" };
+    foreach (var fileName in wordNetFiles)
+    {
+        string sourceFilePath = Path.Combine(sourcePath, fileName);
+        string targetFilePath = Path.Combine(targetPath, fileName);
+    //    _debuggingWindow.SetText(sourceFilePath + "\n"+ targetFilePath);
+        #if UNITY_ANDROID
+        // Su Android, usa UnityWebRequest per leggere i file da StreamingAssets
+        UnityWebRequest request = UnityWebRequest.Get(sourceFilePath);
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("Errore nel caricamento di WordNet su Android: " + request.error);
-            _debuggingWindow.SetText("Errore nel caricamento");
+            Debug.LogError("Errore nel caricamento del file: " + fileName + " - " + request.error);
+        //    _debuggingWindow.SetText("Errore nel caricamento del file: " + fileName);
+            yield break;  // Esci se c'è un errore
         }
         else
         {
-            // Puoi accedere ai dati qui
-            // wordNet.LoadFromDirectory(request.downloadHandler.text); // Se necessario modificare la logica qui
-            Debug.Log("Caricamento avvenuto con successo su Android.");
-            _debuggingWindow.SetText("Caricamento avvenuto con successo su Android");
+            // Scrivi il contenuto del file nella directory persistente
+            File.WriteAllBytes(targetFilePath, request.downloadHandler.data);
+            Debug.Log("File " + fileName + " copiato in " + targetFilePath);
         }
+        #else
+        // Su piattaforme non Android, copia direttamente il file
+        if (File.Exists(sourceFilePath))
+        {
+            File.Copy(sourceFilePath, targetFilePath, true);
+            Debug.Log("File " + fileName + " copiato in " + targetFilePath);
+            _debuggingWindow.SetText("File " + fileName + " copiato in " + targetFilePath);
+        }
+        else
+        {
+            Debug.LogError("File non trovato: " + sourceFilePath);
+        }
+        #endif
     }
 
-    
+    // Dopo aver copiato i file, usa la funzione LoadFromDirectory sulla directory di destinazione
+    wordNet.LoadFromDirectory(targetPath);
+
+    if (wordNet.AllWords.Count > 0)
+    {
+        Debug.Log("Caricamento WordNet completato con successo. Numero parole: " + wordNet.AllWords.Count);
+   //     _debuggingWindow.SetText("Caricamento WordNet completato con successo su Android");
+    }
+    else
+    {
+        Debug.LogError("Errore nel caricamento del database WordNet.");
+   //     _debuggingWindow.SetText("Errore nel caricamento del database WordNet su Android.");
+    }
+}
+   
+  
     public string GetSyn(string word, string wordType) 
     {
         if (GetComponent<WordnetManager>().enabled) //Se il componente stesso non � attivo (= non ha mai eseguito la Start()), ritorna semplicemente la parola 

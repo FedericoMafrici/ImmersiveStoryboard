@@ -65,7 +65,6 @@ namespace Trev3d.Quest.ScreenCapture
 				if (startScreenCaptureOnStart)
 				{
 					Debug.Log("Finestra di PoPup avviata dovrebbe essere visibile");
-					_debuggingWindow.SetText("Finestra di PoPup avviata dovrebbe essere visibile");
 					StartScreenCapture();
 				}
 				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixel

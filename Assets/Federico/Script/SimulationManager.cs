@@ -23,7 +23,8 @@ public class SimulationManager : MonoBehaviour
 
     [Header("Personaggi e componenti attivi")]
     public int status=0; // 0 -> object placement; 1 -> storyboarding 
-    
+    public bool contemporaryAction = false;
+    public int actionTime = 0;
     [SerializeField] GameObject objectCollection;
     [SerializeField] List<GameObject> listaOggettiManipolabili;
     
@@ -38,6 +39,25 @@ public class SimulationManager : MonoBehaviour
     public static EventHandler<EventArgs> stopAnimation;
     
     [Header("HEADER UI ")]
+    [SerializeField]  private GameObject MenuOggetti;
+
+    [SerializeField] private GameObject consoleDebuggin;
+
+    [SerializeField] private GameObject ScreenshotPanel;
+     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     [SerializeField] GameObject _buttonRenameScene;
     [SerializeField] GameObject _buttonSaveScene;
     [SerializeField] GameObject _buttonStartStoryboarding;
@@ -50,6 +70,17 @@ public class SimulationManager : MonoBehaviour
     [SerializeField] GameObject _canvasUseCase1;
     [SerializeField] GameObject _canvasUseCase2;
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
    // public GridObjectCollection SceneMenuButtonGridObjectCollection;
     
     public Material ComandiOculusWorldBuilding;
@@ -91,16 +122,11 @@ public class SimulationManager : MonoBehaviour
 
     public GameObject light;
     private GameObject newLight;
-    //public GameObject cameraHint;
-    //public GameObject sceneInputName;
-    //public GameObject sceneNameText;
-    //public GameObject dropdownHandlder;
     public string sName;
     //private int loopCount = 0;
     private int screenshotCount = 0;
     private int screenshotCountUndo = 0;
-
-    public bool contemporaryAction = true;
+    
     public bool firstAction = true;
 
     public bool startSimulationPremuto;
@@ -162,7 +188,8 @@ public class SimulationManager : MonoBehaviour
 
     void Start()
     {
-       // DebuggingStartStoryBoarding();
+      BoundingBoxManagerUI.OnSceneInizializationCompleted+=ChangeSimulationState;
+      ValueVisualizer.onActionTimeChanged += SetTime;
     }
 
     public void  Update()
@@ -575,176 +602,30 @@ public void ToggleTutorial()
     public void ChangeCurrentTime() { }
     public void ChangeCurrentTimeManual() { }
     public void SpendTime() { }
-
+    public void SetTime(object e, ActionTimeChangedEventArgs args)
+    {
+        actionTime = (int) args.NewValue;
+    }
     public int GetTime() 
     {
-
-      //  var slider = timeSlider.GetComponent<PinchSlider>().SliderValue;
-      //    var time = Mathf.RoundToInt(slider * 10); 
-      //  return time; 
-      return 1; //TODO da rimuovere e ripristinare con quello sopra
+        
+      return actionTime ; //TODO da rimuovere e ripristinare con quello sopra
     }
     public void ControlCamera(){ }
 
-    public void SetContemporaryAction(bool b)
+    public void SetContemporaryAction()
     {
-        contemporaryAction = b;
-   //     animaPersonaggio.ChangeWalker();
+        contemporaryAction = !contemporaryAction;
+        //     animaPersonaggio.ChangeWalker(); non ho ancora capito a cosa serva onestamente 
     }
 
-        /*
-    public void ChangeColorContemporary()
-    {
+    //FUNZIONI USATE DA FEDERICO ( QUELLE SOPRA SONO STATE REIMPORTATE DAGLI SCRIPT DELLE COLLEGHE//
+    /*
+     * SE QUALCUNO DOPO DI ME LAVORERà ALLA TESI VI CONSIGLIO DI FARVI MANDARE LA TESI DELLE COLLEGHE PRECEDENTI DAI PROF
+     * E POI LEGGERE LA MIA
+     * 
+     */
     
-        // colori tasto
-        Color DefaltCustomColor = new Color(0.8509805f, 0.1686275f, 0.5686275f, 1);
-        Color FocusCustomColor = new Color(0.09803922f, 0.1490196f, 0.254902f, 1);
-        Color PressedCustomColor = new Color(0.5526878f, 0.582599f, 0.8679245f, 1);
-
-        Color DefaltCustomColorDisabled = new Color(0.3215686f, 0.3215686f, 0.3215686f, 1);
-        //Color ColorTextDisabled = new Color(0.2641509f, 0.240477f, 0.240477f, 1);
-
-        Color ColorTextDisabled = Color.white;
-
-        var newThemeType = ThemeDefinition.GetDefaultThemeDefinition<InteractableColorTheme>().Value;
-        var interactableObject = contemporaryButton.transform.Find("BackPlate").Find("Quad").gameObject;
-
-        // coloro accesso bottone attivo
-        newThemeType.StateProperties[0].Values = new List<ThemePropertyValue>()
-                            {
-                                new ThemePropertyValue() { Color = DefaltCustomColor},  // Default ROSA
-                                new ThemePropertyValue() { Color = FocusCustomColor}, // Focus
-                                new ThemePropertyValue() { Color = PressedCustomColor},   // Pressed
-                                new ThemePropertyValue() { Color = Color.black},   // Disabled
-                            };
-
-
-        contemporaryButton.GetComponent<Interactable>().Profiles = new List<InteractableProfileItem>()
-
-        
-
-        {
-                                new InteractableProfileItem()
-                                {
-                                    Themes = new List<Theme>()
-                                    {
-                                        Interactable.GetDefaultThemeAsset(new List<ThemeDefinition>() { newThemeType })
-                                    },
-                                    Target = interactableObject,
-                                },
-                            };
-    
-        contemporaryButton.transform.Find("BackPlate").Find("Quad").gameObject.GetComponent<Renderer>().material = bordoChiaro;
-
-        contemporaryButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject.GetComponent<TextMeshPro>().color = Color.white;
-
-        // spengo bottone opposto 
-        var newThemeType2 = ThemeDefinition.GetDefaultThemeDefinition<InteractableColorTheme>().Value;
-        var interactableObject2 = consecutiveButton.transform.Find("BackPlate").Find("Quad").gameObject;
-
-        // Define a color for every state in our Default Interactable States
-        newThemeType2.StateProperties[0].Values = new List<ThemePropertyValue>()
-                            {
-                                new ThemePropertyValue() { Color = DefaltCustomColorDisabled},  // Default GRIGIO
-                                new ThemePropertyValue() { Color = FocusCustomColor}, // Focus
-                                new ThemePropertyValue() { Color = PressedCustomColor},   // Pressed
-                                new ThemePropertyValue() { Color = Color.black},   // Disabled
-                            };
-
-
-        consecutiveButton.GetComponent<Interactable>().Profiles = new List<InteractableProfileItem>()
-                            {
-                                new InteractableProfileItem()
-                                {
-                                    Themes = new List<Theme>()
-                                    {
-                                        Interactable.GetDefaultThemeAsset(new List<ThemeDefinition>() { newThemeType2 })
-                                    },
-                                    Target = interactableObject2,
-                                },
-                            };
-
-        consecutiveButton.transform.Find("BackPlate").Find("Quad").gameObject.GetComponent<Renderer>().material = bordoScuro;
-        consecutiveButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject.GetComponent<TextMeshPro>().color = ColorTextDisabled;
-    
-    }
-
-
-    public void ChangeColorConsecutive()
-    {
-
-        // colori tasto
-        Color DefaltCustomColor = new Color(0.8509805f, 0.1686275f, 0.5686275f, 1);
-        Color FocusCustomColor = new Color(0.09803922f, 0.1490196f, 0.254902f, 1);
-        Color PressedCustomColor = new Color(0.5526878f, 0.582599f, 0.8679245f, 1);
-
-        //Color ColorTextDisabled = new Color(0.2641509f, 0.240477f, 0.240477f, 1);
-
-        Color ColorTextDisabled = Color.white;
-
-        Color DefaltCustomColorDisabled = new Color(0.3215686f, 0.3215686f, 0.3215686f, 1);
-
-        var newThemeType = ThemeDefinition.GetDefaultThemeDefinition<InteractableColorTheme>().Value;
-        var interactableObject = consecutiveButton.transform.Find("BackPlate").Find("Quad").gameObject;
-
-        // coloro accesso bottone attivo
-                            newThemeType.StateProperties[0].Values = new List<ThemePropertyValue>()
-                            {
-                                new ThemePropertyValue() { Color = DefaltCustomColor},  // Default ROSA
-                                new ThemePropertyValue() { Color = FocusCustomColor}, // Focus
-                                new ThemePropertyValue() { Color = PressedCustomColor},   // Pressed
-                                new ThemePropertyValue() { Color = Color.black},   // Disabled
-                            };
-
-
-                            consecutiveButton.GetComponent<Interactable>().Profiles = new List<InteractableProfileItem>()
-                            {
-                                new InteractableProfileItem()
-                                {
-                                    Themes = new List<Theme>()
-                                    {
-                                        Interactable.GetDefaultThemeAsset(new List<ThemeDefinition>() { newThemeType })
-                                    },
-                                    Target = interactableObject,
-                                },
-                            };
-
-
-        consecutiveButton.transform.Find("BackPlate").Find("Quad").gameObject.GetComponent<Renderer>().material = bordoChiaro;
-        consecutiveButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject.GetComponent<TextMeshPro>().color = Color.white;
-
-        // spengo bottone opposto 
-        var newThemeType2 = ThemeDefinition.GetDefaultThemeDefinition<InteractableColorTheme>().Value;
-        var interactableObject2 = contemporaryButton.transform.Find("BackPlate").Find("Quad").gameObject;
-
-        // Define a color for every state in our Default Interactable States
-                            newThemeType2.StateProperties[0].Values = new List<ThemePropertyValue>()
-                            {
-                                new ThemePropertyValue() { Color = DefaltCustomColorDisabled},  // Default GRIGIO
-                                new ThemePropertyValue() { Color = FocusCustomColor}, // Focus
-                                new ThemePropertyValue() { Color = PressedCustomColor},   // Pressed
-                                new ThemePropertyValue() { Color = Color.black},   // Disabled
-                            };
-
-
-                            contemporaryButton.GetComponent<Interactable>().Profiles = new List<InteractableProfileItem>()
-                            {
-                                new InteractableProfileItem()
-                                {
-                                    Themes = new List<Theme>()
-                                    {
-                                        Interactable.GetDefaultThemeAsset(new List<ThemeDefinition>() { newThemeType2 })
-                                    },
-                                    Target = interactableObject2,
-                                },
-                            };
-
-        contemporaryButton.transform.Find("BackPlate").Find("Quad").gameObject.GetComponent<Renderer>().material = bordoScuro;
-        contemporaryButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject.GetComponent<TextMeshPro>().color = ColorTextDisabled;
-        
-    }
-
-    */
     // USAGE: 
     /*
      * SE C'è GIA UN PERSONAGGIO ATTIVO LO CAMBIA, IN CASO CONTRARIO ASSEGNA LO SLOT ALL'OBJ CORRENTE ED AVVIA LE PARTICELLE
@@ -838,50 +719,7 @@ public void ToggleTutorial()
 
 
     }
-    /*
-    public void getControl()
-    {
-
-    //    animaPersonaggio.ChangeWalker();
-        activeCharacter.GetComponent<CharacterManager>().StopWalking();
-        if (status == 1)
-        {
-       //     var obj = characterAnimationManager.GetComponent<AnimaPersonaggio>().character;
-            activeCharacter = obj;
-      //      characterAnimationManager.GetComponent<AnimaPersonaggio>().setCharacter(obj);
-            GetControlButton.SetActive(false);
-            if (activeCharacter.GetComponent<Animator>() != null)
-                activeCharacterAnimator = activeCharacter.GetComponent<Animator>();
-
-            DestroyParticles();
-            CreateParticleActive(activeCharacter);
-            //sfondoTitolo.SetActive(false);
-      //      animaPersonaggio.PosizioneTasti();
-
-            var speed = activeCharacter.GetComponent<Animator>().speed;
-
-            if (speed == 0)
-            {
-
-                // cambia testo e icona tasto Play e Stop
-        //        animaPersonaggio.buttonConfigHelperStartStop.SetQuadIconByName("IconPlay");
-        //        animaPersonaggio.buttonConfigHelperStartStop.MainLabelText = "PLAY";
-
-                
-            }
-            else
-            {
-
-                // cambia testo e icona tasto Play e Stop
-         //       animaPersonaggio.buttonConfigHelperStartStop.SetQuadIconByName("IconHandMesh");
-         //       animaPersonaggio.buttonConfigHelperStartStop.MainLabelText = "STOP";
-
-
-            }
-        }
-            
-    }
-    */
+    
     public void setActiveObject(GameObject obj)
     {
         if (status == 1)
@@ -1030,5 +868,15 @@ public void ToggleTutorial()
 
         numberIllustration.text = "# " + nIllustration.ToString();
     }
+    // GESTIONE SIMULAZIONE: 
+
+    public void ChangeSimulationState(object sender, EventArgs e)
+    {
+        MenuOggetti.SetActive(true);
+        ScreenshotPanel.SetActive(true);
+        status = 0;
+        Debug.Log("Cambio stato simulazione avvenuto con successo");
+    }
+    
 }
 

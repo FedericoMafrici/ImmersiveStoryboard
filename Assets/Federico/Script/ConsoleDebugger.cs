@@ -7,9 +7,13 @@ public class ConsoleDebugger : MonoBehaviour
    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        AddText("console pronta e funzionante\n");
+        if (_text !=null)
+        {
+            _text.text = "";
+           // AddText("console pronta e funzionante\n");
+        }
     }
 
     // Update is called once per frame
@@ -20,8 +24,7 @@ public class ConsoleDebugger : MonoBehaviour
 
     public void SetText(string txt)
     {
-        _text.text="console pronta a partire e funzionante \n"; 
-        _text.text += txt + "\n";
+        _text.text += "\n" + txt + "\n";
     }
 
     public void AddText(string txt)

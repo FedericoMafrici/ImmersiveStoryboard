@@ -29,6 +29,8 @@ public class AnimaPersonaggio : MonoBehaviour
     // Elementi della UI
     [SerializeField] private GameObject _ScrollviewElementPrefab;
 
+    [SerializeField] private GameObject ObjectMenu;
+    
 
    
     

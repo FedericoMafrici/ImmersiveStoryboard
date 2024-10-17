@@ -78,7 +78,11 @@ public class ScreenshotManager : MonoBehaviour
         }
         
     }
-    
+
+    public void setActionType()
+    {
+        _simulationManager.SetContemporaryAction();
+    }
     // Update is called once per frame
     void Update()
     {
