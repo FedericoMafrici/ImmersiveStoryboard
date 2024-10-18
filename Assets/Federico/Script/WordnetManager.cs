@@ -110,6 +110,7 @@ public class WordnetManager : MonoBehaviour
         Debug.LogError("Errore nel caricamento del database WordNet.");
    //     _debuggingWindow.SetText("Errore nel caricamento del database WordNet su Android.");
     }
+    yield break;  // Assicurati di terminare l'IEnumerator
 }
    
   

@@ -18,7 +18,7 @@ public class CharacterManager : MonoBehaviour
     */
     //private TapToPlace ttp;
     //private BoundsControl bc;
-    public string type="";
+    [SerializeField] public string type;
     public bool simulation = false;
     public bool isWalking;
     public bool walkMode = true;
@@ -48,7 +48,7 @@ public class CharacterManager : MonoBehaviour
         charAnim = this.GetComponent<Animator>();
         SimulationManager.setUpMovement +=EnableCharacterMovement;
         
-        if (!loadedObject)
+        if (!loadedObject || type=="")
         {
             type = gameObject.name;
         }

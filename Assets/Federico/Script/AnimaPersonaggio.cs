@@ -155,37 +155,7 @@ public class AnimaPersonaggio : MonoBehaviour
     
 
     // Funzione per pulire il container
-    private void ClearContainer(Transform container)
-    {
-        // Distrugge tutti i figli del container
-        foreach (Transform child in container)
-        {
-            Destroy(child.gameObject);
-        }
-    }
-    // Funzione di utilità: 
-    GameObject CreateElement(string text,Transform container)
-    {
-        // Clona l'elemento prefab
-        GameObject newElement = Instantiate(_ScrollviewElementPrefab, container);
-
-        // Ottieni il componente Text (o TextMeshPro) e imposta il testo
-        Text elementText = newElement.GetComponentInChildren<Text>();
-        if (elementText != null)
-        {
-            elementText.text = text;
-        }
-        else
-        {
-            Debug.LogError("Il prefab non contiene un componente Text.");
-        }
-
-        return newElement;
-    }
     
-    /*
-     * ABILITA LA USER INTERFACE DELL'OGGETTO
-     */
     public void ShowActions()
     {
         // abilita la UI
@@ -195,8 +165,8 @@ public class AnimaPersonaggio : MonoBehaviour
             Debug.LogError("ui del personaggio non trovata personaggio: "+ this.gameObject.name);
         }
         ui.SetActive(true);
-        var tmp = ui.transform.Find("Front");
-        ui.transform.localPosition = new Vector3(2.78f, -0.78f, 1.07f);
+       // var tmp = ui.transform.Find("Front");
+       // ui.transform.localPosition = new Vector3(2.78f, -0.78f, 1.07f);
         ui= _simulationManager.activeCharacter.transform.parent.Find("PersonaggioAttivo").gameObject;
         ui.SetActive(true);
         var container = ui.transform.Find("Front/Scrollview Canvas/Panel/Pannello/Viewport/Content");
@@ -393,7 +363,8 @@ public class AnimaPersonaggio : MonoBehaviour
 
                 if (_character.GetComponent<CharacterManager>().type == "chair")
                 {
-                    _simulationManager.activeCharacter.transform.position = new Vector3(_character.transform.position.x, _character.transform.position.y, _character.transform.position.z + 0.015f);
+                    // siedi sulla sedia:
+                    SitOnTheChair();
                 }
                 _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles);
             }
@@ -511,8 +482,37 @@ public class AnimaPersonaggio : MonoBehaviour
         }
         
     }
-   */ 
-    
+   */
+  public void SitOnTheChair()
+  {
+      // interaction object 
+      var rbobj = _interactionObject.GetComponent<Rigidbody>();
+      if (rbobj != null)
+      {
+          rbobj.isKinematic = true;
+      }
+      // active character rigid body disabilitato
+      var rb =_simulationManager.activeCharacter.GetComponent<Rigidbody>();
+      if (rb != null)
+      {
+          rb.useGravity = false;
+          rb.isKinematic = true;
+                    
+      }
+      else
+      {
+          Debug.LogError("Errore rigid body non trovato per l'oggetto: " + gameObject.name);
+      }
+      _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
+      _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles.x,  _character.transform.localRotation.eulerAngles.y + 180f , _character.transform.localRotation.eulerAngles.z);
+      var bench = _character.transform.Find("spawnPoint").transform;
+      if (bench == null)
+      {
+          Debug.LogError("errore panchina non trovata");
+      }
+      _simulationManager.activeCharacter.transform.position = new Vector3(bench.position.x , bench.position.y-0.3f ,bench.position.z ); //+0.1f
+      
+  }
     public void WalkMode(bool walk)
     {
         if (ActiveWalk)
@@ -528,6 +528,36 @@ public class AnimaPersonaggio : MonoBehaviour
 
     }
     
+    private void ClearContainer(Transform container)
+    {
+        // Distrugge tutti i figli del container
+        foreach (Transform child in container)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    // Funzione di utilità: 
+    GameObject CreateElement(string text,Transform container)
+    {
+        // Clona l'elemento prefab
+        GameObject newElement = Instantiate(_ScrollviewElementPrefab, container);
+
+        // Ottieni il componente Text (o TextMeshPro) e imposta il testo
+        Text elementText = newElement.GetComponentInChildren<Text>();
+        if (elementText != null)
+        {
+            elementText.text = text;
+        }
+        else
+        {
+            Debug.LogError("Il prefab non contiene un componente Text.");
+        }
+
+        return newElement;
+    }
     
+    /*
+     * ABILITA LA USER INTERFACE DELL'OGGETTO
+     */
     
 }

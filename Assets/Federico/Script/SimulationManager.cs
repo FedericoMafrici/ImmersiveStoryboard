@@ -190,6 +190,8 @@ public class SimulationManager : MonoBehaviour
     {
       BoundingBoxManagerUI.OnSceneInizializationCompleted+=ChangeSimulationState;
       ValueVisualizer.onActionTimeChanged += SetTime;
+        DebuggingStartStoryBoarding();
+        
     }
 
     public void  Update()
