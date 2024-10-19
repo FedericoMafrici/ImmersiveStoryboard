@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Grip",
+                    "type": "Button",
+                    "id": "a3c0a3d4-2d91-4377-8d8e-338f5e5ca9be",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -50,7 +59,7 @@
                 {
                     "name": "",
                     "id": "90121da1-139a-4c03-b38b-1ca7fc227cac",
-                    "path": "<OculusTouchController>/secondaryButton",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
@@ -61,11 +70,103 @@
                 {
                     "name": "",
                     "id": "1cfca133-b466-40bd-911d-11239b187000",
-                    "path": "<XRSimulatedController>/secondaryButton",
+                    "path": "<XRSimulatedController>{LeftHand}/secondaryButton",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Y",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "83067850-1885-471e-a3ec-010c49c3e69c",
+                    "path": "<XRController>{LeftHand}/{GripButton}",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f90bfa0c-12e5-4fc4-8caf-de4ce1968e70",
+                    "path": "<XRSimulatedController>{LeftHand}/gripButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Right",
+            "id": "15544389-e073-47bb-807b-cd03f9e03b87",
+            "actions": [
+                {
+                    "name": "B",
+                    "type": "Button",
+                    "id": "6bc738da-6cb3-48bb-99d2-6f2a6b717c7b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "A",
+                    "type": "Button",
+                    "id": "f2f68b73-f42d-475f-bf7b-79c23fbed0f7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f252ecda-a1c8-497e-8716-c06ac17c2b54",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "B",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3eca3682-fd0d-4ad0-ad4d-cf9a14a33907",
+                    "path": "<XRSimulatedController>{RightHand}/primaryButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "B",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fae42001-0df3-4b06-9878-1721858e2f45",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d1f6afdf-cc35-4302-8f3a-743bf22c34d6",
+                    "path": "<XRSimulatedController>/secondaryButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "A",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

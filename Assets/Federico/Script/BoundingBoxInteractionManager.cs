@@ -7,19 +7,29 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BoundingBoxInteractionManager : MonoBehaviour
 {
-    private GameObject labelUI;
+    public GameObject labelUI;
+
+    public SnapToPlane interactable;
+
+    public SnapToPlane boundingBoxPlane;
+
+    public Vector3 boundingBoxSize=Vector3.zero; // dimensione della bounding box aggiornata 
+
+    public Vector3 initialPlaneLocalPosition; //posizione locale iniziale del piano
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     public void Awake()
     {
             BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += AllowLabeling;
             BoundingBoxManagerUI.OnSceneInizializationCompleted += StopShowingLabeling;
+            ControllerManager.OnBoundingBoxPlaneEdit += AllowEditPlane;
             Debug.Log("Iscrizione all'evento OnBoundingBoxPlacement completata");
             labelUI = this.transform.Find("BoundingBoxLabel").gameObject;
-            if (labelUI==null)
+            interactable = this.GetComponent<SnapToPlane>();
+            if (interactable == null || labelUI==null)
             {
-                Debug.LogError("errore nellinserimento della label della bounding box"+ this.name);
+                Debug.LogError("errore nel reperimento del componente Snap To Plane o della label o del piano");
             }
-
             SetLabel("default");
     }
     
@@ -28,6 +38,11 @@ public class BoundingBoxInteractionManager : MonoBehaviour
        Text label= labelUI.transform.Find("Scrollview Canvas/Pannello/Viewport/Content/Scroll View Item/Text").GetComponent<Text>();
        label.text = text;
       // this.GetComponent<CharacterManager>().type = text;
+    }
+
+    public void Update()
+    {
+    //    ConstrainPlaneMovement();
     }
 
     public void StopShowingLabeling(object sender,EventArgs e)
@@ -78,9 +93,36 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             _xrInt.trackRotation = false;
             _xrInt.trackScale = false;
         }
+    }
 
-      
-         
+    public void AllowEditPlane(object sender,EventArgs e)
+    {
+        interactable.transform.Find("BoundingBoxWrapper/Cube").GetComponent<BoxCollider>().enabled = false;
+        SetInteractionLayer(LayerMask.NameToLayer("InteractionDisabled"),interactable);
+      //  SetInteractionLayer(LayerMask.NameToLayer("Default"),boundingBoxPlane);
+        
+    }
+    
+    
+    
+    public void SetInteractionLayer(int layerIndex,SnapToPlane obj)
+    {
+        // Cambia l'Interaction Layer Mask con il layer specificato
+        obj.interactionLayers = 1 << layerIndex;
+        Debug.Log("Interaction Layer Mask cambiata al layer: " + layerIndex);
+    }
+
+    public void setBoundingBoxSize(Vector3 size)
+    {
+        boundingBoxSize = size;
+    }
+    
+ 
+    
+    private void OnRelease(SelectExitEventArgs args)
+    {
+        // Quando il piano viene rilasciato, assicurati che non sia uscito dai confini
+        // ConstrainPlaneMovement();
     }
     
 }

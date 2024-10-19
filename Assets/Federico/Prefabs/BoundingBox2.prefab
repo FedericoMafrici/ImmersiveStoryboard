@@ -154,6 +154,8 @@ GameObject:
   - component: {fileID: 2687888719301980589}
   - component: {fileID: 3475659166992885545}
   - component: {fileID: 3825118457902054476}
+  - component: {fileID: 4482112057698829791}
+  - component: {fileID: 8027205524337754715}
   m_Layer: 0
   m_Name: BoundingBox2
   m_TagString: Untagged
@@ -368,7 +370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a1302d0d134fa8a2a5b3bf4aec3c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PermittedDisplacementAxes: -1
+  m_PermittedDisplacementAxes: 2
   m_ConstrainedAxisDisplacementMode: 1
   m_TwoHandedRotationMode: 1
   m_AllowOneHandedScaling: 1
@@ -406,6 +408,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7d783968c7d4b6d905704a48d8a0ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  labelUI: {fileID: 0}
+  interactable: {fileID: 324986747280638563}
+  boundingBoxPlane: {fileID: 0}
+  boundingBoxSize: {x: 0, y: 0, z: 0}
+  initialPlaneLocalPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &4482112057698829791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508348494270127559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b184e5766a6c94fb3ab414d9b2527b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state:
+  - lifted
+  possibleStates:
+  - lifted
+  - fallen
+  DataBase: {fileID: 0}
+  _simulationManager: {fileID: 0}
+  animator: {fileID: 0}
+  surname: 
+  nearObjs: []
+--- !u!114 &8027205524337754715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508348494270127559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d0273e270dd45e99c9f4c23e300613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: chair
+  simulation: 0
+  isWalking: 0
+  walkMode: 1
+  nearObjects: []
+  charAnim: {fileID: 0}
+  loadedObject: 1
+  lastAction: 
+  lastTimeAction: 0
+  groundCheck: {fileID: 0}
+  groundDistance: 0.4
+  place: 
+  hitColliders: []
 --- !u!1 &6488076954433884910
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,6 +473,8 @@ GameObject:
   - component: {fileID: 2496376495308038457}
   - component: {fileID: 6831207681470711109}
   - component: {fileID: 856532621829152082}
+  - component: {fileID: 2495592416141472278}
+  - component: {fileID: 4096398062660328168}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -436,7 +492,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.007, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.10972001, y: 0.10972001, z: 0.10972001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7086639445851828157}
@@ -513,7 +569,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &856532621829152082
@@ -530,6 +586,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plane: {fileID: 6488076954433884910}
   boundingBox: {fileID: 708176586986063333}
+--- !u!54 &2495592416141472278
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488076954433884910}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4096398062660328168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488076954433884910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9d3138d08054da4b04c337e0c90639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BoundingBoxController: {fileID: 3825118457902054476}
 --- !u!1001 &220978875859713700
 PrefabInstance:
   m_ObjectHideFlags: 0

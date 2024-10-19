@@ -24,6 +24,7 @@ public class BoundingBoxScaler : MonoBehaviour
         box.transform.localScale = _boundingBox.size;
         boxEmptyController.transform.position = _boundingBox.transform.position;
         boxEmptyController.transform.rotation = _boundingBox.transform.rotation;
+        boxEmptyController.GetComponent<BoundingBoxInteractionManager>().setBoundingBoxSize(_boundingBox.size);
     }
     public void SetBoundingBox(GameObject emptyController, GameObject cube, ARBoundingBox boundingBox)
     {
@@ -33,5 +34,6 @@ public class BoundingBoxScaler : MonoBehaviour
         debugging_window.SetText("setbounding box chiamata"+ cube.name+" "+ _boundingBox.name);
         BoundingBoxInteractionManager bbint = emptyController.GetComponent<BoundingBoxInteractionManager>();
         bbint.SetLabel(boundingBox.classifications.ToString());
+        bbint.setBoundingBoxSize(boundingBox.size);
     }
 }

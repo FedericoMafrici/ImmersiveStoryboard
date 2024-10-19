@@ -44,6 +44,15 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Grip"",
+                    ""type"": ""Button"",
+                    ""id"": ""a3c0a3d4-2d91-4377-8d8e-338f5e5ca9be"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -72,7 +81,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""90121da1-139a-4c03-b38b-1ca7fc227cac"",
-                    ""path"": ""<OculusTouchController>/secondaryButton"",
+                    ""path"": ""<XRController>{LeftHand}/{SecondaryButton}"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
@@ -83,11 +92,103 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1cfca133-b466-40bd-911d-11239b187000"",
-                    ""path"": ""<XRSimulatedController>/secondaryButton"",
+                    ""path"": ""<XRSimulatedController>{LeftHand}/secondaryButton"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83067850-1885-471e-a3ec-010c49c3e69c"",
+                    ""path"": ""<XRController>{LeftHand}/{GripButton}"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f90bfa0c-12e5-4fc4-8caf-de4ce1968e70"",
+                    ""path"": ""<XRSimulatedController>{LeftHand}/gripButton"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Right"",
+            ""id"": ""15544389-e073-47bb-807b-cd03f9e03b87"",
+            ""actions"": [
+                {
+                    ""name"": ""B"",
+                    ""type"": ""Button"",
+                    ""id"": ""6bc738da-6cb3-48bb-99d2-6f2a6b717c7b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""A"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2f68b73-f42d-475f-bf7b-79c23fbed0f7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f252ecda-a1c8-497e-8716-c06ac17c2b54"",
+                    ""path"": ""<XRController>{RightHand}/{PrimaryButton}"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""B"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3eca3682-fd0d-4ad0-ad4d-cf9a14a33907"",
+                    ""path"": ""<XRSimulatedController>{RightHand}/primaryButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""B"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fae42001-0df3-4b06-9878-1721858e2f45"",
+                    ""path"": ""<XRController>{RightHand}/{SecondaryButton}"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""A"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1f6afdf-cc35-4302-8f3a-743bf22c34d6"",
+                    ""path"": ""<XRSimulatedController>/secondaryButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""A"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -100,11 +201,17 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         m_Left = asset.FindActionMap("Left", throwIfNotFound: true);
         m_Left_X = m_Left.FindAction("X", throwIfNotFound: true);
         m_Left_Y = m_Left.FindAction("Y", throwIfNotFound: true);
+        m_Left_Grip = m_Left.FindAction("Grip", throwIfNotFound: true);
+        // Right
+        m_Right = asset.FindActionMap("Right", throwIfNotFound: true);
+        m_Right_B = m_Right.FindAction("B", throwIfNotFound: true);
+        m_Right_A = m_Right.FindAction("A", throwIfNotFound: true);
     }
 
     ~@ButtonController()
     {
         UnityEngine.Debug.Assert(!m_Left.enabled, "This will cause a leak and performance issues, ButtonController.Left.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Right.enabled, "This will cause a leak and performance issues, ButtonController.Right.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -168,12 +275,14 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
     private List<ILeftActions> m_LeftActionsCallbackInterfaces = new List<ILeftActions>();
     private readonly InputAction m_Left_X;
     private readonly InputAction m_Left_Y;
+    private readonly InputAction m_Left_Grip;
     public struct LeftActions
     {
         private @ButtonController m_Wrapper;
         public LeftActions(@ButtonController wrapper) { m_Wrapper = wrapper; }
         public InputAction @X => m_Wrapper.m_Left_X;
         public InputAction @Y => m_Wrapper.m_Left_Y;
+        public InputAction @Grip => m_Wrapper.m_Left_Grip;
         public InputActionMap Get() { return m_Wrapper.m_Left; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -189,6 +298,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Y.started += instance.OnY;
             @Y.performed += instance.OnY;
             @Y.canceled += instance.OnY;
+            @Grip.started += instance.OnGrip;
+            @Grip.performed += instance.OnGrip;
+            @Grip.canceled += instance.OnGrip;
         }
 
         private void UnregisterCallbacks(ILeftActions instance)
@@ -199,6 +311,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Y.started -= instance.OnY;
             @Y.performed -= instance.OnY;
             @Y.canceled -= instance.OnY;
+            @Grip.started -= instance.OnGrip;
+            @Grip.performed -= instance.OnGrip;
+            @Grip.canceled -= instance.OnGrip;
         }
 
         public void RemoveCallbacks(ILeftActions instance)
@@ -216,9 +331,69 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         }
     }
     public LeftActions @Left => new LeftActions(this);
+
+    // Right
+    private readonly InputActionMap m_Right;
+    private List<IRightActions> m_RightActionsCallbackInterfaces = new List<IRightActions>();
+    private readonly InputAction m_Right_B;
+    private readonly InputAction m_Right_A;
+    public struct RightActions
+    {
+        private @ButtonController m_Wrapper;
+        public RightActions(@ButtonController wrapper) { m_Wrapper = wrapper; }
+        public InputAction @B => m_Wrapper.m_Right_B;
+        public InputAction @A => m_Wrapper.m_Right_A;
+        public InputActionMap Get() { return m_Wrapper.m_Right; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(RightActions set) { return set.Get(); }
+        public void AddCallbacks(IRightActions instance)
+        {
+            if (instance == null || m_Wrapper.m_RightActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_RightActionsCallbackInterfaces.Add(instance);
+            @B.started += instance.OnB;
+            @B.performed += instance.OnB;
+            @B.canceled += instance.OnB;
+            @A.started += instance.OnA;
+            @A.performed += instance.OnA;
+            @A.canceled += instance.OnA;
+        }
+
+        private void UnregisterCallbacks(IRightActions instance)
+        {
+            @B.started -= instance.OnB;
+            @B.performed -= instance.OnB;
+            @B.canceled -= instance.OnB;
+            @A.started -= instance.OnA;
+            @A.performed -= instance.OnA;
+            @A.canceled -= instance.OnA;
+        }
+
+        public void RemoveCallbacks(IRightActions instance)
+        {
+            if (m_Wrapper.m_RightActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IRightActions instance)
+        {
+            foreach (var item in m_Wrapper.m_RightActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_RightActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public RightActions @Right => new RightActions(this);
     public interface ILeftActions
     {
         void OnX(InputAction.CallbackContext context);
         void OnY(InputAction.CallbackContext context);
+        void OnGrip(InputAction.CallbackContext context);
+    }
+    public interface IRightActions
+    {
+        void OnB(InputAction.CallbackContext context);
+        void OnA(InputAction.CallbackContext context);
     }
 }

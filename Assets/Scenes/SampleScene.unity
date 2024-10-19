@@ -4160,7 +4160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1386082259481429544, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
-      value: 4294967295
+      value: 2147483657
       objectReference: {fileID: 0}
     - target: {fileID: 1394134084125277868, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       propertyPath: m_Layer
@@ -4656,7 +4656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8227192243087186103, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
-      value: 4294967295
+      value: 2147484169
       objectReference: {fileID: 0}
     - target: {fileID: 8359034970863009475, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       propertyPath: m_Layer
@@ -6694,6 +6694,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 324986747280638563, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
+      propertyPath: m_Colliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 324986747280638563, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
+      propertyPath: 'm_Colliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1424258262}
     - target: {fileID: 3508348494270127559, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
       propertyPath: m_Name
       value: BoundingBox2
@@ -6708,15 +6716,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7086639445851828157, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.7252238
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 7086639445851828157, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7411966
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 7086639445851828157, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.968
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7086639445851828157, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6746,6 +6754,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8362379255886311761, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
+      propertyPath: m_Colliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8362379255886311761, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
+      propertyPath: 'm_Colliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1475602019}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6764,7 +6780,7 @@ GameObject:
   - component: {fileID: 689416967}
   - component: {fileID: 689416966}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6815,7 +6831,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: eb54303a490eb42c39214d4b1759329a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8557,6 +8573,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BoundingBox2 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3508348494270127559, guid: 0b50227178f0746378803ebd49df772b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3947158674186425217, guid: 0b50227178f0746378803ebd49df772b, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.8109975
@@ -9496,6 +9516,10 @@ MonoBehaviour:
   _screenshot: {fileID: 0}
   _mainCamera: {fileID: 378230103}
   currSelectedObject: {fileID: 0}
+  isMovingPlane: 1
+  initialPlaneLocalPosition: {x: 0, y: 0, z: 0}
+  boundingBoxSize: {x: 0, y: 0, z: 0}
+  planeTransform: {fileID: 0}
 --- !u!114 &962571405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9570,7 +9594,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 962571400}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 302dd627522104e29b6099a31a65318b, type: 3}
   m_Name: 
@@ -14892,6 +14916,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414733612}
   m_CullTransparentMesh: 1
+--- !u!65 &1424258262 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 6582631794514940802, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
+  m_PrefabInstance: {fileID: 688086001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1425485348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15457,6 +15486,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!64 &1475602019 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 6831207681470711109, guid: 52b686a67f5e84ff5a1cfdc8ecc9d0b6, type: 3}
+  m_PrefabInstance: {fileID: 688086001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1480513497 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2397425259038431700, guid: 8a3826b29567e6044a95e79d38cce36c, type: 3}
@@ -17708,7 +17742,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 996bc95e1b6dfc847aead2de66dc4a91, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

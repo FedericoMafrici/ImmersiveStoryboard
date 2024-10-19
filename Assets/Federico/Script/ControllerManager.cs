@@ -31,9 +31,14 @@ public class ControllerManager : MonoBehaviour
     public GameObject currSelectedObject;
     
     public static EventHandler<EventArgs> OnObjectPlaced;
-
+    public static EventHandler<EventArgs> OnBoundingBoxPlaneEdit;
    
-    
+    // manipolazione piano interno alla bounding box 
+    public bool isMovingPlane=false;
+    private float initialControllerY;
+    public Vector3 initialPlaneLocalPosition;
+    public Vector3 boundingBoxSize;
+    public Transform planeTransform;
     private void OnEnable()
     {
         // Sottoscrivi gli eventi quando un interattore afferra l'oggetto
@@ -55,6 +60,12 @@ public class ControllerManager : MonoBehaviour
         controlli.Left.Y.performed += ctx => Ypressed(ctx);
      //   controlli.Left.Y.canceled += ctx => Yreleased(ctx);
         controlli.Left.X.performed += ctx => X(ctx);
+        controlli.Right.Enable();
+        controlli.Right.A.performed += ctx => Apressed(ctx);
+        controlli.Right.B.performed += ctx => Bpressed(ctx);
+
+        controlli.Left.Grip.performed += ctx => OnGripHold(ctx);
+        controlli.Left.Grip.canceled += ctx => OnGripRelease(ctx);
         
         // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato
         leftControllerRay.enabled = false;
@@ -118,6 +129,17 @@ public class ControllerManager : MonoBehaviour
                   
                           return;
                       }
+
+                      public void Apressed(InputAction.CallbackContext ctx)
+                      {
+                          Debug.Log("A pressed");
+                          OnBoundingBoxPlaneEdit.Invoke(this,EventArgs.Empty);
+                      }
+
+                      public void Bpressed(InputAction.CallbackContext ctx)
+                      {
+                          Debug.Log("B pressed");
+                      }
     private IEnumerator CaptureScreenshot()
     {
         yield return new WaitForEndOfFrame();  // Aspetta la fine del frame per assicurarsi che il rendering sia completato
@@ -146,11 +168,14 @@ public class ControllerManager : MonoBehaviour
         _ConsoleDebugger.AddText("Screenshot visualizzato sulla UI: " + _screenshot.name);
     }
         
-      
-        private void Update()
-            {
-             
-            }
+    private void Update()
+    {
+        // Se il piano sta muovendosi, aggiorna la posizione
+        if (isMovingPlane)
+        {
+            MovePlaneWithController(initialPlaneLocalPosition,boundingBoxSize);
+        }
+    }
            
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
@@ -200,8 +225,40 @@ public class ControllerManager : MonoBehaviour
             currSelectedObject = null;
         }
     }
-
-
+    private void StartMovingPlane(Vector3 planePosition)
+    {
+        isMovingPlane = true;
+        initialControllerY = leftControllerRay.transform.position.y; // Memorizza la Y iniziale del controller
+        initialPlaneLocalPosition = planePosition;
+    }
+    
+    private void OnGripHold(InputAction.CallbackContext context)
+    {
+        Debug.Log("grip pressed");
+        _ConsoleDebugger.SetText("Grip Pressed");
+        // Controlla se il ray interactor sta selezionando il piano
+        if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit))
+        {
+            
+            if (hit.transform.name=="Plane")
+            {
+                planeTransform = hit.transform;
+                initialPlaneLocalPosition = planeTransform.localPosition;
+                boundingBoxSize = hit.transform.GetComponent<BoundingBoxReference>().GetBoundingBoxSize();
+                if (!isMovingPlane)
+                {
+                    StartMovingPlane(hit.transform.localPosition);
+                }
+            }
+        }
+    }
+    
+    private void OnGripRelease(InputAction.CallbackContext context)
+    {
+        Debug.Log("Grip Released");
+        // Ferma il movimento del piano
+        isMovingPlane = false;
+    }
 
 
 
@@ -341,7 +398,28 @@ public class ControllerManager : MonoBehaviour
          
      }
  }
+ private void MovePlaneWithController(Vector3 initialPlaneLocalPosition, Vector3 boundingBoxSize)
+ {
+     Debug.Log("Entering MovePlaneWithController");
+     Debug.Log($"initialPlaneLocalPosition: {initialPlaneLocalPosition}, boundingBoxSize: {boundingBoxSize}");
 
+     float currentControllerY = leftControllerRay.transform.position.y; // Ottieni la Y attuale del controller
+     float deltaY = currentControllerY - initialControllerY; // Differenza rispetto alla Y iniziale
+     Debug.Log(leftControllerRay.transform.position);
+     // Calcola la nuova posizione del piano
+     Vector3 newLocalPosition = initialPlaneLocalPosition + new Vector3(0, deltaY, 0);
+
+     // Calcola i limiti della bounding box lungo l'asse Y
+     float minY = initialPlaneLocalPosition.y - boundingBoxSize.y / 2;
+     float maxY = initialPlaneLocalPosition.y + boundingBoxSize.y / 2;
+
+     // Vincola la posizione del piano all'interno della bounding box
+     newLocalPosition.y = Mathf.Clamp(newLocalPosition.y, minY, maxY);
+    
+     // Aggiorna la posizione del piano solo sull'asse Y
+     planeTransform.localPosition = new Vector3(initialPlaneLocalPosition.x, newLocalPosition.y, initialPlaneLocalPosition.z);
+ }
+ 
 
     public void KillAllObjects()
     {
