@@ -15,6 +15,7 @@ public class ControllerManager : MonoBehaviour
     [SerializeField] public GameObject objectToSpawn;
     [SerializeField] public SimulationManager _SimulationManager;
     [SerializeField] public ConsoleDebugger _ConsoleDebugger;
+    [SerializeField] public PersistentAnchorManager persistentAnchorManager;
     [SerializeField] public XRRayInteractor leftControllerRay;
     [SerializeField] public XRRayInteractor rightControllerRay;
     public GameObject leftXRController;
@@ -32,6 +33,7 @@ public class ControllerManager : MonoBehaviour
     
     public static EventHandler<EventArgs> OnObjectPlaced;
     public static EventHandler<EventArgs> OnBoundingBoxPlaneEdit;
+    public static EventHandler<EventArgs> StopBoundingBoxPlaneEdit;
    
     // manipolazione piano interno alla bounding box 
     public bool isMovingPlane=false;
@@ -139,6 +141,7 @@ public class ControllerManager : MonoBehaviour
                       public void Bpressed(InputAction.CallbackContext ctx)
                       {
                           Debug.Log("B pressed");
+                          StopBoundingBoxPlaneEdit.Invoke(this, EventArgs.Empty);
                       }
     private IEnumerator CaptureScreenshot()
     {
@@ -171,7 +174,7 @@ public class ControllerManager : MonoBehaviour
     private void Update()
     {
         // Se il piano sta muovendosi, aggiorna la posizione
-        if (isMovingPlane)
+        if (isMovingPlane && planeTransform!=null)
         {
             MovePlaneWithController(initialPlaneLocalPosition,boundingBoxSize);
         }
@@ -343,43 +346,46 @@ public class ControllerManager : MonoBehaviour
      if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo))
      {
          Vector3 hitPosition = hitInfo.point; // Coordinate del punto di impatto
-         Vector3 hitNormal = hitInfo.normal;  // Normale della superficie colpita
+         Vector3 hitNormal = hitInfo.normal; // Normale della superficie colpita
          // aggiusto la rotazione con quella del prefab 
-       
-         
+
+
          GameObject hitObject = hitInfo.collider.gameObject; // GameObject colpito
 
          Debug.Log($"Il raggio del controller sinistro ha colpito: {hitObject.name} alle coordinate {hitPosition}");
+        #if !UNITY_EDITOR
+         persistentAnchorManager.CreateAnchor(hitPosition,objectToSpawn);
+        #else
+          // Instanzia l'oggetto da spawnare
+          GameObject spawnedObject = Instantiate(objectToSpawn);
+          spawnedObject.name = objectToSpawn.name;
+          // Imposta la posizione dell'oggetto
+          spawnedObject.transform.position = hitPosition;
 
-         // Instanzia l'oggetto da spawnare
-         GameObject spawnedObject = Instantiate(objectToSpawn);
-         spawnedObject.name = objectToSpawn.name;
-         // Imposta la posizione dell'oggetto
-         spawnedObject.transform.position = hitPosition;
+          // Allinea l'oggetto alla superficie del piano utilizzando la normale della superficie
+          Quaternion surfaceRotation = Quaternion.LookRotation(hitNormal);
 
-         // Allinea l'oggetto alla superficie del piano utilizzando la normale della superficie
-         Quaternion surfaceRotation = Quaternion.LookRotation(hitNormal);
+          // Ottieni la direzione verso l'utente (ad esempio, la camera o il controller)
+          Vector3 directionToUser = (leftXRController.transform.position - hitPosition).normalized;
 
-         // Ottieni la direzione verso l'utente (ad esempio, la camera o il controller)
-         Vector3 directionToUser = (leftXRController.transform.position - hitPosition).normalized;
+          // Ignora la componente verticale della direzione (asse Y) per calcolare solo la direzione orizzontale
+          directionToUser.y = 0;  // Ignora l'altezza (asse Y) per evitare inclinazioni verso l'alto o il basso
 
-         // Ignora la componente verticale della direzione (asse Y) per calcolare solo la direzione orizzontale
-         directionToUser.y = 0;  // Ignora l'altezza (asse Y) per evitare inclinazioni verso l'alto o il basso
+          // Calcola la rotazione in modo che l'oggetto guardi verso l'utente solo sull'asse XZ
+          Quaternion lookAtUserRotation = Quaternion.LookRotation(directionToUser, hitNormal);
 
-         // Calcola la rotazione in modo che l'oggetto guardi verso l'utente solo sull'asse XZ
-         Quaternion lookAtUserRotation = Quaternion.LookRotation(directionToUser, hitNormal);
+          // Applica la rotazione combinata all'oggetto spawnato
+          spawnedObject.transform.rotation = lookAtUserRotation;
 
-         // Applica la rotazione combinata all'oggetto spawnato
-         spawnedObject.transform.rotation = lookAtUserRotation;
-         
-            // Aggiungi l'oggetto alla lista degli oggetti spawnati
-         _SimulationManager.spawnedGameObjects.Add(spawnedObject);
-         OnObjectPlaced.Invoke(this,EventArgs.Empty);
+             // Aggiungi l'oggetto alla lista degli oggetti spawnati
+          _SimulationManager.spawnedGameObjects.Add(spawnedObject);
+          OnObjectPlaced.Invoke(this,EventArgs.Empty);
+        #endif 
      }
      else
-     {
-         Debug.Log("Il raggio del controller sinistro non ha colpito nulla.");
-     }
+      {
+          Debug.Log("Il raggio del controller sinistro non ha colpito nulla.");
+      }
  }
 
  public void MoveCharacter(object sender, EventArgs obj)

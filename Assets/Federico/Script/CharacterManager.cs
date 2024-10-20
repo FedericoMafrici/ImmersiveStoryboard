@@ -42,6 +42,7 @@ public class CharacterManager : MonoBehaviour
 
     private GameObject CursorVisual;
 
+    public bool isBoundingBox=false;
     // Start is called before the first frame update
     void Start()
     {

@@ -53,6 +53,15 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""9f4f9e21-24fd-4244-9654-3234c54417f0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -119,6 +128,28 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Grip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec7fc736-2019-460a-98df-4f4c93e5a0ac"",
+                    ""path"": ""<XRController>{LeftHand}/{TriggerButton}"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20c39458-04d5-4ad4-809e-955f78c1053c"",
+                    ""path"": ""<XRSimulatedController>{LeftHand}/triggerButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -202,6 +233,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         m_Left_X = m_Left.FindAction("X", throwIfNotFound: true);
         m_Left_Y = m_Left.FindAction("Y", throwIfNotFound: true);
         m_Left_Grip = m_Left.FindAction("Grip", throwIfNotFound: true);
+        m_Left_Fire = m_Left.FindAction("Fire", throwIfNotFound: true);
         // Right
         m_Right = asset.FindActionMap("Right", throwIfNotFound: true);
         m_Right_B = m_Right.FindAction("B", throwIfNotFound: true);
@@ -276,6 +308,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Left_X;
     private readonly InputAction m_Left_Y;
     private readonly InputAction m_Left_Grip;
+    private readonly InputAction m_Left_Fire;
     public struct LeftActions
     {
         private @ButtonController m_Wrapper;
@@ -283,6 +316,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         public InputAction @X => m_Wrapper.m_Left_X;
         public InputAction @Y => m_Wrapper.m_Left_Y;
         public InputAction @Grip => m_Wrapper.m_Left_Grip;
+        public InputAction @Fire => m_Wrapper.m_Left_Fire;
         public InputActionMap Get() { return m_Wrapper.m_Left; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -301,6 +335,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Grip.started += instance.OnGrip;
             @Grip.performed += instance.OnGrip;
             @Grip.canceled += instance.OnGrip;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
         }
 
         private void UnregisterCallbacks(ILeftActions instance)
@@ -314,6 +351,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Grip.started -= instance.OnGrip;
             @Grip.performed -= instance.OnGrip;
             @Grip.canceled -= instance.OnGrip;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
         }
 
         public void RemoveCallbacks(ILeftActions instance)
@@ -390,6 +430,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         void OnX(InputAction.CallbackContext context);
         void OnY(InputAction.CallbackContext context);
         void OnGrip(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
     public interface IRightActions
     {

@@ -98,8 +98,12 @@ public class AnimaPersonaggio : MonoBehaviour
            ShowAloneActions();
            return; 
        }
-        // se non è un personaggio attivo allora ho selezionato un oggetto 
-        _interactionObject = obj;
+       else
+       {
+           // se non è un personaggio attivo allora ho selezionato un oggetto 
+           _interactionObject = obj;       
+       }
+    
 
        if (_simulationManager.activeCharacter != null && _simulationManager.activeCharacter != _character)
        {
@@ -175,7 +179,7 @@ public class AnimaPersonaggio : MonoBehaviour
             Debug.LogError("Null reference exception nella gestione della ui dell'oggetto " + _character.name);
         }
         _selectedActionsList =
-            _actionsDB.ReturnActions(_simulationManager.activeCharacter.GetComponent<CharacterManager>().type,_character.GetComponent<CharacterManager>().type,
+            _actionsDB.ReturnActions(_simulationManager.activeCharacter.GetComponent<CharacterManager>().type,_interactionObject.GetComponent<CharacterManager>().type,
                 _character.GetComponent<State>().state, _self);
         ClearContainer(container);
         // update dei contenuti 
@@ -428,7 +432,7 @@ public class AnimaPersonaggio : MonoBehaviour
                     Debug.LogError("Errore rigid body non trovato per l'oggetto: " + gameObject.name);
                 }
                 _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
-                _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles.x,  _character.transform.localRotation.eulerAngles.y + 180f , _character.transform.localRotation.eulerAngles.z);
+                _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles.x,  _character.transform.localRotation.eulerAngles.y, _character.transform.localRotation.eulerAngles.z);
                 var bench = _character.transform.Find("PianoBench/spawnPoint").transform;
                 if (bench == null)
                 {
@@ -505,13 +509,27 @@ public class AnimaPersonaggio : MonoBehaviour
       }
       _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
       _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles.x,  _character.transform.localRotation.eulerAngles.y + 180f , _character.transform.localRotation.eulerAngles.z);
-      var bench = _character.transform.Find("spawnPoint").transform;
-      if (bench == null)
+      if (!_character.GetComponent<CharacterManager>().isBoundingBox)
       {
-          Debug.LogError("errore panchina non trovata");
+          var bench = _character.transform.Find("spawnPoint").transform;
+          if (bench == null)
+          {
+              Debug.LogError("errore panchina non trovata");
+          }
+
+          _simulationManager.activeCharacter.transform.position =
+              new Vector3(bench.position.x, bench.position.y - 0.3f, bench.position.z); //+0.1f
       }
-      _simulationManager.activeCharacter.transform.position = new Vector3(bench.position.x , bench.position.y-0.3f ,bench.position.z ); //+0.1f
-      
+      else
+      {
+          var spawnPoint = _character.transform.Find("Plane/spawnPoint");
+          if (spawnPoint == null)
+          {
+              Debug.LogError("errore panchina non trovata");
+          }
+          _simulationManager.activeCharacter.transform.position =
+              new Vector3(spawnPoint.position.x, spawnPoint.position.y-0.45f, spawnPoint.position.z); //+0.1f
+      }
   }
     public void WalkMode(bool walk)
     {

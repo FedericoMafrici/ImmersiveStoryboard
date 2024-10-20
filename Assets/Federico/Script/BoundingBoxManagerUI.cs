@@ -73,6 +73,10 @@ public class BoundingBoxManagerUI : MonoBehaviour
                 case 2:
                     OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
                 break;
+                case 3:
+                    Debug.Log("Start Plane Edit chiamata");
+                    ControllerManager.OnBoundingBoxPlaneEdit.Invoke(this,EventArgs.Empty);
+                    break;
                 case 4:
                     Debug.Log("Ho chiamato l'evento di cambio stato simulazione");
                     OnSceneInizializationCompleted.Invoke(this,EventArgs.Empty); 

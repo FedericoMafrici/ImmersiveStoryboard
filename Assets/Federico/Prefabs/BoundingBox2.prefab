@@ -108,6 +108,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &739399234091141311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7896563074413910782}
+  m_Layer: 0
+  m_Name: spawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7896563074413910782
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739399234091141311}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8873329459403333257}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2639079611923312787
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,6 +187,7 @@ GameObject:
   - component: {fileID: 3825118457902054476}
   - component: {fileID: 4482112057698829791}
   - component: {fileID: 8027205524337754715}
+  - component: {fileID: 8911769062033480742}
   m_Layer: 0
   m_Name: BoundingBox2
   m_TagString: Untagged
@@ -281,7 +313,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3825118457902054476}
+        m_TargetAssemblyTypeName: BoundingBoxInteractionManager, Assembly-CSharp
+        m_MethodName: OnSelectionEnter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
@@ -408,11 +452,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7d783968c7d4b6d905704a48d8a0ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  simulationManager: {fileID: 0}
   labelUI: {fileID: 0}
   interactable: {fileID: 324986747280638563}
   boundingBoxPlane: {fileID: 0}
   boundingBoxSize: {x: 0, y: 0, z: 0}
   initialPlaneLocalPosition: {x: 0, y: 0, z: 0}
+  interactionEnabled: 0
 --- !u!114 &4482112057698829791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,6 +506,23 @@ MonoBehaviour:
   groundDistance: 0.4
   place: 
   hitColliders: []
+  isBoundingBox: 1
+--- !u!208 &8911769062033480742
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508348494270127559}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &6488076954433884910
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,7 +557,8 @@ Transform:
   m_LocalPosition: {x: 0.007, y: 0, z: 0}
   m_LocalScale: {x: 0.10972001, y: 0.10972001, z: 0.10972001}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 7896563074413910782}
   m_Father: {fileID: 7086639445851828157}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7638118080470158624
@@ -1221,6 +1285,7 @@ MonoBehaviour:
   groundDistance: 0.4
   place: 
   hitColliders: []
+  isBoundingBox: 0
 --- !u!224 &3899392794785329105 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 747562692447532203, guid: ca28f79686f464267ba686e8966b6d0b, type: 3}

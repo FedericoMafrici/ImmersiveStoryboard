@@ -169,7 +169,7 @@ public class InteractionManagerAddOn : MonoBehaviour
        if (interactionEnabled)
        {
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
-           interactionEnabled = false;
+           //interactionEnabled = false;
        }
     }
     
