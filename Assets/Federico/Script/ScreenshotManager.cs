@@ -51,6 +51,7 @@ public class ScreenshotManager : MonoBehaviour
         AddNewValue(_simulationManager.GetScreenshotCount().ToString(), _focalLength); //memorizza la focale al tempo time 
         //incrementa il counter degli screenshot 
         _screenshotCounter++;
+        _simulationManager.screenshotCount++;
         screenShotTaken.Invoke(this,EventArgs.Empty);
     }
     public void AddNewValue(string index, string focal)

@@ -11,8 +11,9 @@ public class PersistentAnchorManager : MonoBehaviour
     
     // Dizionario per tenere traccia degli oggetti associati alle ancore
     private Dictionary<string, GameObject> anchorsDictionary = new Dictionary<string, GameObject>();
-
-    [SerializeField] Dictionary<string, GameObject> GameObjectsDictionary = new Dictionary<string, GameObject>();
+    [SerializeField] private List<string> keys = new List<string>();
+    [SerializeField] private List<GameObject> values = new List<GameObject>();
+    [SerializeField] public Dictionary<string, GameObject> GameObjectsDictionary = new Dictionary<string, GameObject>();
     // Percorso del file JSON
     private string jsonFilePath;
 
@@ -38,10 +39,19 @@ public class PersistentAnchorManager : MonoBehaviour
     private void Start()
     {
      //   anchorManager = FindObjectOfType<ARAnchorManager>();
-        jsonFilePath = Path.Combine(Application.persistentDataPath, "anchors.json");
-
+     for (int i = 0; i < keys.Count && i < values.Count; i++)
+     {
+         if (!GameObjectsDictionary.ContainsKey(keys[i]))
+         {
+                Debug.Log(keys[i]+ " " + values[i] );
+             GameObjectsDictionary.Add(keys[i], values[i]);
+         }
+     }
+     
+     //   jsonFilePath = Path.Combine(Application.persistentDataPath, "anchors.json");
+        
         // Carica le ancore salvate all'avvio
-        LoadAnchors();
+     //   LoadAnchors();
     }
 
     public async void CreateAnchor(Vector3 position, GameObject objectName)
@@ -54,7 +64,7 @@ public class PersistentAnchorManager : MonoBehaviour
         {
             var anchor = result.value;
             // Salva l'ancora e il nome dell'oggetto nel file JSON
-            await TrySaveAnchor(anchor, objectName.GetComponent<CharacterManager>().type);
+         //   await TrySaveAnchor(anchor, objectName.GetComponent<CharacterManager>().type);
             Debug.Log($"Ancora creata: {anchor.trackableId}");
 
             // Instanzia un oggetto associato all'ancora
@@ -72,6 +82,7 @@ public class PersistentAnchorManager : MonoBehaviour
         var saveResult = await anchorManager.TrySaveAnchorAsync(anchor);
         if (saveResult.status.IsSuccess())
         {
+           /*
             // Salva l'ID dell'ancora e il nome dell'oggetto nel file JSON
             var anchorData = new AnchorData(anchor.trackableId.ToString(), objectName);
             
@@ -86,18 +97,20 @@ public class PersistentAnchorManager : MonoBehaviour
             {
                 anchorList = new AnchorList();
             }
-
+    
             // Aggiungi il nuovo dato all'elenco
             anchorList.anchors.Add(anchorData);
-
+            
             // Salva l'elenco aggiornato nel file JSON
             string jsonToSave = JsonUtility.ToJson(anchorList, true);
             File.WriteAllText(jsonFilePath, jsonToSave);
+            */
         }
         else
         {
             Debug.LogError("Errore nel salvataggio dell'ancora.");
         }
+        
     }
 
     private async void LoadAnchors()

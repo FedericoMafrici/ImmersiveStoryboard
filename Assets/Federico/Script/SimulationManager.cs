@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.AI;
 using System;
+using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
@@ -124,7 +125,7 @@ public class SimulationManager : MonoBehaviour
     private GameObject newLight;
     public string sName;
     //private int loopCount = 0;
-    private int screenshotCount = 0;
+    public int screenshotCount = 0;
     private int screenshotCountUndo = 0;
     
     public bool firstAction = true;
@@ -190,8 +191,9 @@ public class SimulationManager : MonoBehaviour
     {
       BoundingBoxManagerUI.OnSceneInizializationCompleted+=ChangeSimulationState;
       ValueVisualizer.onActionTimeChanged += SetTime;
+      ScreenshotManager.screenShotTaken += CompletedAction;
       Debug.Log("Storyboarding Avviato");
-    //  DebuggingStartStoryBoarding();
+      DebuggingStartStoryBoarding();
         
     }
 
@@ -230,174 +232,7 @@ public class SimulationManager : MonoBehaviour
             txtcomponent.text = "Start";
         }
     }
-    //change the tracking of all scene object
-  /*  
-    void Start()
-    {
-    /*     
-        startSimulationPremuto = false;
-       
-       // _buttonStopStoryboarding.SetActive(false);
-
-        //_canvasUseCase1.SetActive(false);
-//        _canvasUseCase2.SetActive(false);
-
-  //      _buttonUseCase1.SetActive(true);
-        _buttonUseCase2.SetActive(true);
-
-        _soundManager = GameObject.Find("SoundManager");
-      //  cameraManager = FindObjectOfType<CameraManager>();
-        // Texture t2d = AssetPreview.GetMiniThumbnail(prova) as Texture;
-
-        // image.GetComponent<RawImage>().texture = t2d;
-
-     //  objectManagerVR = FindObjectOfType<ObjectManagerVR>();
-
-        canvasNewLight = GameObject.Find("ParentCanvas").transform.Find("Canvas_NewLightAdded").gameObject;
-        status = 0;
-        activeCharacter = null;
-        activeCharacterText.SetActive(false);
-        characterAnimationManager.SetActive(false);
-
-        _pannelloFine.SetActive(false);
-        //animaPersonaggio = FindObjectOfType<AnimaPersonaggio>();
-
-     //   NextPannelButton.GetComponent<Interactable>().IsEnabled = false;
-
-        //secondCamera.SetActive(false);
-        ButtonScreenshot.SetActive(false);
-        StepPinchSliderFocalLength.SetActive(false);
-
-        mainCamera = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
-
-       //mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-
-        dialogue = false;
-
-        //time = 1;
-        sName = "no name";
-
-        //pulire il file con le azioni
-        string basePath = Path.Combine(Application.streamingAssetsPath, "screenshotActions.csv");
-        File.WriteAllText(basePath, string.Empty);
-
-   //     phraseGenerator = FindObjectOfType<PhraseGenerator>();
-    
-    
-    }
-*/
-    /*tutorialIndex = 0;
-
-    tutorialText = tutorial.GetComponent<TextMeshProUGUI>();
-    tutorialText.text = tutorialArray[tutorialIndex].ToString();
-
-
-
-
-public void IncrementTutorialIndex() {
-    if (tutorialIndex < 10) tutorialIndex++;
-    else if (tutorialIndex == 10) tutorialIndex = 0;
-
-    tutorialText.text = tutorialArray[tutorialIndex].ToString();
-
-}
-public void DecrementTutorialIndex()
-{
-    if (tutorialIndex > 0) tutorialIndex--;
-    else if (tutorialIndex == 0) tutorialIndex = 10;
-
-    tutorialText.text = tutorialArray[tutorialIndex].ToString();
-
-}
-public void ToggleTutorial()
-{
-    if (tutorialPanel.activeSelf)
-        tutorialPanel.SetActive(false);
-    else tutorialPanel.SetActive(true);
-
-}*/
-
-/*
-    void Update()
-
-    {
-        // al momento il tempo scorre a seconda degli screen fatti 
-        //time = PhotoCaptureManager.GetComponent<SR_RenderCamera>().FileCounter;
-
-
-        /*sceneNameText.GetComponent<TextMeshPro>().text = sName;
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (controlCamera)
-            {
-                controlCamera = false;
-                activeCharacterText.GetComponent<TextMeshPro>().text = "Active player: none";
-                //cameraHint.SetActive(true);
-            }
-            else
-            {
-                //cameraHint.SetActive(true);
-                ControlCamera();
-            }
-        }*/
-
-
-       /* // GENERATE STORYBOARD FINALE FUNZIONA SOLO IN STATUS STORYBOARD
-        if ((Input.GetKeyDown(KeyCode.Y) || OVRInput.GetDown(OVRInput.RawButton.Y)) && status == 1)
-        {
-            gameObject.GetComponent<OutputGenerator>().GenerateFile();
-            _soundManager.GetComponent<AudioSource>().PlayOneShot(_notificationSound);
-            _pannelloFine.SetActive(true);
-        }*/
-
-        // NEW CAMERA FUNZIONA SOLO IN STATUS STORYBOARD
-        /*
-        if ((Input.GetKeyDown(KeyCode.B) || OVRInput.GetDown(OVRInput.RawButton.B)) && status == 1 && secondCamera.activeSelf)
-        {
-            cameraManager.NewCamera();
-            _soundManager.GetComponent<AudioSource>().PlayOneShot(_notificationSound);
-        }
-
-        // UNDO FUNZIONA SOLO IN STATUS STORYBOARD
-        if ((Input.GetKeyDown(KeyCode.P) || OVRInput.GetDown(OVRInput.RawButton.Y)) && status == 1)
-        {
-            UndoLastAction();
-            _soundManager.GetComponent<AudioSource>().PlayOneShot(_notificationSound);
-        }
-
-        // NUOVA LUCE
-        if ((Input.GetKeyDown(KeyCode.L) || OVRInput.GetDown(OVRInput.RawButton.A)) && light.activeSelf)
-        {
-            NewLight();
-            _soundManager.GetComponent<AudioSource>().PlayOneShot(_notificationSound);
-        }
-
-        if (activeCharacter != null && ParticleActive != null && status == 1)
-        {
-            ParticleActive.transform.position = new Vector3(activeCharacter.transform.position.x, activeCharacter.transform.position.y + 0.02f, activeCharacter.transform.position.z);
-        }
-
-        if (activeCharacter != null && NomePersonaggioAttivo.gameObject.activeSelf && status == 1)
-        {
-            NomePersonaggioAttivo.text = activeCharacter.name;
-        }
-
-
-        if (activeCharacter != null && activeCharacter != objectManagerVR.current && status == 1)
-        {
-            positionActiveObject.SetActive(true);
-            NomeActiveCh.text = activeCharacter.name; // definisce nome oggetto
-
-            positionActiveObject.transform.position = new Vector3(activeCharacter.transform.position.x + 0.05f, activeCharacter.transform.position.y + (activeCharacter.transform.position.y) / 2.5f, activeCharacter.transform.position.z); // posiziona nome oggetto in base al padre empty
-        }
-        else
-        {
-            positionActiveObject.SetActive(false);
-            NomeActiveCh.text = "";
-        
-        
-    }
-*/
+   
     private void NewLight()
     {
         newLight = Instantiate(light);
@@ -419,18 +254,6 @@ public void ToggleTutorial()
 
         canvasNewLight.SetActive(false);
     }
-
-
-    /*public void SetSceneName()
-{
-   //sName = sceneInputName.GetComponent<MRTKTMPInputField>().text;
-
-}*/
-
-    /*public void SaveScene()
-    {
-        GameObject.Find("SaveManager")?.GetComponent<SaveLoadStage>().SaveData(sName);
-    }*/
     
 
     public void StartSimulation() 
@@ -501,105 +324,7 @@ public void ToggleTutorial()
         SfondoAzioni.transform.SetParent(StopAndPlayButtonPadre.transform);
     }
 
-    public void StartSimulationTutorial()
-    {
-        startSimulationPremuto = true;
-
-        //menuManoOggetti.SetActive(false);
-        BottoneRinominaOggetto.SetActive(false); // lascio nome oggetto ma disattivo Bottone che serve a rinominare in fase di storyboard
-
-        //sceneMenu.SetActive(false);
-        _buttonRenameScene.SetActive(false);
-        if (_buttonSaveScene.activeSelf) _buttonSaveScene.SetActive(false);
-        _buttonStartStoryboarding.SetActive(false);
-
-        _buttonStopStoryboarding.SetActive(true);
-
-        _buttonStoryboard.SetActive(true);
-
-
-
-
-     //   SceneMenuButtonGridObjectCollection.UpdateCollection();
-
-
-
-        imageOculus.GetComponent<Image>().material = ComandiOculusStoryboard;
-
-        characterAnimationManager.enabled=true;
-        objectCollection.SetActive(false);
-
-        /*//Attiva Camera e oggetti collegati quando premo Start Storyboarding
-        secondCamera.SetActive(true);
-        ButtonScreenshot.SetActive(true);
-        StepPinchSliderFocalLength.SetActive(true);*/
-
-      //  characterAnimationManager.GetComponent<AnimaPersonaggio>().enabled = true;
-
-      //  objectManagerVR.StopManipulation();
-
-        //controlla che ci sia almeno un personaggio
-        var atleast1pg = false;
-        GameObject empty = GameObject.FindGameObjectWithTag("emptyPlane");
-
-        foreach (Transform child in empty.transform)
-        {
-            if (child.CompareTag("Player"))
-                atleast1pg = true;
-        }
-        if (atleast1pg)
-        {
-
-            status = 1;
-           
-            activeCharacterText.SetActive(true);
-            activeCharacterText.GetComponent<TextMeshPro>().text = "Active player: none";
-
-        }
-
-      
-
-        // tolgo parentela messa in StopSimulation
-        moveButton.transform.SetParent(ManuAzioniTasti.transform);
-        StopAndPlayButton.transform.SetParent(StopAndPlayButtonPadre.transform);
-        actionsPanel.transform.SetParent(ManuAzioniTasti.transform);
-        SfondoAzioni.transform.SetParent(StopAndPlayButtonPadre.transform);
-    }
-
-    public void StopSimulation()
-    {
-     
-       
-        BottoneRinominaOggetto.SetActive(true);
-        characterAnimationManager.enabled = true;
-
-
-        _buttonRenameScene.SetActive(true);
-        
-        _buttonStartStoryboarding.SetActive(true);
-
-        _buttonStopStoryboarding.SetActive(false);
-
-        _buttonStoryboard.SetActive(false);
-
-     //   SceneMenuButtonGridObjectCollection.UpdateCollection();
-
-        imageOculus.GetComponent<Image>().material = ComandiOculusWorldBuilding;
-
-        // imparento ad un oggetto disattivo altrimenti si riattivavano al click del personaggio
-        moveButton.transform.SetParent(characterAnimationManager.transform);
-        StopAndPlayButton.transform.SetParent(characterAnimationManager.transform);
-        actionsPanel.transform.SetParent(characterAnimationManager.transform);
-        SfondoAzioni.transform.SetParent(characterAnimationManager.transform);
-
-        // simulationMenu.SetActive(false); // DISATTIVARE STOP STORYBOARDING
-        objectCollection.SetActive(true);
-      //  characterAnimationManager.GetComponent<AnimaPersonaggio>().enabled = false;
-      //  objectManagerVR.RestartManipulation();
-        status = 0;
-
-    }
-
+    
 
     public void ChangeMaxTime() { }
     public void ChangeCurrentTime() { }
@@ -856,7 +581,9 @@ public void ToggleTutorial()
 
     public void IncrementScreenshotCountUndo()
     {
-        screenshotCountUndo++;
+        if(screenshotCount>0)
+        screenshotCountUndo= screenshotCount-1;
+        
     }
 
     public int GetScreenshotCountUndo()
@@ -880,6 +607,232 @@ public void ToggleTutorial()
         status = 0;
         Debug.Log("Cambio stato simulazione avvenuto con successo");
     }
+    public void StopAll()
+    {
+     
+        foreach (GameObject o in spawnedGameObjects)
+        {
+            if (o.GetComponent<Animator>() != null)
+            {
+                o.GetComponent<Animator>().speed = 0;
+                
+                if (o.GetComponent<NavMeshAgent>() != null && o.GetComponent<NavMeshAgent>().enabled)
+                {
+                    o.GetComponent<NavMeshAgent>().Stop();
+                }
+            }
+        }
+    }
+    public void CompletedAction(object sender,EventArgs e)
+    {
+        Debug.Log("Completed Action Chiamata");
+        //salvare tutte le azioni che sono state completate 
+        if (firstAction)
+            firstAction = false;
+        
+        GameObject[] objects = new GameObject[spawnedGameObjects.Count];
+        spawnedGameObjects.CopyTo(objects);
+        //ogni screenshot � un azione che salvo
+
+        string basePath = Path.Combine(Application.streamingAssetsPath, "screenshotActions.csv");
+        var backup = new List<string>();
+        backup.Clear();
+        using (var reader = new StreamReader(basePath))
+        {
+            while (!reader.EndOfStream)
+            {
+                backup.Add(reader.ReadLine());
+            }
+        }
+
+        using (var writer = new StreamWriter(basePath))
+        {
+            string line = "action" + GetScreenshotCountUndo() + "|";
+
+            GameObject obj;
+            foreach (GameObject o in objects)
+            {
+                if (o.CompareTag("Player"))
+                {
+                    obj = o.transform.GetChild(0).gameObject;
+                }
+                else
+                {
+                    obj = o;
+                }
+                
+                
+                line += obj.GetInstanceID() + ";" + obj.transform.localPosition.x + ";" + obj.transform.localPosition.y + ";" + obj.transform.localPosition.z + ";"
+                    + obj.transform.rotation.eulerAngles.y + ";";
+                
+              
+                if (obj.GetComponent<State>().state.Count != 0)
+                {
+                    line += obj.GetComponent<State>().state[0] + ";";
+                }
+                else { line += "none" + ";"; }
+
+                if (obj.CompareTag("Player") && obj.GetComponent<CharacterManager>() != null && obj.GetComponent<CharacterManager>().lastTimeAction == GetScreenshotCountUndo())
+                {
+                    line += obj.GetComponent<CharacterManager>().lastAction;
+                }
+                else { line += "none"; }
+
+                line += "|";
+                ;
+            }
+            writer.WriteLine(line);
+            foreach (string s in backup)
+            {
+                writer.WriteLine(s);
+            }
+        }
+    }
+    public void ResetDestination()
+    {
+        foreach (GameObject obj in spawnedGameObjects)
+        {
+            if (obj.CompareTag("Player"))
+            {
+                var navMeshAgent = obj.GetComponent<NavMeshAgent>();
+                if (navMeshAgent != null && navMeshAgent.isActiveAndEnabled)
+                    navMeshAgent.ResetPath();
+            }
+        }
+    }
+
+    public void PlayAll()
+    {
+       
+        foreach (GameObject o in spawnedGameObjects)
+        {
+            if (o.GetComponent<Animator>() != null )
+            {
+                o.GetComponent<Animator>().speed = 0.5f;
+                
+                if (o.GetComponent<NavMeshAgent>() != null && o.GetComponent<NavMeshAgent>().enabled)
+                {
+                    o.GetComponent<NavMeshAgent>().Resume();
+                }
+            }
+        }
+    }
     
+    public void UndoLastAction()
+    {
+        
+        if (screenshotCount > 0)
+        {
+            characterAnimationManager = FindObjectOfType<AnimaPersonaggio>();
+            StopAll();
+            string basePath = Path.Combine(Application.streamingAssetsPath, "screenshotActions.csv");
+
+            characterAnimationManager.WalkMode(false);
+           ResetDestination();
+           
+            List<int> cameraList2 = new List<int>();
+
+            using (var reader = new StreamReader(basePath))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+
+                    if (line.Split('|')[0] == "action" + (GetScreenshotCountUndo()))
+                    {
+                        //istanzia ogni oggetto della linea
+                        var objs = line.Split('|');
+                       objs[0]=objs[0].Replace("action", "");
+                        var i = 0;
+
+                        foreach (string previousAction in objs.Skip(1))
+                        {
+                            var parts = previousAction.Split(';');
+    
+                            if (parts.Length < 7) {
+                                Debug.LogWarning("La riga non ha il numero corretto di campi: " + previousAction);
+                                continue;  // Salta questa riga
+                            }
+
+                            int objectID;
+                            if (!int.TryParse(parts[0] , out objectID)) {
+                                Debug.LogError("Errore di parsing dell'objectID: " + parts[0]);
+                                continue;
+                            }
+                            
+
+                            float x, y, z, r;
+                            if (!float.TryParse(parts[1], out x) ||
+                                !float.TryParse(parts[2], out y) ||
+                                !float.TryParse(parts[3], out z) ||
+                                !float.TryParse(parts[4], out r)) {
+                                Debug.LogError("Errore di parsing delle coordinate o della rotazione: " + previousAction);
+                                continue;
+                            }
+
+                            string state = parts[5];
+                            string action = parts[6];
+
+                            GameObject obj = null;
+                                foreach (GameObject o in spawnedGameObjects)
+                                {
+                                    if (o.CompareTag("Player"))
+                                    {
+                                        obj = o.transform.GetChild(0).gameObject;
+                                    }
+                                    else
+                                    {
+                                        obj = o;
+                                    }
+                                    
+                                    if (obj.GetInstanceID() == objectID)
+                                    {
+                                        obj.transform.localPosition = new Vector3(x, y, z);
+                                        obj.transform.rotation = Quaternion.Euler(0, r, 0);
+                                        if (state != "none") obj.GetComponent<State>().SetState(state, action);
+                                    }
+                                }
+
+                           
+                            i++;
+                        }
+                    }
+
+                }
+            }
+
+            PlayAll();
+
+            SetActiveCharacterActionClick(activeCharacter);
+
+           
+            DeleteSentencesUndo();
+            phraseGenerator.AggiornaTesto();
+
+        }
+    }
+
+
+    public List<string> DeleteSentencesUndo()
+    {
+        buffer = GetComponent<PhraseGenerator>().ClearBuffer();
+        List<string> sentencesToRemove = new List<string>();
+
+        foreach (string b in buffer)
+        {
+            if (Convert.ToInt32(b.Split('_')[2]) == screenshotCountUndo)
+            {
+                sentencesToRemove.Add(b);
+            }
+        }
+
+        foreach (string sentence in sentencesToRemove)
+        {
+            buffer.Remove(sentence);
+        }
+
+        return buffer;
+    }
+
 }
 
