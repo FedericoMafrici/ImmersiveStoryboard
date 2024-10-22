@@ -168,6 +168,7 @@ public class InteractionManagerAddOn : MonoBehaviour
         }
        if (interactionEnabled)
        {
+           Debug.Log("Set Active character chiamata");
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
            //interactionEnabled = false;
        }

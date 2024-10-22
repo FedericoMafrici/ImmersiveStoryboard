@@ -24,7 +24,7 @@ public class SimulationManager : MonoBehaviour
 
     [Header("Personaggi e componenti attivi")]
     public int status=0; // 0 -> object placement; 1 -> storyboarding 
-    public bool contemporaryAction = false;
+    public bool contemporaryAction = true;
     public int actionTime = 0;
     [SerializeField] GameObject objectCollection;
     [SerializeField] List<GameObject> listaOggettiManipolabili;
@@ -47,6 +47,9 @@ public class SimulationManager : MonoBehaviour
     [SerializeField] private GameObject ScreenshotPanel;
      
     
+    [Header("Componenti UI ")]
+    
+    [SerializeField]  private Toggle toggleContemporaryAction;
     
     
     
@@ -54,83 +57,29 @@ public class SimulationManager : MonoBehaviour
     
     
     
-    
-    
-    
-    
-    
-    [SerializeField] GameObject _buttonRenameScene;
-    [SerializeField] GameObject _buttonSaveScene;
-    [SerializeField] GameObject _buttonStartStoryboarding;
-    [SerializeField] GameObject _buttonStopStoryboarding;
-    [SerializeField] GameObject _buttonStoryboard;
-    [SerializeField] GameObject _buttonUseCase1;
-    [SerializeField] GameObject _buttonUseCase2;
-    [SerializeField] GameObject BottoneRinominaOggetto;
+    [Header("Componenti inutili che la collega prima di me ha lasciato di cui ancora non conosco l'utilità")]
 
-    [SerializeField] GameObject _canvasUseCase1;
-    [SerializeField] GameObject _canvasUseCase2;
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   // public GridObjectCollection SceneMenuButtonGridObjectCollection;
-    
-    public Material ComandiOculusWorldBuilding;
-    public Material ComandiOculusStoryboard;
-    public GameObject imageOculus;
-
-    public AudioClip _notificationSound;
-    private GameObject _soundManager;
-
-    [SerializeField] GameObject GetControlButton;
-
-   
-   
-    
-    public GameObject activeCharacterText;
  //   public ObjectManagerVR objectManagerVR;
     private GameObject canvasNewLight;
 
   //  public CameraManager cameraManager;
    
-    public GameObject PhotoCaptureManager;
-
-    public GameObject secondCamera;
-    public GameObject ButtonScreenshot;
-    public GameObject StepPinchSliderFocalLength;
-
-    public GameObject sfondoTitolo;
+  
 
     public GameObject ParticleActive;
 
     [SerializeField] private GameObject moveButton;
     [SerializeField] private GameObject StopAndPlayButton;
-
-    public GameObject ManuAzioniTasti;
-    public GameObject SfondoAzioni;
-
-    public GameObject StopAndPlayButtonPadre;
-    public GameObject actionsPanel;
+    
 
     public GameObject light;
     private GameObject newLight;
-    public string sName;
     //private int loopCount = 0;
     public int screenshotCount = 0;
     private int screenshotCountUndo = 0;
     
     public bool firstAction = true;
-
-    public bool startSimulationPremuto;
+    
 
     private Camera mainCamera;
     // public GameObject timeManager;
@@ -255,7 +204,7 @@ public class SimulationManager : MonoBehaviour
         canvasNewLight.SetActive(false);
     }
     
-
+        /*
     public void StartSimulation() 
     {
         startSimulationPremuto = true;
@@ -318,12 +267,13 @@ public class SimulationManager : MonoBehaviour
         actionsPanel.transform.parent = null;*/
 
         // tolgo parentela messa in StopSimulation
+  /*
         moveButton.transform.SetParent(ManuAzioniTasti.transform);
         StopAndPlayButton.transform.SetParent(StopAndPlayButtonPadre.transform);
         actionsPanel.transform.SetParent(ManuAzioniTasti.transform);
         SfondoAzioni.transform.SetParent(StopAndPlayButtonPadre.transform);
     }
-
+*/
     
 
     public void ChangeMaxTime() { }
@@ -344,7 +294,17 @@ public class SimulationManager : MonoBehaviour
     public void SetContemporaryAction()
     {
         contemporaryAction = !contemporaryAction;
-        //     animaPersonaggio.ChangeWalker(); non ho ancora capito a cosa serva onestamente 
+        toggleContemporaryAction.isOn = contemporaryAction;
+        var txt=   toggleContemporaryAction.transform.Find("Image/Text").GetComponent<Text>();
+        if (contemporaryAction)
+        {
+            txt.text = "attivata";
+        }
+        else
+        { 
+            txt.text = "disattivata";
+        }
+        characterAnimationManager.ChangeWalker(); 
     }
 
     //FUNZIONI USATE DA FEDERICO ( QUELLE SOPRA SONO STATE REIMPORTATE DAGLI SCRIPT DELLE COLLEGHE//
@@ -366,7 +326,7 @@ public class SimulationManager : MonoBehaviour
                 // non so cosa faccia l'instruzione sotto scoprilo 
                 characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj); 
                 // abilita in modo il pulsante di get Control per far diventare quel personaggio il principale 
-              GetControlButton.SetActive(true);
+              
                
             }
             else
@@ -405,6 +365,10 @@ public class SimulationManager : MonoBehaviour
        setUpMovement.Invoke(this,new EventArgs());
     }
 
+    public void MoveAlert(string place, string placeType)
+    {
+        phraseGenerator.GenerateMovementPhrase(activeCharacter.name, activeCharacter.GetComponent<CharacterManager>().type, "room", "room");
+    }
     public void StartOrStopAnimation()
     {
        var activeChar= activeCharacter.GetComponent<CharacterManager>();
@@ -425,7 +389,7 @@ public class SimulationManager : MonoBehaviour
             {
 
                 characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj);
-                GetControlButton.SetActive(true);
+               
               
             }
             else
@@ -458,7 +422,7 @@ public class SimulationManager : MonoBehaviour
                 var q = Quaternion.LookRotation(obj.transform.position - activeCharacter.transform.position);
                 activeCharacter.transform.rotation = q;
             }
-            GetControlButton.SetActive(false);
+     
         }
            
     }
@@ -724,12 +688,12 @@ public class SimulationManager : MonoBehaviour
         if (screenshotCount > 0)
         {
             characterAnimationManager = FindObjectOfType<AnimaPersonaggio>();
-            StopAll();
+          
             string basePath = Path.Combine(Application.streamingAssetsPath, "screenshotActions.csv");
 
             characterAnimationManager.WalkMode(false);
-           ResetDestination();
-           
+            ResetDestination();
+            StopAll(); 
             List<int> cameraList2 = new List<int>();
 
             using (var reader = new StreamReader(basePath))
@@ -801,7 +765,7 @@ public class SimulationManager : MonoBehaviour
                 }
             }
 
-            PlayAll();
+        //    PlayAll();
 
             SetActiveCharacterActionClick(activeCharacter);
 

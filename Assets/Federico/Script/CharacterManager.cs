@@ -18,6 +18,8 @@ public class CharacterManager : MonoBehaviour
     */
     //private TapToPlace ttp;
     //private BoundsControl bc;
+    [SerializeField] private PhraseGenerator phraseGenerator;
+    [SerializeField] private SimulationManager simulationManager;
     [SerializeField] public string type;
     public bool simulation = false;
     public bool isWalking;
@@ -46,6 +48,8 @@ public class CharacterManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        phraseGenerator = FindObjectOfType<PhraseGenerator>();
+        simulationManager = FindObjectOfType<SimulationManager>();
         charAnim = this.GetComponent<Animator>();
         SimulationManager.setUpMovement +=EnableCharacterMovement;
         
@@ -107,9 +111,9 @@ public class CharacterManager : MonoBehaviour
 
             Debug.Log(hit.transform.name);
            
-            // phraseGenerator.UpdateForward(hit.transform.gameObject.name,p);
+             phraseGenerator.UpdateForward(hit.transform.gameObject.name,p);
         }
-        //else gameManager.GetComponent<PhraseGenerator>().UpdateForward("");
+      //  else phraseGenerator.UpdateForward("");
     }
 
     public void EnableCharacterMovement(object sender, EventArgs e)
@@ -139,6 +143,7 @@ public class CharacterManager : MonoBehaviour
             agent.SetDestination(hit.position);
             this.GetComponent<Animator>().SetBool("walking", true);
             isWalking = true;  // Assicurati che questo valore sia impostato correttamente
+            simulationManager.MoveAlert("room","room");
         }
         else
         {

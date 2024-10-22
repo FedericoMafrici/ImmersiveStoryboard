@@ -135,13 +135,13 @@ public class ControllerManager : MonoBehaviour
                       public void Apressed(InputAction.CallbackContext ctx)
                       {
                           Debug.Log("A pressed");
-                          OnBoundingBoxPlaneEdit.Invoke(this,EventArgs.Empty);
+                         // OnBoundingBoxPlaneEdit.Invoke(this,EventArgs.Empty);
                       }
 
                       public void Bpressed(InputAction.CallbackContext ctx)
                       {
                           Debug.Log("B pressed");
-                          StopBoundingBoxPlaneEdit.Invoke(this, EventArgs.Empty);
+                       //   StopBoundingBoxPlaneEdit.Invoke(this, EventArgs.Empty);
                       }
     private IEnumerator CaptureScreenshot()
     {
@@ -353,9 +353,9 @@ public class ControllerManager : MonoBehaviour
          GameObject hitObject = hitInfo.collider.gameObject; // GameObject colpito
 
          Debug.Log($"Il raggio del controller sinistro ha colpito: {hitObject.name} alle coordinate {hitPosition}");
-        #if !UNITY_EDITOR
-         persistentAnchorManager.CreateAnchor(hitPosition,objectToSpawn);
-        #else
+      
+       // persistentAnchorManager.CreateAnchor(hitPosition,objectToSpawn);
+        
           // Instanzia l'oggetto da spawnare
           GameObject spawnedObject = Instantiate(objectToSpawn);
           spawnedObject.name = objectToSpawn.name;
@@ -380,7 +380,7 @@ public class ControllerManager : MonoBehaviour
              // Aggiungi l'oggetto alla lista degli oggetti spawnati
           _SimulationManager.spawnedGameObjects.Add(spawnedObject);
           OnObjectPlaced.Invoke(this,EventArgs.Empty);
-        #endif 
+      
      }
      else
       {

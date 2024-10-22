@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class ScreenshotManager : MonoBehaviour
 {
-    [SerializeField] public List<RawImage> _screenshots=null;
+    [SerializeField] public List<RawImage> _screenshots=new List<RawImage>();
+    [SerializeField] public List<Texture2D> screenshotsTexture = new List<Texture2D>();
     public List<byte[]> images = null;
     private int _screenshotCounter=0;
     public Hashtable focalTable = new Hashtable();
@@ -22,6 +23,8 @@ public class ScreenshotManager : MonoBehaviour
     private QuestScreenCaptureTextureManager _screenCaptureTextureManager;
 
     public static EventHandler<EventArgs> screenShotTaken;
+
+    public static readonly Vector2Int Size = new(1024, 1024);
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,6 +33,11 @@ public class ScreenshotManager : MonoBehaviour
         _animaPersonaggio = FindObjectOfType<AnimaPersonaggio>();
         _screenCaptureTextureManager= FindAnyObjectByType<QuestScreenCaptureTextureManager>();
        _screenshotCounter = 0;
+       int length = _screenshots.Count;
+       for (int i = 0; i < length; i++)
+       {
+            screenshotsTexture.Add(new Texture2D(Size.x, Size.y, TextureFormat.RGBA32, 1, false));
+       }
     }
 
     public void TakeScreenshot()
@@ -40,7 +48,7 @@ public class ScreenshotManager : MonoBehaviour
         }
         // informazioni utili per lo screenshot
         _code = _outputGenerator.sceneCode;
-        _screenCaptureTextureManager.TakeScreenShot(_screenshots[_screenshotCounter]);
+        _screenCaptureTextureManager.TakeScreenShot(_screenshots[_screenshotCounter],screenshotsTexture[_screenshotCounter]);
         _screenshots[_screenshotCounter].name =_code.ToString() + "_img" + _simulationManager.GetScreenshotCount().ToString();
         //aggiorni i valori tabulati
         _currActionTime = _simulationManager.GetTime();

@@ -8,6 +8,7 @@ using Application = UnityEngine.Application;
 public class OutputGenerator : MonoBehaviour
 {
     public string sceneName=" Storyboard scena 01";
+    private string path="";
     private List<string> _timestamps;
     [SerializeField] public int sceneCode = -1;
     private ScreenshotManager _screenshotManager;
@@ -27,6 +28,7 @@ public class OutputGenerator : MonoBehaviour
         _timestamps = new List<String>();
         sceneCode = UnityEngine.Random.Range(100000, 999999);
         UnityEngine.Debug.Log("Scene code: " + sceneCode);
+        
         _screenshotManager = FindObjectOfType<ScreenshotManager>();
         _phraseGenerator = FindObjectOfType<PhraseGenerator>();
     }
@@ -48,7 +50,7 @@ public class OutputGenerator : MonoBehaviour
 
 
        // string basePath = Path.Combine(UnityEngine.Application.streamingAssetsPath, "storyboards/Storyboard.html");
-       string path = Path.Combine(Application.persistentDataPath, "Federico");
+        path =Path.Combine(Application.persistentDataPath, "Federico");
     
        if (Application.platform == RuntimePlatform.Android) // Questo include Meta Quest
        {
@@ -59,6 +61,7 @@ public class OutputGenerator : MonoBehaviour
        {
            // Usa persistentDataPath per altre piattaforme
            path = Path.Combine(Application.persistentDataPath, "Federico", "Storyboards");
+           Debug.Log(path);
        }
        Directory.CreateDirectory(path);
 
@@ -109,7 +112,7 @@ public class OutputGenerator : MonoBehaviour
 
                 _html += "<h3 style = \"text-align:center; margin-top: 20px\">Shot #" + j + "</h3>" +
                     "<div class= \"flex-container\"  style=\"display: flex; flex-direction: row; justify-content: center; margin: 8px; align-items: center; background-color:#c0e9fa;\" >" +
-                        "<div><img src=\"screenshots/" + sceneCode + "_img" + t + ".png\" width=\"550\" height=\"300\" style=\"padding: 20px; margin: 10px\" onerror=\"this.src = 'not_found.png'; \"> </div>" +
+                        "<div><img src=\"screenshots/" + "img_" + t + ".png\" width=\"550\" height=\"300\" style=\"padding: 20px; margin: 10px\" onerror=\"this.src = 'not_found.png'; \"> </div>" +
                         "<div contenteditable = \"true\">" +
                             "<p>Duration: " + _screenshotManager.actionTimes[t] + " sec</p>" +
                             "<p> Focal length: " + _screenshotManager.focalTable[t] + " mm</p>" +
@@ -153,10 +156,13 @@ public class OutputGenerator : MonoBehaviour
         
 
 
-        //Application.OpenURL("file:///C:/Users/Scarzello/Documents/Polito/Corsi%20LM/TESI/Progetto%20Unity/StoryboardMaker/Assets/Scripts/storyboards/Storyboard.html");
-        Application.OpenURL(Path.GetFullPath(path));
+       // Application.OpenURL(path);
+       path = path.Replace("Screenshots", "Storyboard.html");
+       Debug.Log("PATH PRIMA DELLA OPEN URL  " + path); 
+       Application.OpenURL("file://"+path);
 
     }
+
     public void SaveStoryboard(string html)
     {
         int index = 0;
@@ -167,42 +173,37 @@ public class OutputGenerator : MonoBehaviour
         string screenshotsPath;
         if (Application.platform == RuntimePlatform.Android) // Meta Quest e Android
         {
-            folderPath = Path.Combine("/storage/emulated/0/MetaQuestFiles", foldername);
+            path= path.Replace("/Storyboard.html", "");
+            folderPath = Path.Combine("/storage/emulated/0/MetaQuestFiles", screenshotsFolder);
         }
         else
         {
-            folderPath = Path.Combine(Application.persistentDataPath, foldername);
+            path= path.Replace("/Storyboard.html", "");
+            path = Path.Combine(path, screenshotsFolder);
         }
+        
+        
+        Directory.CreateDirectory(path);
 
-        screenshotsPath = Path.Combine(folderPath, screenshotsFolder);
-        
-        Directory.CreateDirectory(folderPath);
-        Directory.CreateDirectory(screenshotsPath);
-        
-        
-        _screenshotManager._screenshots.ForEach((i) =>
+
+        _screenshotManager.screenshotsTexture.ForEach((i) =>
         {
-            
-            string filePath =Path.Combine( screenshotsPath ,"/folder/screenshots/" + sceneCode + "_img" + index + ".png");
-        
-            //TODO   File.WriteAllBytes(filePath, i );
 
+
+
+            // Converte la texture in PNG
+            byte[] pngData = i.EncodeToPNG();
+            // Salva il PNG sul disco
+            string filePath = Path.Combine(path,"img_" + index + ".png");
+            File.WriteAllBytes(filePath, pngData);
             index++;
         });
 
-        byte[] fileData = System.Text.Encoding.UTF8.GetBytes(html);
-       
-
-        string filePath = Application.persistentDataPath + "/folder/Stroyboard.html";
-
-        File.WriteAllBytes(filePath, fileData);
-        storyboardSaved.Invoke(this,EventArgs.Empty);
     }
 
-    
     void OnResponseReceived(string response)
-    {
-        Debug.Log("ChatGPT Response: " + response);
-    }
+        {
+            Debug.Log("ChatGPT Response: " + response);
+        }
     
 }

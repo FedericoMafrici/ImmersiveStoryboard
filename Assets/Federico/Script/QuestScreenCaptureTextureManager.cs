@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -138,9 +139,10 @@ namespace Trev3d.Quest.ScreenCapture
 			OnNewFrame.Invoke();
 		}
 
-		public void TakeScreenShot(RawImage screenshot)
+		public void TakeScreenShot(RawImage screenshot,Texture2D screenshottexture2D)
 		{
 			
+			//StartScreenCapture();
 			Texture2D screenshotCopy = new Texture2D(screenTexture.width, screenTexture.height, TextureFormat.RGBA32, false);
 			screenshotCopy.SetPixels(screenTexture.GetPixels());
 			screenshotCopy.Apply();
@@ -151,12 +153,14 @@ namespace Trev3d.Quest.ScreenCapture
 			}
 			// Assegna la copia alla RawImage
 			screenshot.texture = screenshotCopy;
-
+			screenshottexture2D = screenshotCopy;
 			Debug.Log("Screenshot taken and assigned to RawImage");
+		//	StopScreenCapture();
 		}
 		private void ScreenCaptureStopped()
 		{
 			OnScreenCaptureStopped.Invoke();
 		}
 	}
+	
 }

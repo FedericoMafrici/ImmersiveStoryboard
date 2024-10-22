@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2371988725550720748}
-  - component: {fileID: 2436238317443486933}
   m_Layer: 9
   m_Name: CharacterUI
   m_TagString: Untagged
@@ -34,19 +33,6 @@ Transform:
   - {fileID: 4508270855931157229}
   m_Father: {fileID: 7224806168068807965}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2436238317443486933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 216449481819232607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b33c0a7d6bbd147088bcec25997b5f4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
 --- !u!1 &290585738360150466
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,8 +117,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8683739755278651878}
-  - component: {fileID: 7506765170970218057}
-  - component: {fileID: 8078525032683035790}
   m_Layer: 9
   m_Name: PersonaggioAttivo
   m_TagString: Untagged
@@ -157,32 +141,6 @@ Transform:
   - {fileID: 13981970841021481}
   m_Father: {fileID: 7224806168068807965}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7506765170970218057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6001966767395944485}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b33c0a7d6bbd147088bcec25997b5f4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
---- !u!114 &8078525032683035790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6001966767395944485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dd4c1f5d44a347fbb1ed9031c8f51cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
 --- !u!1 &7495461267398114926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1316,6 +1274,7 @@ MonoBehaviour:
   groundDistance: 0.4
   place: 
   hitColliders: []
+  isBoundingBox: 0
 --- !u!114 &803348208917449859
 MonoBehaviour:
   m_ObjectHideFlags: 0
