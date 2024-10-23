@@ -21,11 +21,13 @@ public class ArboundingBoxColorizer : MonoBehaviour
 
     private void Awake()
     {
+        /*
         _console = GameObject.Find("Debugging Window").GetComponent<ConsoleDebugger>();
         if (_console == null)
         {
             Debug.LogError("errore console debugger non ottenuto ");
         }
+        */
         _boundingBoxManager = GameObject.Find("XR Origin (XR Rig)").GetComponent<ARBoundingBoxManager>();
         if (_boundingBoxManager == null)
         {

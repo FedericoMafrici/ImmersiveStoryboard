@@ -13,7 +13,7 @@ public class BoundingBoxScaler : MonoBehaviour
     void Awake()
     {
         box=GameObject.Find("BoundingBoxWrapper");
-        debugging_window = FindObjectOfType<ConsoleDebugger>();
+     //   debugging_window = FindObjectOfType<ConsoleDebugger>();
         BoundingBoxManager.onBoundingBoxChanged += updateBoxSize;
     }
 
@@ -31,7 +31,7 @@ public class BoundingBoxScaler : MonoBehaviour
         _boundingBox = boundingBox;
         box = cube;
         boxEmptyController = emptyController;
-        debugging_window.SetText("setbounding box chiamata"+ cube.name+" "+ _boundingBox.name);
+        // debugging_window.SetText("setbounding box chiamata"+ cube.name+" "+ _boundingBox.name);
         BoundingBoxInteractionManager bbint = emptyController.GetComponent<BoundingBoxInteractionManager>();
         bbint.SetLabel(boundingBox.classifications.ToString());
         bbint.setBoundingBoxSize(boundingBox.size);

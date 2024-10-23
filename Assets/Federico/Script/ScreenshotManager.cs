@@ -12,7 +12,7 @@ public class ScreenshotManager : MonoBehaviour
     public List<byte[]> images = null;
     private int _screenshotCounter=0;
     public Hashtable focalTable = new Hashtable();
-    private string _focalLength = "15mm ";
+    private string _focalLength = "15";
     public Hashtable actionTimes = new Hashtable();
     private int _currActionTime;
     private int _code = 0;

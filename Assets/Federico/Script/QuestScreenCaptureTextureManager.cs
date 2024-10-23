@@ -70,6 +70,8 @@ namespace Trev3d.Quest.ScreenCapture
 				}
 				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixel
 				
+				StartScreenCapture();
+				StopScreenCapture();
 				
 			
 				

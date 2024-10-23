@@ -142,7 +142,7 @@ public class SimulationManager : MonoBehaviour
       ValueVisualizer.onActionTimeChanged += SetTime;
       ScreenshotManager.screenShotTaken += CompletedAction;
       Debug.Log("Storyboarding Avviato");
-      DebuggingStartStoryBoarding();
+   //   DebuggingStartStoryBoarding();
         
     }
 
@@ -598,7 +598,19 @@ public class SimulationManager : MonoBehaviour
         spawnedGameObjects.CopyTo(objects);
         //ogni screenshot � un azione che salvo
 
-        string basePath = Path.Combine(Application.streamingAssetsPath, "screenshotActions.csv");
+        string basePath = Path.Combine(Application.persistentDataPath, "screenshotActions.csv");
+        // Controlla se il file esiste
+        if (!File.Exists(basePath))
+        {
+            // Se il file non esiste, crealo
+            using (var writer = new StreamWriter(basePath))
+            {
+                // Scrivi eventualmente un'intestazione o lascia vuoto
+                writer.WriteLine("");  // Crea un file vuoto o metti un'intestazione se necessario
+            }
+        }
+
+        
         var backup = new List<string>();
         backup.Clear();
         using (var reader = new StreamReader(basePath))
@@ -652,6 +664,101 @@ public class SimulationManager : MonoBehaviour
             }
         }
     }
+    public void UndoLastAction()
+         {
+             
+             if (screenshotCount > 0)
+             {
+                 characterAnimationManager = FindObjectOfType<AnimaPersonaggio>();
+               
+                 string basePath = Path.Combine(Application.persistentDataPath, "screenshotActions.csv");
+     
+     
+                 characterAnimationManager.WalkMode(false);
+                 ResetDestination();
+                 StopAll(); 
+                 List<int> cameraList2 = new List<int>();
+     
+                 using (var reader = new StreamReader(basePath))
+                 {
+                     while (!reader.EndOfStream)
+                     {
+                         var line = reader.ReadLine();
+     
+                         if (line.Split('|')[0] == "action" + (GetScreenshotCountUndo()))
+                         {
+                             //istanzia ogni oggetto della linea
+                             var objs = line.Split('|');
+                            objs[0]=objs[0].Replace("action", "");
+                             var i = 0;
+     
+                             foreach (string previousAction in objs.Skip(1))
+                             {
+                                 var parts = previousAction.Split(';');
+         
+                                 if (parts.Length < 7) {
+                                     Debug.LogWarning("La riga non ha il numero corretto di campi: " + previousAction);
+                                     continue;  // Salta questa riga
+                                 }
+     
+                                 int objectID;
+                                 if (!int.TryParse(parts[0] , out objectID)) {
+                                     Debug.LogError("Errore di parsing dell'objectID: " + parts[0]);
+                                     continue;
+                                 }
+                                 
+     
+                                 float x, y, z, r;
+                                 if (!float.TryParse(parts[1], out x) ||
+                                     !float.TryParse(parts[2], out y) ||
+                                     !float.TryParse(parts[3], out z) ||
+                                     !float.TryParse(parts[4], out r)) {
+                                     Debug.LogError("Errore di parsing delle coordinate o della rotazione: " + previousAction);
+                                     continue;
+                                 }
+     
+                                 string state = parts[5];
+                                 string action = parts[6];
+     
+                                 GameObject obj = null;
+                                     foreach (GameObject o in spawnedGameObjects)
+                                     {
+                                         if (o.CompareTag("Player"))
+                                         {
+                                             obj = o.transform.GetChild(0).gameObject;
+                                         }
+                                         else
+                                         {
+                                             obj = o;
+                                         }
+                                         
+                                         if (obj.GetInstanceID() == objectID)
+                                         {
+                                             obj.transform.localPosition = new Vector3(x, y, z);
+                                             obj.transform.rotation = Quaternion.Euler(0, r, 0);
+                                             if (state != "none") obj.GetComponent<State>().SetState(state, action);
+                                         }
+                                     }
+     
+                                
+                                 i++;
+                             }
+                         }
+     
+                     }
+                 }
+     
+             //    PlayAll();
+     
+                 SetActiveCharacterActionClick(activeCharacter);
+     
+                
+                 DeleteSentencesUndo();
+                 phraseGenerator.AggiornaTesto();
+     
+             }
+         }
+
     public void ResetDestination()
     {
         foreach (GameObject obj in spawnedGameObjects)
@@ -682,100 +789,7 @@ public class SimulationManager : MonoBehaviour
         }
     }
     
-    public void UndoLastAction()
-    {
-        
-        if (screenshotCount > 0)
-        {
-            characterAnimationManager = FindObjectOfType<AnimaPersonaggio>();
-          
-            string basePath = Path.Combine(Application.streamingAssetsPath, "screenshotActions.csv");
-
-            characterAnimationManager.WalkMode(false);
-            ResetDestination();
-            StopAll(); 
-            List<int> cameraList2 = new List<int>();
-
-            using (var reader = new StreamReader(basePath))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-
-                    if (line.Split('|')[0] == "action" + (GetScreenshotCountUndo()))
-                    {
-                        //istanzia ogni oggetto della linea
-                        var objs = line.Split('|');
-                       objs[0]=objs[0].Replace("action", "");
-                        var i = 0;
-
-                        foreach (string previousAction in objs.Skip(1))
-                        {
-                            var parts = previousAction.Split(';');
-    
-                            if (parts.Length < 7) {
-                                Debug.LogWarning("La riga non ha il numero corretto di campi: " + previousAction);
-                                continue;  // Salta questa riga
-                            }
-
-                            int objectID;
-                            if (!int.TryParse(parts[0] , out objectID)) {
-                                Debug.LogError("Errore di parsing dell'objectID: " + parts[0]);
-                                continue;
-                            }
-                            
-
-                            float x, y, z, r;
-                            if (!float.TryParse(parts[1], out x) ||
-                                !float.TryParse(parts[2], out y) ||
-                                !float.TryParse(parts[3], out z) ||
-                                !float.TryParse(parts[4], out r)) {
-                                Debug.LogError("Errore di parsing delle coordinate o della rotazione: " + previousAction);
-                                continue;
-                            }
-
-                            string state = parts[5];
-                            string action = parts[6];
-
-                            GameObject obj = null;
-                                foreach (GameObject o in spawnedGameObjects)
-                                {
-                                    if (o.CompareTag("Player"))
-                                    {
-                                        obj = o.transform.GetChild(0).gameObject;
-                                    }
-                                    else
-                                    {
-                                        obj = o;
-                                    }
-                                    
-                                    if (obj.GetInstanceID() == objectID)
-                                    {
-                                        obj.transform.localPosition = new Vector3(x, y, z);
-                                        obj.transform.rotation = Quaternion.Euler(0, r, 0);
-                                        if (state != "none") obj.GetComponent<State>().SetState(state, action);
-                                    }
-                                }
-
-                           
-                            i++;
-                        }
-                    }
-
-                }
-            }
-
-        //    PlayAll();
-
-            SetActiveCharacterActionClick(activeCharacter);
-
-           
-            DeleteSentencesUndo();
-            phraseGenerator.AggiornaTesto();
-
-        }
-    }
-
+   
 
     public List<string> DeleteSentencesUndo()
     {

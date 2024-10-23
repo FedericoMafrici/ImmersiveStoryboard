@@ -55,7 +55,7 @@ public class OutputGenerator : MonoBehaviour
        if (Application.platform == RuntimePlatform.Android) // Questo include Meta Quest
        {
            // Salva nella memoria esterna del Meta Quest
-           path = "/storage/emulated/0/MetaQuestFiles/Federico/Storyboards";
+           path = Path.Combine(Application.persistentDataPath, "Federico", "Storyboards");
        }
        else
        {
@@ -174,7 +174,7 @@ public class OutputGenerator : MonoBehaviour
         if (Application.platform == RuntimePlatform.Android) // Meta Quest e Android
         {
             path= path.Replace("/Storyboard.html", "");
-            folderPath = Path.Combine("/storage/emulated/0/MetaQuestFiles", screenshotsFolder);
+            path = Path.Combine(path, screenshotsFolder);
         }
         else
         {
@@ -188,9 +188,6 @@ public class OutputGenerator : MonoBehaviour
 
         _screenshotManager.screenshotsTexture.ForEach((i) =>
         {
-
-
-
             // Converte la texture in PNG
             byte[] pngData = i.EncodeToPNG();
             // Salva il PNG sul disco

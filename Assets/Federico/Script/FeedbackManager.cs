@@ -27,6 +27,7 @@ public class FeedbackManager : MonoBehaviour
         ScreenshotManager.screenShotTaken += ScreenShotTaken;
         OutputGenerator.storyboardSaved += StoryboardSavedFeedback;
         ControllerManager.OnObjectPlaced += OnObjectPlaced;
+        InteractionManagerAddOn.onObjectSelected += OnObjectPlaced;
         _arSessionOrigin = FindObjectOfType<XROrigin>();
         
         

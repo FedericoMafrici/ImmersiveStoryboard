@@ -20,8 +20,9 @@ public class InteractionManagerAddOn : MonoBehaviour
     
     private bool _objectSelected = false;
     public bool interactionEnabled = false;
-    private GameObject _currSelectedObj = null; 
-    
+    private GameObject _currSelectedObj = null;
+
+    public static EventHandler<EventArgs> onObjectSelected;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -168,6 +169,7 @@ public class InteractionManagerAddOn : MonoBehaviour
         }
        if (interactionEnabled)
        {
+            onObjectSelected.Invoke(this,EventArgs.Empty);
            Debug.Log("Set Active character chiamata");
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
            //interactionEnabled = false;

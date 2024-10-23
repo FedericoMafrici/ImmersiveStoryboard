@@ -9,6 +9,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
     [SerializeField] private List<GameObject> Cards;
     [SerializeField] private TextMeshProUGUI textHandMenu;
     [SerializeField] private GameObject _tutorial;
+    [SerializeField] private FadeMaterial enviroment;
     private int _cardCounter = 0;
     private int _currCardCounter=0;
     private GameObject currActiveCard;
@@ -71,15 +72,18 @@ public class BoundingBoxManagerUI : MonoBehaviour
             switch (_currCardCounter)
             {
                 case 2:
+                    Debug.Log("Non è più possibile spostare le bounding Box");
                     OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
                 break;
                 case 3:
-                    Debug.Log("Start Plane Edit chiamata");
-                    ControllerManager.OnBoundingBoxPlaneEdit.Invoke(this,EventArgs.Empty);
+                    Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
+                    ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
                     break;
                 case 4:
-                    Debug.Log("Ho chiamato l'evento di cambio stato simulazione");
-                    OnSceneInizializationCompleted.Invoke(this,EventArgs.Empty); 
+                    Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");
+                    ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
+                    enviroment.FadeSkybox(false);
                     currActiveCard.SetActive(false);
                     _currCardCounter = 0;
                     _tutorial.SetActive(false);

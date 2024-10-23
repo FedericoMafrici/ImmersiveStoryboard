@@ -16,6 +16,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     public SnapToPlane boundingBoxPlane;
 
+    public GameObject boundingBoxplane;
+
     public Vector3 boundingBoxSize=Vector3.zero; // dimensione della bounding box aggiornata 
 
     public Vector3 initialPlaneLocalPosition; //posizione locale iniziale del piano
@@ -41,8 +43,11 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             {
                 Debug.LogError("errore nel reperimento del componente Snap To Plane o della label o del piano");
             }
-            SetLabel("chair");
-            
+           
+
+            boundingBoxplane = this.transform.Find("Plane").gameObject;
+
+          //  SetLabel("chair");
     }
 
     public void OnSelectionEnter(SelectEnterEventArgs args)
@@ -84,7 +89,11 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     {
         Text label= labelUI.transform.Find("Scrollview Canvas/Pannello/Viewport/Content/Scroll View Item/Text").GetComponent<Text>();
         label.text = text;
-        this.GetComponent<CharacterManager>().type = text;
+        this.GetComponent<CharacterManager>().type = text.ToLower() ;
+        if (isPlaneNeeded(text.ToLower())&& boundingBoxplane!=null)
+        {
+            boundingBoxplane.SetActive(true);
+        }
     }
     
 
@@ -96,6 +105,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     public void AllowLabeling(object  sender,EventArgs obj)
     { 
+      
         DisableMoving(this,EventArgs.Empty);
         this.GetComponent<SnapToPlane>().selectEntered.AddListener(DisplayLabeling);
     }
@@ -106,8 +116,10 @@ public class BoundingBoxInteractionManager : MonoBehaviour
        var front= this.transform.Find("Front");
        front.gameObject.SetActive(true);
     }
+    
     public void DisableMoving(object sender,EventArgs e)
     {
+        Debug.Log("Disable Moving La bounding box non è più movibile");
         XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
         if (_xrInt != null)
         {
@@ -119,7 +131,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         var navmeshObstacle = this.GetComponent<NavMeshObstacle>();
         if (navmeshObstacle != null)
         {
-            navmeshObstacle.enabled = true;
+            navmeshObstacle.enabled = false;
         }
 
         interactionEnabled = true;
@@ -151,8 +163,18 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     {
         boundingBoxSize = size;
     }
-    
-    
+
+    public bool isPlaneNeeded(string label)
+    {
+        if (label == "chair" || label == "table")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     
     private void OnRelease(SelectExitEventArgs args)
     {
