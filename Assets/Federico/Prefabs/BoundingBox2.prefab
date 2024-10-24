@@ -456,6 +456,7 @@ MonoBehaviour:
   labelUI: {fileID: 0}
   interactable: {fileID: 324986747280638563}
   boundingBoxPlane: {fileID: 0}
+  boundingBoxplane: {fileID: 0}
   boundingBoxSize: {x: 0, y: 0, z: 0}
   initialPlaneLocalPosition: {x: 0, y: 0, z: 0}
   interactionEnabled: 0

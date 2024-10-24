@@ -100,6 +100,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public void StopShowingLabeling(object sender,EventArgs e)
     {
         this.transform.Find("Front").gameObject.SetActive(false);
+        this.GetComponent<SnapToPlane>().selectEntered.RemoveListener(DisplayLabeling);
     }
     
 

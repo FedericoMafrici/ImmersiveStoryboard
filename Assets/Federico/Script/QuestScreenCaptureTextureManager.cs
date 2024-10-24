@@ -69,9 +69,8 @@ namespace Trev3d.Quest.ScreenCapture
 					StartScreenCapture();
 				}
 				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixel
-				
+				OnNewFrameIncoming.AddListener(FirstStopScreenCapture);
 				StartScreenCapture();
-				StopScreenCapture();
 				
 			
 				
@@ -116,6 +115,11 @@ namespace Trev3d.Quest.ScreenCapture
 			InitializeByteBufferRetrieved();
 		}
 
+		private void FirstStopScreenCapture()
+		{
+			OnNewFrameIncoming.RemoveListener(StopScreenCapture);
+			StopScreenCapture();
+		}
 		private void ScreenCapturePermissionDeclined()
 		{
 			OnScreenCapturePermissionDeclined.Invoke();
@@ -144,7 +148,7 @@ namespace Trev3d.Quest.ScreenCapture
 		public void TakeScreenShot(RawImage screenshot,Texture2D screenshottexture2D)
 		{
 			
-			//StartScreenCapture();
+			StartScreenCapture();
 			Texture2D screenshotCopy = new Texture2D(screenTexture.width, screenTexture.height, TextureFormat.RGBA32, false);
 			screenshotCopy.SetPixels(screenTexture.GetPixels());
 			screenshotCopy.Apply();
@@ -157,7 +161,7 @@ namespace Trev3d.Quest.ScreenCapture
 			screenshot.texture = screenshotCopy;
 			screenshottexture2D = screenshotCopy;
 			Debug.Log("Screenshot taken and assigned to RawImage");
-		//	StopScreenCapture();
+			StopScreenCapture();
 		}
 		private void ScreenCaptureStopped()
 		{
