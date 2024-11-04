@@ -12,7 +12,7 @@ public class State : MonoBehaviour
     [SerializeField] private SimulationManager _simulationManager;
     public Animator animator;
     //TODO INSERT THE OTHER SCRIPT WHEN THE SECOND PART IS DONE 
-   // public PhraseGenerator phraseGenerator;
+    public PhraseGenerator phraseGenerator;
     //[SerializeField] private SimulationManager simulationManager;
 
     private string initialState;
@@ -28,6 +28,7 @@ public class State : MonoBehaviour
 
         //surname = gameObject.name;
         DataBase = GameObject.Find("SimulationManager").GetComponent<ActionsDataBase>();
+        phraseGenerator = GameObject.Find("PhraseGenerator").GetComponent<PhraseGenerator>();
         _simulationManager = GameObject.Find("SimulationManager").GetComponent<SimulationManager>();
         //  phraseGenerator = GameObject.Find("SimulationManager").GetComponent<PhraseGenerator>(); TODO 
 
@@ -99,7 +100,7 @@ public void ChangeState(string action) {
 
     public void SetState(string s, string action)
     {
-     /*
+     
         if (action == "play" || action == "sit")
         {
             gameObject.GetComponent<NavMeshAgent>().enabled = false;
@@ -107,14 +108,13 @@ public void ChangeState(string action) {
         ChangeStateAnimation(state[0], s);
 
         state[0] = s;
-        //phraseGenerator.GenerateStatusPhrase(gameObject.GetComponent<CharacterManager>().type, state[0]);
-        */
+        phraseGenerator.GenerateStatusPhrase(gameObject.GetComponent<CharacterManager>().type, state[0]);
+        
     }
 
     //Animazioni passive
     public void PlayAnimation(string action) 
     {
-    /* TODO aggiungere tutti i campi necessari 
         if (animator != null)
         {
             //Se � un oggetto passivo, effettua l'animazione corrispondente all'azione
@@ -142,6 +142,7 @@ public void ChangeState(string action) {
                 }
             }
         }
+
 
         /* //Suono  eventuale
         if (GetComponent<AudioSource>() != null)

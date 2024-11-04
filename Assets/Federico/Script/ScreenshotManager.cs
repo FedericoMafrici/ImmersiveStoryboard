@@ -48,14 +48,13 @@ public class ScreenshotManager : MonoBehaviour
         }
         // informazioni utili per lo screenshot
         _code = _outputGenerator.sceneCode;
-        _screenCaptureTextureManager.TakeScreenShot(_screenshots[_screenshotCounter],screenshotsTexture[_screenshotCounter]);
+        _screenCaptureTextureManager.ScreenShotButtonPressed(_screenshots[_screenshotCounter],screenshotsTexture[_screenshotCounter]);
         _screenshots[_screenshotCounter].name =_code.ToString() + "_img" + _simulationManager.GetScreenshotCount().ToString();
         //aggiorni i valori tabulati
         _currActionTime = _simulationManager.GetTime();
         AddActionTime(_simulationManager.GetScreenshotCount().ToString(), _currActionTime);
         //chiama il metodo per generare una frase di camminata e una di vicinanza
-        _simulationManager.GenerateCondition()
-            ;
+        _simulationManager.GenerateCondition();
         AddNewValue(_simulationManager.GetScreenshotCount().ToString(), _focalLength); //memorizza la focale al tempo time 
         //incrementa il counter degli screenshot 
         _screenshotCounter++;

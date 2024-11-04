@@ -47,7 +47,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
             boundingBoxplane = this.transform.Find("Plane").gameObject;
 
-          //  SetLabel("chair");
+            SetLabel("chair");
     }
 
     public void OnSelectionEnter(SelectEnterEventArgs args)

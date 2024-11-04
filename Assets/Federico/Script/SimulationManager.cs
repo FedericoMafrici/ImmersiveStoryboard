@@ -116,33 +116,13 @@ public class SimulationManager : MonoBehaviour
     [SerializeField] GameObject _pannelloFine;
     
     private List<string> buffer;
-
-    /*public GameObject tutorial;
-    private string[] tutorialArray = new string[] { "Use the dropdown menu to select environment elements, props or characters.", 
-                                                    "Add the object with the '+' button and click on the spot where you want to place it.",
-                                                    "Toggle the guide grid to place elements in a better way.",
-                                                    "Select the already-placed objects to perform editing actions. Use right click to close.",
-                                                    "Control camera with WASD + QE for translations; Press also spacebar for pan/roll/tilt.",
-                                                    "Click on 'Start Simulation' when you are ready.",
-                                                    "Select the character you want to control and use WASD to move it.",
-                                                    "When your character is near another object, click on it to show actions.",
-                                                    "Click on the camera icon to take control of the camera and see further commands.",
-                                                    "Control time moving the timeline forward. You can also increase time limit.",
-                                                     "Click 'P' to take a screenshot and 'Generate Output' to generate the storyboard.",
-                                                    };
-
-    public int tutorialIndex;
-    public TextMeshProUGUI tutorialText;
-    public GameObject tutorialPanel;*/
-
-
     void Start()
     {
       BoundingBoxManagerUI.OnSceneInizializationCompleted+=ChangeSimulationState;
       ValueVisualizer.onActionTimeChanged += SetTime;
       ScreenshotManager.screenShotTaken += CompletedAction;
       Debug.Log("Storyboarding Avviato");
-   //   DebuggingStartStoryBoarding();
+      DebuggingStartStoryBoarding();
         
     }
 

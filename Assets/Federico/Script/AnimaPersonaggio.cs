@@ -329,7 +329,68 @@ public class AnimaPersonaggio : MonoBehaviour
             //TODO Genera la frase
              phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
 
+               //pick & place
+                        if (action == "pick")
+                        {
+                            _character.transform.parent = _simulationManager.activeCharacter.transform;
+                            //selectedObject.transform.position = new Vector3(simulationManager.activeCharacter.transform.position.x + 1f, selectedObject.transform.position.y + 0.5f, simulationManager.activeCharacter.transform.localPosition.z);
+                            _character.transform.position = _simulationManager.activeCharacter.transform.position + _simulationManager.activeCharacter.transform.forward * 1f; ;
+                        }
+                        else if (action == "place")
+                        {
+                            _character.transform.parent = GameObject.Find("BuildingManager").transform;
+                            _character.transform.position = new Vector3(_character.transform.position.x, _character.transform.position.y, _character.transform.position.z);
+                        }
+                        else if (action == "sit")
+                        {
+                            _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
             
+                            if (_character.GetComponent<CharacterManager>().type == "bench")
+                            {
+                                _simulationManager.activeCharacter.transform.position = new Vector3(_character.transform.position.x, _character.transform.position.y - 0.005f, _character.transform.position.z - 0.035f);
+                            }
+            
+                            if (_character.GetComponent<CharacterManager>().type == "chair")
+                            {
+                                // siedi sulla sedia:
+                                SitOnTheChair();
+                            }
+                            _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles);
+                        }
+                        else if (action == "stand up" )
+                        {
+                            _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
+                            _simulationManager.activeCharacter.transform.Translate(0,0, +0.05f);
+            
+                        }
+            
+                        else if (action == "stop play")
+                        {
+            
+                            if (_interactionObject == null)
+                            {
+                                Debug.LogError("L'OGGETTO CON CUI SI INTERAGISCE è NULLO");
+                            }
+                            /*
+                            XRGrabInteractable _xrInt =_interactionObject.GetComponent<XRGrabInteractable>();
+                            if (_xrInt == null)
+                            {
+                                Debug.LogError("errore nel reperire il grabbable component di "+ gameObject.name);
+                            }   
+                            
+                            
+                            _xrInt.interactionLayers = LayerMask.GetMask("Default");
+                            Debug.Log("ho ripristinato il layer mask al default oggetto: "+_interactionObject.name + _xrInt.interactionLayers.ToString());
+                            */
+                            InteractionManagerAddOn interaction = _interactionObject.GetComponent<InteractionManagerAddOn>();
+                            if (interaction == null)
+                            {
+                                Debug.LogError("errore nel reperire il grabbable component di "+ _interactionObject.name);
+                            }
+                            else
+                            {
+                                interaction.interactionEnabled = true;
+                            }
 
             if (action != "sit" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
             {
@@ -344,68 +405,7 @@ public class AnimaPersonaggio : MonoBehaviour
 
             }
 
-            //pick & place
-            if (action == "pick")
-            {
-                _character.transform.parent = _simulationManager.activeCharacter.transform;
-                //selectedObject.transform.position = new Vector3(simulationManager.activeCharacter.transform.position.x + 1f, selectedObject.transform.position.y + 0.5f, simulationManager.activeCharacter.transform.localPosition.z);
-                _character.transform.position = _simulationManager.activeCharacter.transform.position + _simulationManager.activeCharacter.transform.forward * 1f; ;
-            }
-            else if (action == "place")
-            {
-                _character.transform.parent = GameObject.Find("BuildingManager").transform;
-                _character.transform.position = new Vector3(_character.transform.position.x, _character.transform.position.y, _character.transform.position.z);
-            }
-            else if (action == "sit")
-            {
-                _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
-
-                if (_character.GetComponent<CharacterManager>().type == "bench")
-                {
-                    _simulationManager.activeCharacter.transform.position = new Vector3(_character.transform.position.x, _character.transform.position.y - 0.005f, _character.transform.position.z - 0.035f);
-                }
-
-                if (_character.GetComponent<CharacterManager>().type == "chair")
-                {
-                    // siedi sulla sedia:
-                    SitOnTheChair();
-                }
-                _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles);
-            }
-            else if (action == "stand up" )
-            {
-                _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
-                _simulationManager.activeCharacter.transform.Translate(0,0, +0.05f);
-
-            }
-
-            else if (action == "stop play")
-            {
-
-                if (_interactionObject == null)
-                {
-                    Debug.LogError("L'OGGETTO CON CUI SI INTERAGISCE è NULLO");
-                }
-                /*
-                XRGrabInteractable _xrInt =_interactionObject.GetComponent<XRGrabInteractable>();
-                if (_xrInt == null)
-                {
-                    Debug.LogError("errore nel reperire il grabbable component di "+ gameObject.name);
-                }   
-                
-                
-                _xrInt.interactionLayers = LayerMask.GetMask("Default");
-                Debug.Log("ho ripristinato il layer mask al default oggetto: "+_interactionObject.name + _xrInt.interactionLayers.ToString());
-                */
-                InteractionManagerAddOn interaction = _interactionObject.GetComponent<InteractionManagerAddOn>();
-                if (interaction == null)
-                {
-                    Debug.LogError("errore nel reperire il grabbable component di "+ _interactionObject.name);
-                }
-                else
-                {
-                    interaction.interactionEnabled = true;
-                }
+         
                 _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
                 
                 _interactionObject = null;
@@ -489,49 +489,62 @@ public class AnimaPersonaggio : MonoBehaviour
    */
   public void SitOnTheChair()
   {
-      // interaction object 
+      var NavMesh = _simulationManager.activeCharacter.GetComponent<NavMeshAgent>();
+      NavMesh.enabled = false;
+      
+      // interaction object
       var rbobj = _interactionObject.GetComponent<Rigidbody>();
       if (rbobj != null)
       {
           rbobj.isKinematic = true;
       }
-      // active character rigid body disabilitato
-      var rb =_simulationManager.activeCharacter.GetComponent<Rigidbody>();
+
+      // Disabilita il rigidbody del personaggio attivo
+      var rb = _simulationManager.activeCharacter.GetComponent<Rigidbody>();
       if (rb != null)
       {
           rb.useGravity = false;
           rb.isKinematic = true;
-                    
       }
       else
       {
           Debug.LogError("Errore rigid body non trovato per l'oggetto: " + gameObject.name);
       }
+
+      // Disabilita il NavMeshAgent
       _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
-      _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles.x,  _character.transform.localRotation.eulerAngles.y + 180f , _character.transform.localRotation.eulerAngles.z);
+
+      Transform targetPoint;
+
       if (!_character.GetComponent<CharacterManager>().isBoundingBox)
       {
-          var bench = _character.transform.Find("spawnPoint").transform;
-          if (bench == null)
+          targetPoint = _character.transform.Find("spawnPoint");
+          if (targetPoint == null)
           {
-              Debug.LogError("errore panchina non trovata");
+              Debug.LogError("Errore: spawnPoint non trovato");
+              return;
           }
 
-          _simulationManager.activeCharacter.transform.position =
-              new Vector3(bench.position.x, bench.position.y - 0.3f, bench.position.z); //+0.1f
+          _simulationManager.activeCharacter.transform.position = targetPoint.position + Vector3.down * 0.3f;
       }
       else
       {
-          var spawnPoint = _character.transform.Find("Plane/spawnPoint");
-          if (spawnPoint == null)
+          targetPoint = _character.transform.Find("Plane/spawnPoint");
+          if (targetPoint == null)
           {
-              Debug.LogError("errore panchina non trovata");
+              Debug.LogError("Errore: spawnPoint non trovato");
+              return;
           }
-          _simulationManager.activeCharacter.transform.position =
-              new Vector3(spawnPoint.position.x, spawnPoint.position.y-0.45f, spawnPoint.position.z); //+0.1f
+
+          _simulationManager.activeCharacter.transform.position = targetPoint.position + Vector3.down * 0.45f;
       }
+
+      // Allinea il personaggio alla direzione di forward del targetPoint
+      Quaternion rot = Quaternion.LookRotation(targetPoint.right, Vector3.up);
+      _simulationManager.activeCharacter.transform.rotation = rot;
   }
-    public void WalkMode(bool walk)
+
+  public void WalkMode(bool walk)
     {
         if (ActiveWalk)
         {

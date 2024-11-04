@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,7 +12,7 @@ namespace Trev3d.Quest.ScreenCapture
 	{
 		
 		public ConsoleDebugger _debuggingWindow;
-		[SerializeField] public RawImage _screenshot ; // Database con la lista delle azioni per ogni oggetto
+	//	[SerializeField] public RawImage _screenshot ; // Database con la lista delle azioni per ogni oggetto
 		[SerializeField] public RawImage _duplicateScreen ;
 		private AndroidJavaObject byteBuffer;
 		private unsafe sbyte* imageData;
@@ -35,7 +36,7 @@ namespace Trev3d.Quest.ScreenCapture
 		public UnityEvent OnScreenCaptureStopped = new();
 		public UnityEvent OnNewFrameIncoming = new();
 		public UnityEvent OnNewFrame = new();
-
+		public UnityEvent OnNewFrameHandled = new();
 		public static readonly Vector2Int Size = new(1024, 1024);
 
 		private void Awake()
@@ -68,14 +69,7 @@ namespace Trev3d.Quest.ScreenCapture
 					Debug.Log("Finestra di PoPup avviata dovrebbe essere visibile");
 					StartScreenCapture();
 				}
-				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixel
-				OnNewFrameIncoming.AddListener(FirstStopScreenCapture);
-				StartScreenCapture();
-				
-			
-				
-			
-			
+				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixe
 		}
 
 		private unsafe void InitializeByteBufferRetrieved()
@@ -99,7 +93,7 @@ namespace Trev3d.Quest.ScreenCapture
 				Debug.LogError("Errore nella chiamata a startScreenCaptureWithPermission: " + ex.Message);
 			}
 
-			_duplicateScreen.texture = screenTexture;
+		//	_duplicateScreen.texture = screenTexture;
 		}
 
 		public void StopScreenCapture()
@@ -113,12 +107,6 @@ namespace Trev3d.Quest.ScreenCapture
 		{
 			OnScreenCaptureStarted.Invoke();
 			InitializeByteBufferRetrieved();
-		}
-
-		private void FirstStopScreenCapture()
-		{
-			OnNewFrameIncoming.RemoveListener(StopScreenCapture);
-			StopScreenCapture();
 		}
 		private void ScreenCapturePermissionDeclined()
 		{
@@ -135,34 +123,48 @@ namespace Trev3d.Quest.ScreenCapture
 			if (imageData == default) return;
 			screenTexture.LoadRawTextureData((IntPtr)imageData, bufferSize);
 			screenTexture.Apply();
-
+			
 			if (flipTextureOnGPU)
 			{
 				Graphics.Blit(screenTexture, flipTexture, new Vector2(1, -1), Vector2.zero);
 				Graphics.CopyTexture(flipTexture, screenTexture);
 			}
 
+			_duplicateScreen.texture = screenTexture;
+			
+			//_screenshot.texture = screenTexture;
+			
+			Debug.Log("La funzione newFrameAvailable è stata chiamta con successo");
 			OnNewFrame.Invoke();
 		}
 
-		public void TakeScreenShot(RawImage screenshot,Texture2D screenshottexture2D)
+		public void ScreenShotButtonPressed(RawImage screenshot, Texture2D screenshottexture2D)
 		{
+			TakeScreenShot(screenshot,screenshottexture2D);
+		}
+		public void TakeScreenShot(RawImage screenshot, Texture2D screenshottexture2D)
+		{
+			Debug.Log("La funzione Take Screenshot è stata chiamata");
+			Debug.Log($"Screen texture width: {screenTexture.width}, height: {screenTexture.height}");
+			Debug.Log($"Pixel data (sample): {screenTexture.GetPixel(0, 0)}");
 			
-			StartScreenCapture();
 			Texture2D screenshotCopy = new Texture2D(screenTexture.width, screenTexture.height, TextureFormat.RGBA32, false);
 			screenshotCopy.SetPixels(screenTexture.GetPixels());
 			screenshotCopy.Apply();
+
 			if (flipTextureOnGPU)
 			{
-				Graphics.Blit(screenshotCopy,flipTexture,new Vector2(1,-1),Vector2.zero);
+				Graphics.Blit(screenshotCopy, flipTexture, new Vector2(1, -1), Vector2.zero);
 				Graphics.CopyTexture(flipTexture, screenshotCopy);
 			}
-			// Assegna la copia alla RawImage
+
 			screenshot.texture = screenshotCopy;
-			screenshottexture2D = screenshotCopy;
+			screenshottexture2D.SetPixels(screenshotCopy.GetPixels());
+			screenshottexture2D.Apply();
+
 			Debug.Log("Screenshot taken and assigned to RawImage");
-			StopScreenCapture();
 		}
+		
 		private void ScreenCaptureStopped()
 		{
 			OnScreenCaptureStopped.Invoke();
