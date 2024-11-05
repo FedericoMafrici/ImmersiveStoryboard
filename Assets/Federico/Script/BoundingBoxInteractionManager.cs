@@ -24,7 +24,9 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     public bool interactionEnabled;
     
-    private GameObject _currSelectedObj = null; 
+    private GameObject _currSelectedObj = null;
+
+    public bool planeRotation = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     
@@ -137,7 +139,16 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
         interactionEnabled = true;
     }
+
+    public void EnablePlaneRotation()
+    {
+        planeRotation = true;
+    }
     
+    public void DisablePlaneRotation()
+    {
+        planeRotation = false;
+    }
     public void AllowEditPlane(object sender,EventArgs e)
     {
         interactable.transform.Find("BoundingBoxWrapper/Cube").GetComponent<BoxCollider>().enabled = false;
@@ -146,6 +157,23 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         
     }
 
+    public void RotatePlane(int rot)
+    {
+        float rotationAmount = 25f; // Angolo di rotazione incrementale
+
+        // Determina la direzione della rotazione
+        if (rot < 0)
+        {
+            rotationAmount = -rotationAmount;
+        }
+
+        // Aggiunge la rotazione incrementale sull'asse Y
+        boundingBoxplane.transform.rotation = Quaternion.Euler(
+            boundingBoxplane.transform.rotation.eulerAngles.x,
+            boundingBoxplane.transform.rotation.eulerAngles.y + rotationAmount,
+            boundingBoxplane.transform.rotation.eulerAngles.z
+        );
+    }
     public void StopEditPlane(object sender, EventArgs e)
     {
         interactable.transform.Find("BoundingBoxWrapper/Cube").GetComponent<BoxCollider>().enabled = true;

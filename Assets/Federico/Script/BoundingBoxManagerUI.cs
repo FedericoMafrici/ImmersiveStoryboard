@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Tutorials.Core.Editor;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
+using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 
 public class BoundingBoxManagerUI : MonoBehaviour
 {
@@ -10,20 +14,27 @@ public class BoundingBoxManagerUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textHandMenu;
     [SerializeField] private GameObject _tutorial;
     [SerializeField] private FadeMaterial enviroment;
+    [SerializeField] private TutorialSecondPart _tutorialSecondPart;
+    [SerializeField] private Button  _showTutorialButton;
     private int _cardCounter = 0;
     private int _currCardCounter=0;
     private GameObject currActiveCard;
+    public static EventHandler<EventArgs> OnTutorialFirstPartCompleted;
     
     public static EventHandler<EventArgs> OnBoundingBoxPlacementCompleted;
 
     public static EventHandler<EventArgs> OnSceneInizializationCompleted;
+
+    
+    private bool isActive = true;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _cardCounter = Cards.Count;
         _currCardCounter = 0;
         currActiveCard = Cards[_currCardCounter];
-
+        _showTutorialButton.onClick.AddListener(HandleTutorial);
     }
 
     // Update is called once per frame
@@ -45,17 +56,18 @@ public class BoundingBoxManagerUI : MonoBehaviour
 
     public void HandleTutorial()
     {
-        if (textHandMenu.text == "Show")
-        {
-            textHandMenu.text = "Hide";
-            ShowTutorial();
-        }
-        else
-        {
-            textHandMenu.text = "Show";
-            HideTutorial();
-            
-        }
+            if (textHandMenu.text == "Show")
+            {
+                textHandMenu.text = "Hide";
+                ShowTutorial();
+            }
+            else
+            {
+                textHandMenu.text = "Show";
+                HideTutorial();
+
+            }
+        
     }
     public void MoveToNextPanel()
     {
@@ -82,6 +94,8 @@ public class BoundingBoxManagerUI : MonoBehaviour
                 case 4:
                     Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");
                     ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    _showTutorialButton.onClick.RemoveListener( HandleTutorial);
+                    _showTutorialButton.onClick.RemoveListener(_tutorialSecondPart.HandleTutorial);
                     OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
                     enviroment.FadeSkybox(false);
                     currActiveCard.SetActive(false);

@@ -41,20 +41,9 @@ public class ControllerManager : MonoBehaviour
     public Vector3 initialPlaneLocalPosition;
     public Vector3 boundingBoxSize;
     public Transform planeTransform;
-    private void OnEnable()
-    {
-        // Sottoscrivi gli eventi quando un interattore afferra l'oggetto
-        // grabInteractable.selectEntered.AddListener(OnSelectEntered);
-        // grabInteractable.selectExited.AddListener(OnSelectExited);
-       
-    }
-
-    private void OnDisable()
-    {
-        // Rimuovi gli eventi quando l'oggetto non è più attivo
-        // grabInteractable.selectEntered.RemoveListener(OnSelectEntered);
-        // grabInteractable.selectExited.RemoveListener(OnSelectExited);
-    }
+    public int offset = 0;
+    [SerializeField] public GameObject woman;
+    private BoundingBoxInteractionManager boundingBoxSelected;
     void Start()
     {
         controlli = new ButtonController();
@@ -68,7 +57,11 @@ public class ControllerManager : MonoBehaviour
 
         controlli.Left.Grip.performed += ctx => OnGripHold(ctx);
         controlli.Left.Grip.canceled += ctx => OnGripRelease(ctx);
-        
+
+        controlli.Keyboard.Enable();
+        controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
+
+        controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
         // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato
         leftControllerRay.enabled = false;
         rightControllerRay.enabled = false;
@@ -86,6 +79,39 @@ public class ControllerManager : MonoBehaviour
         
         
     }
+
+    public void KeyboardPressed(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("A from keyboard pressed");
+        
+        woman.transform.rotation = Quaternion.Euler(new Vector3(-0, 90+offset, 0));
+        offset += 90;
+        
+    }
+
+    public void AnalogTouched(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Analog Pressed");
+        Vector2 analogValue = ctx.action.ReadValue<Vector2>();
+       if (analogValue.x > 0.5f)
+       {
+           Debug.Log("Hai premuto l'analog a destra bravo!");
+           if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
+           {
+              boundingBoxSelected.RotatePlane(1);
+               
+           }
+       }
+       if(analogValue.x<-0.5f)
+       {
+           Debug.Log("Hai premuto l'analog a sinsitra bravissimo!");
+           if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
+           {
+               boundingBoxSelected.RotatePlane(-1);
+           }
+       }
+    }
+    
     public void Ypressed(InputAction.CallbackContext ctx)
     {
         Debug.Log("Y button pressed");
@@ -116,7 +142,15 @@ public class ControllerManager : MonoBehaviour
                               }
                               else
                               {
-                                  SpawnObject();
+                               if(!hitInfo.transform.CompareTag("BoundingBox"))
+                               {   SpawnObject(); }
+                               else
+                               {
+                               boundingBoxSelected=hitInfo.transform.gameObject.GetComponent<BoundingBoxInteractionManager>();
+                               boundingBoxSelected.EnablePlaneRotation();
+                               
+                               }
+                               
                               }
                           }
                           else if (_SimulationManager.status == 1 )

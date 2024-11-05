@@ -49,7 +49,7 @@ namespace Trev3d.Quest.ScreenCapture
 		{
 			
 				UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-				UnityPlayerActivityWithMediaProjector = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+				 UnityPlayerActivityWithMediaProjector = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 				if (UnityPlayerActivityWithMediaProjector != null)
 				{
 					Debug.Log("currentActivity ottenuto con successo.");

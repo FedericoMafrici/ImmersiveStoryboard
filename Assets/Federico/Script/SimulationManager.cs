@@ -122,7 +122,7 @@ public class SimulationManager : MonoBehaviour
       ValueVisualizer.onActionTimeChanged += SetTime;
       ScreenshotManager.screenShotTaken += CompletedAction;
       Debug.Log("Storyboarding Avviato");
-      DebuggingStartStoryBoarding();
+   //   DebuggingStartStoryBoarding();
         
     }
 

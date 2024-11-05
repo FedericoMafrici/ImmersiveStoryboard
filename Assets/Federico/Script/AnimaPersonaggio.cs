@@ -281,12 +281,7 @@ public class AnimaPersonaggio : MonoBehaviour
 
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastAction = action;
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastTimeAction = _simulationManager.GetScreenshotCount();
-
-       
-
-        //  TODO cambia testo e icona tasto Play e Stop
-        //  buttonConfigHelperStartStop.SetQuadIconByName("IconHandMesh");
-        //  buttonConfigHelperStartStop.MainLabelText = "STOP";
+        
 
         if (action == "smile")
         {
@@ -326,9 +321,22 @@ public class AnimaPersonaggio : MonoBehaviour
             //notifica il simulation manager di avviare animazione del personaggio attivo
             _simulationManager.PlayActiveCharacterAnimation(action);
 
-            //TODO Genera la frase
+           
              phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
+             if (action != "sit" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
+             {
+                 //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
+                 _character.GetComponent<State>().ChangeState(action);
 
+             }
+             else
+             {
+                // SitOnTheChair();
+                 _simulationManager.activeCharacter.GetComponent<State>().ChangeState(action);
+
+             }
+
+             
                //pick & place
                         if (action == "pick")
                         {
@@ -355,7 +363,7 @@ public class AnimaPersonaggio : MonoBehaviour
                                 // siedi sulla sedia:
                                 SitOnTheChair();
                             }
-                            _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles);
+                           // _simulationManager.activeCharacter.transform.localRotation = Quaternion.Euler(_character.transform.localRotation.eulerAngles);
                         }
                         else if (action == "stand up" )
                         {
@@ -371,17 +379,7 @@ public class AnimaPersonaggio : MonoBehaviour
                             {
                                 Debug.LogError("L'OGGETTO CON CUI SI INTERAGISCE è NULLO");
                             }
-                            /*
-                            XRGrabInteractable _xrInt =_interactionObject.GetComponent<XRGrabInteractable>();
-                            if (_xrInt == null)
-                            {
-                                Debug.LogError("errore nel reperire il grabbable component di "+ gameObject.name);
-                            }   
                             
-                            
-                            _xrInt.interactionLayers = LayerMask.GetMask("Default");
-                            Debug.Log("ho ripristinato il layer mask al default oggetto: "+_interactionObject.name + _xrInt.interactionLayers.ToString());
-                            */
                             InteractionManagerAddOn interaction = _interactionObject.GetComponent<InteractionManagerAddOn>();
                             if (interaction == null)
                             {
@@ -392,19 +390,7 @@ public class AnimaPersonaggio : MonoBehaviour
                                 interaction.interactionEnabled = true;
                             }
 
-            if (action != "sit" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
-            {
-                //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
-                _character.GetComponent<State>().ChangeState(action);
-
-            }
-            else
-            {
-
-                _simulationManager.activeCharacter.GetComponent<State>().ChangeState(action);
-
-            }
-
+        
          
                 _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
                 
@@ -474,23 +460,11 @@ public class AnimaPersonaggio : MonoBehaviour
          phraseGenerator.AggiornaTesto();
     }
 
-  /*   
-    public void ResetDestination()
-    {
-        foreach (GameObject obj in objectManager.objectsInScene) {
-            if (obj.CompareTag("Player")) {
-                var navMeshAgent = obj.GetComponent<NavMeshAgent>();
-                if(navMeshAgent!= null && navMeshAgent.isActiveAndEnabled)
-                    navMeshAgent.ResetPath();
-            }
-        }
-        
-    }
-   */
+ 
   public void SitOnTheChair()
   {
-      var NavMesh = _simulationManager.activeCharacter.GetComponent<NavMeshAgent>();
-      NavMesh.enabled = false;
+      var NavAgent = _simulationManager.activeCharacter.GetComponent<NavMeshAgent>();
+      NavAgent.enabled = false;
       
       // interaction object
       var rbobj = _interactionObject.GetComponent<Rigidbody>();
@@ -510,10 +484,7 @@ public class AnimaPersonaggio : MonoBehaviour
       {
           Debug.LogError("Errore rigid body non trovato per l'oggetto: " + gameObject.name);
       }
-
-      // Disabilita il NavMeshAgent
-      _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
-
+      
       Transform targetPoint;
 
       if (!_character.GetComponent<CharacterManager>().isBoundingBox)
@@ -541,7 +512,9 @@ public class AnimaPersonaggio : MonoBehaviour
 
       // Allinea il personaggio alla direzione di forward del targetPoint
       Quaternion rot = Quaternion.LookRotation(targetPoint.right, Vector3.up);
-      _simulationManager.activeCharacter.transform.rotation = rot;
+        Debug.Log("rotazione di "+ rot);
+        _simulationManager.activeCharacter.transform.rotation = rot;
+
   }
 
   public void WalkMode(bool walk)

@@ -62,6 +62,15 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Analog"",
+                    ""type"": ""Value"",
+                    ""id"": ""4102610b-7c83-4dc9-ae2d-14d2b73872aa"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -152,6 +161,116 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""23e9223d-49ea-43b6-bcac-22ff98b164a3"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""b9b905aa-e2a9-458f-8c70-44cbef831f2c"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""69f8f4f5-4694-482d-aaf6-14cc7eec15a2"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d5cdda5e-cdec-496f-a7d3-524006a450c7"",
+                    ""path"": ""<Keyboard>/#(A)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""25a8a790-020d-4cab-a270-a0d92555f3ce"",
+                    ""path"": ""<Keyboard>/#(D)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""aac72893-53ec-4b9e-8b58-b52ed97870dc"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""7e07ce30-6279-4a4a-b87f-946dda7ae7e0"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""aeddeff9-68f8-48d3-9a92-309b055ad59f"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ac7b5142-60df-4e93-aded-346a2c1147c3"",
+                    ""path"": ""<QuestTouchPlusController>/thumbstick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""217e75a1-615e-4942-84a9-7cb7f7f5490e"",
+                    ""path"": ""<QuestProTouchController>/thumbstick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -224,6 +343,34 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Keyboard"",
+            ""id"": ""ca929aea-2830-41c9-900e-8b0a7e7094a6"",
+            ""actions"": [
+                {
+                    ""name"": ""Keyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""b9a1cba0-d700-45c0-b865-ef23a34092de"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d8e2950f-8f70-4603-b90c-b1b931ac3806"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -234,16 +381,21 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         m_Left_Y = m_Left.FindAction("Y", throwIfNotFound: true);
         m_Left_Grip = m_Left.FindAction("Grip", throwIfNotFound: true);
         m_Left_Fire = m_Left.FindAction("Fire", throwIfNotFound: true);
+        m_Left_Analog = m_Left.FindAction("Analog", throwIfNotFound: true);
         // Right
         m_Right = asset.FindActionMap("Right", throwIfNotFound: true);
         m_Right_B = m_Right.FindAction("B", throwIfNotFound: true);
         m_Right_A = m_Right.FindAction("A", throwIfNotFound: true);
+        // Keyboard
+        m_Keyboard = asset.FindActionMap("Keyboard", throwIfNotFound: true);
+        m_Keyboard_Keyboard = m_Keyboard.FindAction("Keyboard", throwIfNotFound: true);
     }
 
     ~@ButtonController()
     {
         UnityEngine.Debug.Assert(!m_Left.enabled, "This will cause a leak and performance issues, ButtonController.Left.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Right.enabled, "This will cause a leak and performance issues, ButtonController.Right.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Keyboard.enabled, "This will cause a leak and performance issues, ButtonController.Keyboard.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -309,6 +461,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Left_Y;
     private readonly InputAction m_Left_Grip;
     private readonly InputAction m_Left_Fire;
+    private readonly InputAction m_Left_Analog;
     public struct LeftActions
     {
         private @ButtonController m_Wrapper;
@@ -317,6 +470,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         public InputAction @Y => m_Wrapper.m_Left_Y;
         public InputAction @Grip => m_Wrapper.m_Left_Grip;
         public InputAction @Fire => m_Wrapper.m_Left_Fire;
+        public InputAction @Analog => m_Wrapper.m_Left_Analog;
         public InputActionMap Get() { return m_Wrapper.m_Left; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -338,6 +492,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Analog.started += instance.OnAnalog;
+            @Analog.performed += instance.OnAnalog;
+            @Analog.canceled += instance.OnAnalog;
         }
 
         private void UnregisterCallbacks(ILeftActions instance)
@@ -354,6 +511,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Analog.started -= instance.OnAnalog;
+            @Analog.performed -= instance.OnAnalog;
+            @Analog.canceled -= instance.OnAnalog;
         }
 
         public void RemoveCallbacks(ILeftActions instance)
@@ -425,16 +585,67 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         }
     }
     public RightActions @Right => new RightActions(this);
+
+    // Keyboard
+    private readonly InputActionMap m_Keyboard;
+    private List<IKeyboardActions> m_KeyboardActionsCallbackInterfaces = new List<IKeyboardActions>();
+    private readonly InputAction m_Keyboard_Keyboard;
+    public struct KeyboardActions
+    {
+        private @ButtonController m_Wrapper;
+        public KeyboardActions(@ButtonController wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Keyboard => m_Wrapper.m_Keyboard_Keyboard;
+        public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(KeyboardActions set) { return set.Get(); }
+        public void AddCallbacks(IKeyboardActions instance)
+        {
+            if (instance == null || m_Wrapper.m_KeyboardActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_KeyboardActionsCallbackInterfaces.Add(instance);
+            @Keyboard.started += instance.OnKeyboard;
+            @Keyboard.performed += instance.OnKeyboard;
+            @Keyboard.canceled += instance.OnKeyboard;
+        }
+
+        private void UnregisterCallbacks(IKeyboardActions instance)
+        {
+            @Keyboard.started -= instance.OnKeyboard;
+            @Keyboard.performed -= instance.OnKeyboard;
+            @Keyboard.canceled -= instance.OnKeyboard;
+        }
+
+        public void RemoveCallbacks(IKeyboardActions instance)
+        {
+            if (m_Wrapper.m_KeyboardActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IKeyboardActions instance)
+        {
+            foreach (var item in m_Wrapper.m_KeyboardActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_KeyboardActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public KeyboardActions @Keyboard => new KeyboardActions(this);
     public interface ILeftActions
     {
         void OnX(InputAction.CallbackContext context);
         void OnY(InputAction.CallbackContext context);
         void OnGrip(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnAnalog(InputAction.CallbackContext context);
     }
     public interface IRightActions
     {
         void OnB(InputAction.CallbackContext context);
         void OnA(InputAction.CallbackContext context);
+    }
+    public interface IKeyboardActions
+    {
+        void OnKeyboard(InputAction.CallbackContext context);
     }
 }

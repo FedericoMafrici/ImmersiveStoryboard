@@ -28,7 +28,7 @@ public class State : MonoBehaviour
 
         //surname = gameObject.name;
         DataBase = GameObject.Find("SimulationManager").GetComponent<ActionsDataBase>();
-        phraseGenerator = GameObject.Find("PhraseGenerator").GetComponent<PhraseGenerator>();
+        phraseGenerator = GameObject.Find("SimulationManager").GetComponent<PhraseGenerator>();
         _simulationManager = GameObject.Find("SimulationManager").GetComponent<SimulationManager>();
         //  phraseGenerator = GameObject.Find("SimulationManager").GetComponent<PhraseGenerator>(); TODO 
 
