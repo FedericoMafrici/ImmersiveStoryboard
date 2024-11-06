@@ -153,6 +153,17 @@
             ]
         },
         {
+                      "name": "flyn",
+                                  "transitions": [
+                                      "standing>faint>fainted",
+                                      "standing>sit>sitting"
+                                  ],
+                                  "S_A": [
+                                      "standing:sit",
+                                      "sit:stand up"
+                                  ]
+                  },
+        {
             "name": "zombie",
             "transitions": [
                 "standing>sit>sitting",
