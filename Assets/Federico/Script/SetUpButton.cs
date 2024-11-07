@@ -29,6 +29,11 @@ public class SetUpButton : MonoBehaviour
     {
             _simulationManager.StartOrStopAnimation();
     }
+
+    public void getControl()
+    {
+        _simulationManager.getControlOfsecondCharacter();
+    }
     
     // Update is called once per frame
     void Update()

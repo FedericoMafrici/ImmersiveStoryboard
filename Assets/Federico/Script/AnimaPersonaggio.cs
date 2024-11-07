@@ -101,7 +101,16 @@ public class AnimaPersonaggio : MonoBehaviour
        else
        {
            // se non è un personaggio attivo allora ho selezionato un oggetto 
-           _interactionObject = obj;       
+           if (obj.CompareTag("Player"))
+           {
+               obj.transform.parent.Find("GetControl").gameObject.SetActive(true);
+               _interactionObject = obj;
+           }
+           else
+           {
+               _interactionObject = obj;       
+           }
+        
        }
     
 
@@ -138,7 +147,7 @@ public class AnimaPersonaggio : MonoBehaviour
         _selectedActionsList =
             _actionsDB.ReturnActions(_simulationManager.activeCharacter.GetComponent<CharacterManager>().type,_character.GetComponent<CharacterManager>().type,
                 _character.GetComponent<State>().state, _self);
-        if (_selectedActionsList == null)
+        if (_selectedActionsList == null) 
         {
             Debug.LogError("ACTIONS NOT FOUND FOR OBJECT:"+ _character.name);
         }
@@ -194,6 +203,20 @@ public class AnimaPersonaggio : MonoBehaviour
         
     }
 
+    public void HideActions()
+    {
+        var ui =  _simulationManager.activeCharacter.transform.parent.Find("CharacterUI").gameObject;
+       
+        ui.SetActive(false);
+        ui= _simulationManager.activeCharacter.transform.parent.Find("PersonaggioAttivo").gameObject;
+        ui.SetActive(false);
+        var container = ui.transform.Find("Front/Scrollview Canvas/Panel/Pannello/Viewport/Content");
+        if (container == null)
+        {
+            Debug.LogError("Null reference exception nella gestione della ui dell'oggetto " + _character.name);
+        }
+        ClearContainer(container);
+    }
     
       public void StopOldLongAnimation()
     {
@@ -297,19 +320,24 @@ public class AnimaPersonaggio : MonoBehaviour
             var r = Quaternion.LookRotation(_simulationManager.activeCharacter.transform.position - _character.transform.position);
             _character.transform.rotation = r;
         }
-       
+        
 
         if (action == "talk" || action == "talk to")
         {
-            //TODO GENERATORE DI FRASI DA IMPLEMENTARE 
-            phraseGenerator.StartSpeech();
-           // SetKeyboardForDictaction(true);
-         
+            //phraseGenerator.StartSpeech();
+            //per configurare il testo da dichiarare 
+            // SetKeyboardForDictaction(true);
+           
 
             //distruggi particelle
             _simulationManager.DestroyParticlesActive();
             //crea particlle
             _simulationManager.CreateParticleActive(_simulationManager.activeCharacter);
+            phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.GetComponent<CharacterManager>().name,_simulationManager.activeCharacter.GetComponent<CharacterManager>().type ,action,_interactionObject.name,_interactionObject.GetComponent<CharacterManager>().type,false);
+            //notifica lo state di avviare l'eventuale animazione dell'oggetto che subisce l'azione
+            _character.GetComponent<State>().PlayAnimation(action);
+            //notifica il simulation manager di avviare animazione del personaggio attivo
+            _simulationManager.PlayActiveCharacterAnimation(action);
         }
 
         else
@@ -327,7 +355,7 @@ public class AnimaPersonaggio : MonoBehaviour
              {
                  //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
                  _character.GetComponent<State>().ChangeState(action);
-
+                    
              }
              else
              {

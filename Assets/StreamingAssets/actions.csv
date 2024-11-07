@@ -49,5 +49,7 @@ woman-chair,sit
 woman-Cheese,pick,eat
 woman-bench,sit
 man-bench,sit
-flyn-self,walk
+flyn-self,faint
 flyn-chair,sit
+rapunzel-flyn,talk to,hit
+flyn-wardrobe,locked in

@@ -303,11 +303,15 @@ public class SimulationManager : MonoBehaviour
         if (status == 1) {
             if (activeCharacter != null && activeCharacter != obj && obj.CompareTag("Player"))
             {
+           
+                //TODO da eseguire se il personaggio deve essere selezionato come nuovo personaggio attivo
                 // non so cosa faccia l'instruzione sotto scoprilo 
-                characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj); 
+                //activeCharacter = obj.transform.GetChild(0).gameObject;
+                //characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(activeCharacter); 
                 // abilita in modo il pulsante di get Control per far diventare quel personaggio il principale 
-              
-               
+                
+              //   activeCharacter = obj.transform.GetChild(0).gameObject;
+                characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.transform.GetChild(0).gameObject); 
             }
             else
             {
@@ -331,7 +335,6 @@ public class SimulationManager : MonoBehaviour
                 }
                 //sfondoTitolo.SetActive(false);
                 //animaPersonaggio.PosizioneTasti();
-
             }
 
             
@@ -339,6 +342,15 @@ public class SimulationManager : MonoBehaviour
 
        
     }
+
+    public void getControlOfsecondCharacter()
+    {
+        // 
+        characterAnimationManager.GetComponent<AnimaPersonaggio>().HideActions();
+        activeCharacter=characterAnimationManager.GetComponent<AnimaPersonaggio>()._character;
+       characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(activeCharacter);
+    }
+    
     //TODO probabilmente può essere cancellata visto che ho creato un sistema ad eventi per gesitre il movimento
     public void SetupMovement()
     {
@@ -406,7 +418,7 @@ public class SimulationManager : MonoBehaviour
         }
            
     }
-
+    
     //animazioni "attive"
     public void PlayActiveCharacterAnimation(string action)
     {

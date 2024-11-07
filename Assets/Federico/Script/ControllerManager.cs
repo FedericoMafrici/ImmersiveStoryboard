@@ -84,7 +84,7 @@ public class ControllerManager : MonoBehaviour
     {
         Debug.Log("A from keyboard pressed");
         
-        woman.transform.rotation = Quaternion.Euler(new Vector3(-0, 90+offset, 0));
+//        woman.transform.rotation = Quaternion.Euler(new Vector3(-0, 90+offset, 0));
         offset += 90;
         
     }

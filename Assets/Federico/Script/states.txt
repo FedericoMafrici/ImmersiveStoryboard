@@ -15,11 +15,10 @@
             "name": "wardrobe",
             "transitions": [
                 "closed>open>open",
-                "open>close>closed",
-                "closed>explode>open"
+                "open>close>closed"
             ],
             "S_A": [
-                "open:close,tidy",
+                "open:close",
                 "closed:open"
             ]
         },
@@ -162,7 +161,15 @@
                                       "standing:sit",
                                       "sit:stand up"
                                   ]
-                  },
+        },
+        {
+                              "name": "rapunzel",
+                                          "transitions": [    
+                                          ],
+                                          "S_A": [
+                                              "standing:standing"
+                                          ]
+        }, 
         {
             "name": "zombie",
             "transitions": [

@@ -191,18 +191,24 @@ public class PhraseGenerator : MonoBehaviour
                 {
                     phrase.text += sub + " " + ac + " " + com + ". ";
                 }
+
+                if (ac == "lock up")
+                {
+                    phrase.text += sub + " " + "is locked up" + " inside the " + com + ". ";
+                }
             }
 
             if (ac != "talks to") //altriemnti mette nel buffer ad es.: First, Paola talks to Sofia. First, Paola talks to Sofia. �Ciao Ciao.� Perch� buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text); � chimato anche in GenerateDialogue()
             {
-                buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text + "_" + simulationManager.GetScreenshotCountUndo());
+                 buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text + "_" + simulationManager.GetScreenshotCountUndo());
             }
       
 
             //Se l'azione � talk o talk to, attiva la casella per l'input del dialogo
             if (action.Split(' ')[0] == "talk")
             {
-                GenerateDialogue();
+             //   GenerateDialogue();
+             buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text + "_" + simulationManager.GetScreenshotCountUndo());
             }
 
             //Se due soggetti diversi, nelle ultime due azioni eseguite, hanno eseguito la stessa azione sullo stesso oggetto, elimina dal buffer le ultime due frasi e metti questa
@@ -280,7 +286,7 @@ public class PhraseGenerator : MonoBehaviour
     public void StartSpeech()
     {
         //dictationEngine.gameObject.SetActive(true); // dictation
-        tastiera.SetActive(true);
+      //  tastiera.SetActive(true);
     }
     public void EndSpeech() 
     {
