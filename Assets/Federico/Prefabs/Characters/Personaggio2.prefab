@@ -5150,7 +5150,7 @@ Animator:
   m_GameObject: {fileID: 2947539885772421738}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 739a0aab9596f436fafc851d52735749, type: 3}
-  m_Controller: {fileID: 9100000, guid: f920e978303854b03a0ca42c467287a2, type: 2}
+  m_Controller: {fileID: 9100000, guid: a4933983ce1ba45498c5ebba0701f21e, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -5198,7 +5198,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2947539885772421738}
   m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.008
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -5245,6 +5245,7 @@ MonoBehaviour:
   possibleStates:
   - standing
   - sitting
+  - fainted
   DataBase: {fileID: 0}
   _simulationManager: {fileID: 0}
   animator: {fileID: 7197710621023637584}

@@ -100,7 +100,7 @@ public class AnimaPersonaggio : MonoBehaviour
        }
        else
        {
-           // se non è un personaggio attivo allora ho selezionato un oggetto 
+           // se non è un personaggio attivo allora ho selezionato un altro giocatore o un oggetto 
            if (obj.CompareTag("Player"))
            {
                obj.transform.parent.Find("GetControl").gameObject.SetActive(true);
@@ -124,9 +124,9 @@ public class AnimaPersonaggio : MonoBehaviour
     private void ShowAloneActions()
     {
         Debug.Log("Entered in ShowAloneActions");
-        
+        HideGetControlPanel(_simulationManager.activeCharacter);
         // recupero le azioni possibili dell'oggeto ed attivo la UI
-
+        // HideGetControlPanel(_simulationManager.activeCharacter);
         var ui =  _simulationManager.activeCharacter.transform.parent.Find("CharacterUI").gameObject;
         if (ui == null)
         {
@@ -217,7 +217,11 @@ public class AnimaPersonaggio : MonoBehaviour
         }
         ClearContainer(container);
     }
-    
+
+    public void HideGetControlPanel(GameObject obj)
+    {
+        obj.transform.parent.Find("GetControl").gameObject.SetActive(false);
+    }
       public void StopOldLongAnimation()
     {
         if (!_simulationManager.contemporaryAction)
@@ -250,12 +254,20 @@ public class AnimaPersonaggio : MonoBehaviour
             {
                 string azione = "stand up";
                 _simulationManager.activeCharacter.GetComponent<State>().ChangeState(azione);
-                _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
+                _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
                 _simulationManager.activeCharacter.transform.Translate(0, 0, +0.05f);
                 _simulationManager.SetActiveCharacterActionClick(_simulationManager.activeCharacter);
 
             }
-
+            else if (_simulationManager.activeCharacter.GetComponent<State>().GetCurrentState() == "is tied")
+            {                                                                                               
+                string azione = "stand up";                                                                 
+                _simulationManager.activeCharacter.GetComponent<State>().ChangeState(azione);               
+                _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;            
+                _simulationManager.activeCharacter.transform.Translate(0, 0, +0.05f);                       
+                _simulationManager.SetActiveCharacterActionClick(_simulationManager.activeCharacter);       
+                                                                                                  
+            }                                                                                               
         }
     }
     
@@ -304,7 +316,7 @@ public class AnimaPersonaggio : MonoBehaviour
 
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastAction = action;
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastTimeAction = _simulationManager.GetScreenshotCount();
-        
+       
 
         if (action == "smile")
         {
@@ -342,16 +354,14 @@ public class AnimaPersonaggio : MonoBehaviour
 
         else
         {
-
-            //notifica lo state di avviare l'eventuale animazione dell'oggetto che subisce l'azione
-            _character.GetComponent<State>().PlayAnimation(action);
+          
 
             //notifica il simulation manager di avviare animazione del personaggio attivo
             _simulationManager.PlayActiveCharacterAnimation(action);
 
            
              phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
-             if (action != "sit" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
+             if (action != "sit" && action!="is tied" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
              {
                  //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
                  _character.GetComponent<State>().ChangeState(action);
@@ -377,7 +387,7 @@ public class AnimaPersonaggio : MonoBehaviour
                             _character.transform.parent = GameObject.Find("BuildingManager").transform;
                             _character.transform.position = new Vector3(_character.transform.position.x, _character.transform.position.y, _character.transform.position.z);
                         }
-                        else if (action == "sit")
+                        else if (action == "sit" || action=="is tied")
                         {
                             _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;
             
@@ -459,7 +469,7 @@ public class AnimaPersonaggio : MonoBehaviour
 
             //HideActions();
 
-            if (action == "work out" || action == "dance" || action == "play" || action == "sit" || action == "stop dance" || action == "stop work out" || action == "stop play" || action == "stand up")
+            if (action == "work out" || action=="is tied" || action == "dance" || action == "play" || action == "sit" || action == "stop dance" || action == "stop work out" || action == "stop play" || action == "stand up")
             {
                 _simulationManager.SetActiveCharacterActionClick(_simulationManager.activeCharacter);
             }

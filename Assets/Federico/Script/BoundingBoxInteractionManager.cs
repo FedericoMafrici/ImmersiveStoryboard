@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -27,8 +28,24 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     private GameObject _currSelectedObj = null;
 
     public bool planeRotation = false;
-    
+
+    public List<ObjectType> oggettiInScena;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public class ObjectType
+    {
+        public string type;
+        public List<String> possibleStates;
+        public string currentState;
+
+        public ObjectType(string objectType,List<String> objectPossibleStates, string objectcurrentState)
+        {
+            type = objectType;
+            possibleStates = objectPossibleStates;
+            currentState = objectcurrentState;
+        }
+    }
+
+    private Dictionary<String, ObjectType> ObjectsMap=new Dictionary<String, ObjectType>();
     
     public void Awake()
     {
@@ -45,11 +62,25 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             {
                 Debug.LogError("errore nel reperimento del componente Snap To Plane o della label o del piano");
             }
-           
-
             boundingBoxplane = this.transform.Find("Plane").gameObject;
+            // qui andiamo ad aggiungere tutte le label degli oggetti, per ogni oggetti specifichiamo i campi con cui andare a corredare 
+            // poi il character manager e lo state con tutte le informazioni necessarie.  
+             List<String> possibleStates = new List<String>();
+             List<ObjectType> objects = new List<ObjectType>();
+             //chair 
+             possibleStates.Add("lifted");
+             possibleStates.Add("fallen");
+             objects.Add(new ObjectType("chair", possibleStates, "lifted"));
+             possibleStates.Clear();
+             ObjectsMap.Add("chair",objects[0]);
+             //wardrobe
+             possibleStates.Add("closed");
+             possibleStates.Add("open");
+             objects.Add(new ObjectType("wardrobe", possibleStates, "closed"));
+             possibleStates.Clear();
+             ObjectsMap.Add("wardrobe",objects[1]);
 
-            SetLabel("chair");
+             SetLabel("chair");
     }
 
     public void OnSelectionEnter(SelectEnterEventArgs args)
@@ -91,7 +122,19 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     {
         Text label= labelUI.transform.Find("Scrollview Canvas/Pannello/Viewport/Content/Scroll View Item/Text").GetComponent<Text>();
         label.text = text;
+        //assegnazione del tipo
         this.GetComponent<CharacterManager>().type = text.ToLower() ;
+        State objectState = this.GetComponent<State>();
+        ObjectType obj;
+        //assegnazione degli stati
+        if (ObjectsMap.TryGetValue(text.ToLower(),out obj))
+        {
+            objectState.state.Clear();
+            objectState.state.Add(obj.currentState);
+            objectState.possibleStates.Clear();
+            objectState.possibleStates = obj.possibleStates ;
+        }
+        
         if (isPlaneNeeded(text.ToLower())&& boundingBoxplane!=null)
         {
             boundingBoxplane.SetActive(true);

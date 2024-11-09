@@ -155,10 +155,10 @@
                       "name": "flyn",
                                   "transitions": [
                                       "standing>faint>fainted",
-                                      "standing>sit>sitting"
+                                      "standing>is tied>sitting"
                                   ],
                                   "S_A": [
-                                      "standing:sit",
+                                      "standing:sit,faint",
                                       "sit:stand up"
                                   ]
         },
