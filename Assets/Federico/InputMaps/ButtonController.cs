@@ -253,7 +253,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""ac7b5142-60df-4e93-aded-346a2c1147c3"",
-                    ""path"": ""<QuestTouchPlusController>/thumbstick/left"",
+                    ""path"": ""<XRController>{LeftHand}/{Primary2DAxisTouch}"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -264,7 +264,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""217e75a1-615e-4942-84a9-7cb7f7f5490e"",
-                    ""path"": ""<QuestProTouchController>/thumbstick/right"",
+                    ""path"": ""<XRController>{RightHand}/{Primary2DAxisTouch}"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

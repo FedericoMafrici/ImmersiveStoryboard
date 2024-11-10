@@ -80,7 +80,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              possibleStates.Clear();
              ObjectsMap.Add("wardrobe",objects[1]);
 
-             SetLabel("chair");
+           // SetLabel("chair");
     }
 
     public void OnSelectionEnter(SelectEnterEventArgs args)

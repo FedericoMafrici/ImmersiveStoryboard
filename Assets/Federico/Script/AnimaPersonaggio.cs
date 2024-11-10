@@ -30,8 +30,8 @@ public class AnimaPersonaggio : MonoBehaviour
     [SerializeField] private GameObject _ScrollviewElementPrefab;
 
     [SerializeField] private GameObject ObjectMenu;
-    
 
+    [SerializeField] public GameObject hiddenCharacter;
    
     
     
@@ -222,7 +222,8 @@ public class AnimaPersonaggio : MonoBehaviour
     {
         obj.transform.parent.Find("GetControl").gameObject.SetActive(false);
     }
-      public void StopOldLongAnimation()
+      public void 
+          StopOldLongAnimation()
     {
         if (!_simulationManager.contemporaryAction)
         {
@@ -267,7 +268,7 @@ public class AnimaPersonaggio : MonoBehaviour
                 _simulationManager.activeCharacter.transform.Translate(0, 0, +0.05f);                       
                 _simulationManager.SetActiveCharacterActionClick(_simulationManager.activeCharacter);       
                                                                                                   
-            }                                                                                               
+            } 
         }
     }
     
@@ -365,11 +366,10 @@ public class AnimaPersonaggio : MonoBehaviour
              {
                  //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
                  _character.GetComponent<State>().ChangeState(action);
-                    
              }
              else
              {
-                // SitOnTheChair();
+                
                  _simulationManager.activeCharacter.GetComponent<State>().ChangeState(action);
 
              }
@@ -433,8 +433,8 @@ public class AnimaPersonaggio : MonoBehaviour
                 _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
                 
                 _interactionObject = null;
-            }
-
+                //per nascondere il personaggio
+                }
             else if (action == "play")
             {
                 // interaction object 
@@ -485,7 +485,26 @@ public class AnimaPersonaggio : MonoBehaviour
 
             Debug.Log("Action: " + action);
             
+            if (action == "locked in")
+            {
+                hiddenCharacter = _simulationManager.activeCharacter;
+                _simulationManager.DestroyParticlesActive();
+                _simulationManager.DestroyParticles();
+                if (hiddenCharacter != null)
+                {
+                    hiddenCharacter.SetActive(false);
+                }
 
+                _simulationManager.activeCharacter = null;
+            }
+
+            if (action == "free")
+            {
+                if(hiddenCharacter!=null){ hiddenCharacter.SetActive(true);}
+                hiddenCharacter = null;
+            }
+                
+        
         }
 
         ChangeWalker();

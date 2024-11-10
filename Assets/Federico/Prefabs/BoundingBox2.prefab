@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 8911769062033480742}
   m_Layer: 0
   m_Name: BoundingBox2
-  m_TagString: Untagged
+  m_TagString: BoundingBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -460,6 +460,7 @@ MonoBehaviour:
   boundingBoxSize: {x: 0, y: 0, z: 0}
   initialPlaneLocalPosition: {x: 0, y: 0, z: 0}
   interactionEnabled: 0
+  planeRotation: 0
 --- !u!114 &4482112057698829791
 MonoBehaviour:
   m_ObjectHideFlags: 0

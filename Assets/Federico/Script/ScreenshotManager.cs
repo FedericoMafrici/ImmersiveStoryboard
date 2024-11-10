@@ -9,6 +9,7 @@ public class ScreenshotManager : MonoBehaviour
 {
     [SerializeField] public List<RawImage> _screenshots=new List<RawImage>();
     [SerializeField] public List<Texture2D> screenshotsTexture = new List<Texture2D>();
+    [SerializeField] public GameObject UI;
     public List<byte[]> images = null;
     private int _screenshotCounter=0;
     public Hashtable focalTable = new Hashtable();
@@ -42,6 +43,8 @@ public class ScreenshotManager : MonoBehaviour
 
     public void TakeScreenshot()
     {
+        UI.SetActive(false);
+        
         if (_screenCaptureTextureManager == null)
         {
             Debug.LogError("Errore capturetexturemanager non trovato");
@@ -60,6 +63,7 @@ public class ScreenshotManager : MonoBehaviour
         _screenshotCounter++;
         _simulationManager.screenshotCount++;
         screenShotTaken.Invoke(this,EventArgs.Empty);
+        UI.SetActive(true);
     }
     public void AddNewValue(string index, string focal)
     {

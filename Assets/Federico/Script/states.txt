@@ -15,7 +15,9 @@
             "name": "wardrobe",
             "transitions": [
                 "closed>open>open",
-                "open>close>closed"
+                "open>close>closed",
+                "open>locked in>full",
+                "full>free>open"
             ],
             "S_A": [
                 "open:close",
