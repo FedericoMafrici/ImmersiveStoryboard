@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6582631794514940802}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 4482112057698829791}
   - component: {fileID: 8027205524337754715}
   - component: {fileID: 8911769062033480742}
+  - component: {fileID: 6834164780776179310}
   m_Layer: 0
   m_Name: BoundingBox2
   m_TagString: BoundingBox
@@ -528,6 +529,19 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &6834164780776179310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508348494270127559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb898793194e03f4bb10dba03ec2cb70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_DestroyOnRemoval: 1
 --- !u!1 &6488076954433884910
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,7 +559,7 @@ GameObject:
   - component: {fileID: 4096398062660328168}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

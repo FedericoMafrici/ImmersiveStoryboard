@@ -94,7 +94,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
                     Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");
                     ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
                     _showTutorialButton.onClick.RemoveListener( HandleTutorial);
-                    _showTutorialButton.onClick.RemoveListener(_tutorialSecondPart.HandleTutorial);
+                    _showTutorialButton.onClick.AddListener(_tutorialSecondPart.HandleTutorial);
                     OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
                     enviroment.FadeSkybox(false);
                     currActiveCard.SetActive(false);

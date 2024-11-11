@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -14,6 +15,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     [SerializeField] public Material selectMaterial;
     [SerializeField] public SimulationManager _SimulationManager;
     [SerializeField] public MenuManager menuManager;
+    private ARAnchor _currentAnchor;
     private bool _objectHovered = false;
     private GameObject _currHoveredObj = null;
     private float _time = 0.0f;
@@ -31,6 +33,8 @@ public class InteractionManagerAddOn : MonoBehaviour
        {
            Debug.LogError("Simulation manager di :" + gameObject.name + " non trovato");
        }
+       CreateAnchor();
+       
     }
 
     void Start()
@@ -44,28 +48,7 @@ public class InteractionManagerAddOn : MonoBehaviour
         SimulationManager.startStoryboarding += DisableMoving;
         SimulationManager.pauseStoryboarding += EnableMoving;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-      /*
-        if (_objectHovered)
-        {
-            _time += Time.deltaTime;
-            if (_time > 3.0f && _currHoveredObj!=null )
-            {
-                _currHoveredObj.transform.Find("Front").gameObject.SetActive(true);
-                if (_currHoveredObj.transform.Find("Front") == null)
-                {
-                    Debug.Log("UI non trovata");
-                }
-                // reset del menu 
-                _time = 0;
-                _objectHovered = false;
-            }
-        }
-        */
-    }
+    
     public void PlaceOnNavMesh()
     {
         NavMeshHit navMeshHit;
@@ -160,20 +143,27 @@ public class InteractionManagerAddOn : MonoBehaviour
     // Deve essere void per poter essere visualizzata nell'Inspector
     public void onSelectionEnter(SelectEnterEventArgs args)
     {
-        Debug.Log("hai selezionato l'oggetto: " +this.gameObject.name);
-        _currSelectedObj = args.interactableObject.transform.gameObject;
-        if (_currSelectedObj == null)
+        if (!interactionEnabled)
         {
-            Debug.LogError("On Selection Enter "+ this.name+ "null reference exception");
-            return;
+            Debug.Log("hai selezionato l'oggetto: " + this.gameObject.name);
+            _currSelectedObj = args.interactableObject.transform.gameObject;
+            Destroy(_currentAnchor.gameObject);
+            _currentAnchor = null;
+            transform.parent = null; // Rimuove la parentela per la manipolazione libera
+            
         }
-       if (interactionEnabled)
-       {
+        else
+        {
             onObjectSelected.Invoke(this,EventArgs.Empty);
            Debug.Log("Set Active character chiamata");
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
            //interactionEnabled = false;
        }
+    }
+    public void OnSelectionExit(SelectExitEventArgs args)
+    {
+        // Crea una nuova ancora alla posizione attuale quando l'oggetto viene rilasciato
+        CreateAnchor();
     }
     
     public void MenuObjectSelected()
@@ -192,31 +182,6 @@ public class InteractionManagerAddOn : MonoBehaviour
     
     
     //Probabilmente non usate queste due 
-    public void onSelection(SelectEnterEventArgs args)
-    {
-        Debug.Log("Hai selezionato l'oggetto");
-        var obj = args.interactableObject.transform.gameObject;
-        var renderer = obj.GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            renderer.material = selectMaterial;
-
-        }
-       
-    }
-
-    public void onselectionExit(SelectExitEventArgs args)
-    {
-        Debug.Log("Hai deselezionato l'oggetto");
-        if (_currSelectedObj != null)
-        {
-            XRGrabInteractable _xrInt = _currSelectedObj.GetComponent<XRGrabInteractable>();
-            _xrInt.enabled = true;
-            
-          //  _currSelectedObj.transform.Find("Front").gameObject.SetActive(false);
-            _currSelectedObj = null;
-        }
-    }
     public void onHoverEnter(HoverEnterEventArgs args)
     {
         Debug.Log("hai appena iniziato a guardare l'oggetto");
@@ -238,6 +203,32 @@ public class InteractionManagerAddOn : MonoBehaviour
         _time = 0.0f;
         _currHoveredObj= null;
     }
+//@@@@@@ GESTIONE FUNZIONI ANCORAGGIO @@@@@@@
+    private async void CreateAnchor()
+    {
+        // Controlla se esiste già un'ancora e la rimuove se presente
+        if (_currentAnchor != null)
+        {
+            Destroy(_currentAnchor);
+        }
 
+        // Crea una nuova ancora alla posizione e rotazione attuali
+        ARAnchorManager anchorManager = FindObjectOfType<ARAnchorManager>();
+        if (anchorManager != null)
+        {
+            var result = await anchorManager.TryAddAnchorAsync(new Pose(transform.position, transform.rotation));
+            if (result.status.IsSuccess())
+            {
+                _currentAnchor = result.value; // Assegna l'ancora creata a _currentAnchor
+                transform.parent = _currentAnchor.transform; // Rende l'oggetto figlio dell'ancora
+                Debug.Log("Ancora creata e assegnata con successo.");
+            }
+            else
+            {
+                Debug.LogWarning("Impossibile creare un'ancora alla posizione specificata.");
+            }
+        }
+    }
+    
  
 }

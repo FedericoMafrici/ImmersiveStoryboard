@@ -6,6 +6,7 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using InputDevice = UnityEngine.InputSystem.InputDevice;
 
@@ -18,6 +19,7 @@ public class ControllerManager : MonoBehaviour
     [SerializeField] public PersistentAnchorManager persistentAnchorManager;
     [SerializeField] public XRRayInteractor leftControllerRay;
     [SerializeField] public XRRayInteractor rightControllerRay;
+    [SerializeField] public ARAnchorManager anchorManager;
     public GameObject leftXRController;
     public GameObject rightXRController;
     [SerializeField] public RawImage _screenshot;
@@ -62,22 +64,6 @@ public class ControllerManager : MonoBehaviour
         controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
 
         controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
-        // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato
-        leftControllerRay.enabled = false;
-        rightControllerRay.enabled = false;
-        possibleInteraction = false;
-        var lr = leftXRController.GetComponent<LineRenderer>();
-        lr.enabled = false;
-
-        lr = rightXRController.GetComponent<LineRenderer>();
-        lr.enabled = false;
-      
-        GameObject rint = rightXRController.transform.Find("Near-Far Interactor").gameObject;
-        GameObject lint = leftXRController.transform.Find("Near-Far Interactor").gameObject;
-        rint.SetActive(true); 
-        lint.SetActive(false);
-        
-        
     }
 
     public void KeyboardPressed(InputAction.CallbackContext ctx)
@@ -89,27 +75,41 @@ public class ControllerManager : MonoBehaviour
         
     }
 
+    private bool analogIsTilted = false; // Variabile di stato per monitorare l'inclinazione
+
     public void AnalogTouched(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Analog Pressed");
         Vector2 analogValue = ctx.action.ReadValue<Vector2>();
-       if (analogValue.x > 0.5f)
-       {
-           Debug.Log("Hai premuto l'analog a destra bravo!");
-           if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
-           {
-              boundingBoxSelected.RotatePlane(1);
-               
-           }
-       }
-       if(analogValue.x<-0.5f)
-       {
-           Debug.Log("Hai premuto l'analog a sinsitra bravissimo!");
-           if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
-           {
-               boundingBoxSelected.RotatePlane(-1);
-           }
-       }
+      //  _ConsoleDebugger.SetText("hai premuto l'analog, valori rilevati: " + analogValue.x + " " + analogValue.y);
+
+        // Controlla se l'analogico è inclinato a destra e l'azione non è stata ancora eseguita
+        if (analogValue.x > 0.5f && !analogIsTilted)
+        {
+            _ConsoleDebugger.SetText("hai premuto l'analog a destra, valori rilevati: " + analogValue.x + " " + analogValue.y);
+
+            Debug.Log("Hai premuto l'analog verso destra bravo!");
+            if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
+            {
+                boundingBoxSelected.RotatePlane(1);
+            }
+            analogIsTilted = true; // Segna l'analogico come inclinato
+        }
+        // Controlla se l'analogico è inclinato a sinistra e l'azione non è stata ancora eseguita
+        else if (analogValue.x < -0.5f && !analogIsTilted)
+        {
+            Debug.Log("Hai premuto l'analog verso sinistra bravissimo!");
+            _ConsoleDebugger.SetText("hai premuto l'analog a sinistra , valori rilevati: " + analogValue.x + " " + analogValue.y);
+            if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
+            {
+                boundingBoxSelected.RotatePlane(-1);
+            }
+            analogIsTilted = true; // Segna l'analogico come inclinato
+        }
+        // Resetta lo stato se l'analogico è tornato al centro
+        else if (Mathf.Abs(analogValue.x) < 0.5f)
+        {
+            analogIsTilted = false;
+        }
     }
     
     public void Ypressed(InputAction.CallbackContext ctx)
@@ -128,13 +128,11 @@ public class ControllerManager : MonoBehaviour
      void X(InputAction.CallbackContext ctx)
                       {
                         
-                          if (leftControllerRay == null)
+                          if(leftControllerRay == null)
                           {
                               Debug.LogError("controller sinistro non trovato");
                           }
-
-
-                          if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo) && _SimulationManager.status == 0 )
+                          if(leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo) && _SimulationManager.status == 0 )
                           {
                               if (hitInfo.transform.gameObject.layer==9)
                               {
@@ -142,7 +140,7 @@ public class ControllerManager : MonoBehaviour
                               }
                               else
                               {
-                               if(!hitInfo.transform.CompareTag("BoundingBox"))
+                               if(!hitInfo.transform.CompareTag("BoundingBox") && !hitInfo.transform.CompareTag("Object"))
                                {   SpawnObject(); }
                                else
                                {
@@ -169,15 +167,29 @@ public class ControllerManager : MonoBehaviour
                       public void Apressed(InputAction.CallbackContext ctx)
                       {
                           Debug.Log("A pressed");
-                         // OnBoundingBoxPlaneEdit.Invoke(this,EventArgs.Empty);
+                          _ConsoleDebugger.SetText("A pressed");
+                         // SpawnAnchor();
                       }
 
                       public void Bpressed(InputAction.CallbackContext ctx)
                       {
                           Debug.Log("B pressed");
+                          _ConsoleDebugger.SetText("B pressed");
                        //   StopBoundingBoxPlaneEdit.Invoke(this, EventArgs.Empty);
                       }
-    private IEnumerator CaptureScreenshot()
+                      public async void SpawnAnchor()
+                      {
+                          rightControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit);
+                          Pose hitPose = new Pose(hit.point, Quaternion.LookRotation(-hit.normal));
+                          var result = await anchorManager.TryAddAnchorAsync(hitPose);
+                          if (result.status.IsSuccess())
+                          {
+                                  var anchor = result.value;
+                                  _ConsoleDebugger.SetText("Ancora creata con suggesso posizione" + anchor.transform.position);
+                          }
+                      }
+
+                      private IEnumerator CaptureScreenshot()
     {
         yield return new WaitForEndOfFrame();  // Aspetta la fine del frame per assicurarsi che il rendering sia completato
 
@@ -374,7 +386,7 @@ public class ControllerManager : MonoBehaviour
     
 
  // function to spawn objects
- public void SpawnObject()
+ public async void SpawnObject()
  {
      // Ottieni il punto di impatto e il GameObject colpito, se presente
      if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo))
@@ -413,6 +425,7 @@ public class ControllerManager : MonoBehaviour
 
              // Aggiungi l'oggetto alla lista degli oggetti spawnati
           _SimulationManager.spawnedGameObjects.Add(spawnedObject);
+          
           OnObjectPlaced.Invoke(this,EventArgs.Empty);
       
      }

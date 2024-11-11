@@ -42,7 +42,7 @@ public class SimulationManager : MonoBehaviour
     [Header("HEADER UI ")]
     [SerializeField]  private GameObject MenuOggetti;
 
-    [SerializeField] private GameObject consoleDebuggin;
+    [SerializeField] private ConsoleDebugger consoleDebuggin;
 
     [SerializeField] private GameObject ScreenshotPanel;
      
@@ -148,16 +148,17 @@ public class SimulationManager : MonoBehaviour
     
     public void StartStoryBoarding(TMP_Text txtcomponent)
     {
+        consoleDebuggin.SetText("starStoryboarding Chiamata");
         if (status == 0)
         {
             status = 1;
-            startStoryboarding.Invoke(this, new EventArgs());
+            startStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Stop";
         }
         else
         {
             status = 0;
-            pauseStoryboarding.Invoke(this, new EventArgs());
+            pauseStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Start";
         }
     }

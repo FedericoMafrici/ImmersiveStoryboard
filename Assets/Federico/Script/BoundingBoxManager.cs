@@ -19,6 +19,8 @@ public class BoundingBoxManager : MonoBehaviour
     private List<ARBoundingBox> boundingBoxes = new List<ARBoundingBox>();
     
     [SerializeField] private ARBoundingBoxManager bbManager; // Databa
+    [SerializeField] public ARAnchorManager anchorManager;
+    
     public static EventHandler<EventArgs> onBoundingBoxChanged;
     void Start()
     {
@@ -47,7 +49,7 @@ public class BoundingBoxManager : MonoBehaviour
     public void CreateCubeFromBoundingBox(ARBoundingBox boundingBox)
     {
         Debug.Log("cubo instanziato");
-        _debuggingWindow.SetText("ho appena instanziato una bounding box");
+       // _debuggingWindow.SetText("ho appena instanziato una bounding box");
         // instanziato l'empty e reperiamo la bounding box per modificare la scala
         GameObject prefab = GameObject.Instantiate(_boundingBoxPrefab);
         GameObject wrapper = prefab.transform.GetChild(3).gameObject;
@@ -91,7 +93,7 @@ public class BoundingBoxManager : MonoBehaviour
         foreach (var boundingBox in changes.added)
         {
            
-            _debuggingWindow.SetText("Bounding box trovata la aggiungo");
+          //  _debuggingWindow.SetText("Bounding box trovata la aggiungo");
             OnBoundingBoxDetected(boundingBox);
         }
 

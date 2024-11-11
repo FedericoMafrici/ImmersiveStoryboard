@@ -218,59 +218,15 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""aac72893-53ec-4b9e-8b58-b52ed97870dc"",
-                    ""path"": ""2DVector"",
+                    ""name"": """",
+                    ""id"": ""b7f1a82d-5c09-48af-96a3-83f6ef0a2f0d"",
+                    ""path"": ""<XRController>{LeftHand}/{Primary2DAxis}"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Analog"",
-                    ""isComposite"": true,
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""7e07ce30-6279-4a4a-b87f-946dda7ae7e0"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Analog"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""aeddeff9-68f8-48d3-9a92-309b055ad59f"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Analog"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""ac7b5142-60df-4e93-aded-346a2c1147c3"",
-                    ""path"": ""<XRController>{LeftHand}/{Primary2DAxisTouch}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Analog"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""217e75a1-615e-4942-84a9-7cb7f7f5490e"",
-                    ""path"": ""<XRController>{RightHand}/{Primary2DAxisTouch}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Analog"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -301,7 +257,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f252ecda-a1c8-497e-8716-c06ac17c2b54"",
-                    ""path"": ""<XRController>{RightHand}/{PrimaryButton}"",
+                    ""path"": ""<OculusTouchController>{RightHand}/primaryButton"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.XR.ARFoundation;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -87,6 +88,7 @@ public class CharacterManager : MonoBehaviour
                     {
                         // Il personaggio ha raggiunto la destinazione, ferma il movimento
                         StopWalking();
+                        this.gameObject.AddComponent<ARAnchor>();
                     }
                 }
             }
@@ -122,7 +124,9 @@ public class CharacterManager : MonoBehaviour
     }
     public void Move(RaycastHit hitInfo)
     {
+        Destroy(this.GetComponent<ARAnchor>());
         var agent = this.GetComponent<NavMeshAgent>();
+        
         if (agent == null)
         {
             Debug.LogError("NavMeshAgent non trovato sul personaggio");
