@@ -66,7 +66,7 @@ namespace Trev3d.Quest.ScreenCapture
 
 				if (startScreenCaptureOnStart)
 				{
-					Debug.Log("Finestra di PoPup avviata dovrebbe essere visibile");
+					//Debug.Log("Finestra di PoPup avviata dovrebbe essere visibile");
 					StartScreenCapture();
 				}
 				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixe
@@ -134,7 +134,7 @@ namespace Trev3d.Quest.ScreenCapture
 			
 			//_screenshot.texture = screenTexture;
 			
-			Debug.Log("La funzione newFrameAvailable è stata chiamta con successo");
+			//Debug.Log("La funzione newFrameAvailable è stata chiamta con successo");
 			OnNewFrame.Invoke();
 		}
 
@@ -144,9 +144,9 @@ namespace Trev3d.Quest.ScreenCapture
 		}
 		public void TakeScreenShot(RawImage screenshot, Texture2D screenshottexture2D)
 		{
-			Debug.Log("La funzione Take Screenshot è stata chiamata");
-			Debug.Log($"Screen texture width: {screenTexture.width}, height: {screenTexture.height}");
-			Debug.Log($"Pixel data (sample): {screenTexture.GetPixel(0, 0)}");
+			//Debug.Log("La funzione Take Screenshot è stata chiamata");
+			//Debug.Log($"Screen texture width: {screenTexture.width}, height: {screenTexture.height}");
+			//Debug.Log($"Pixel data (sample): {screenTexture.GetPixel(0, 0)}");
 			
 			Texture2D screenshotCopy = new Texture2D(screenTexture.width, screenTexture.height, TextureFormat.RGBA32, false);
 			screenshotCopy.SetPixels(screenTexture.GetPixels());
@@ -162,7 +162,7 @@ namespace Trev3d.Quest.ScreenCapture
 			screenshottexture2D.SetPixels(screenshotCopy.GetPixels());
 			screenshottexture2D.Apply();
 
-			Debug.Log("Screenshot taken and assigned to RawImage");
+			//Debug.Log("Screenshot taken and assigned to RawImage");
 		}
 		
 		private void ScreenCaptureStopped()

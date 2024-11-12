@@ -1,4 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -11,38 +14,126 @@ public class PlaneManager : MonoBehaviour
     [SerializeField] private GameObject planePrefab; // Prefab fisico da instanziare per ogni piano rilevato
     private float detectionTimeout = 10f; // Tempo di attesa per il rilevamento dei piani
     private Coroutine detectionCoroutine;
-
-    void OnEnable()
+    private NavMeshSurface navMeshSurface;
+    [SerializeField] private Material navMeshMaterial; // Materiale per la visualizzazione della NavMesh
+    private void OnEnable()
     {
         planeManager.planesChanged += OnPlanesChanged;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         planeManager.planesChanged -= OnPlanesChanged;
     }
 
     private void Start()
     {
-        detectionCoroutine = StartCoroutine(WaitForPlanesDetection());
+        navMeshSurface = gameObject.AddComponent<NavMeshSurface>();
+        navMeshSurface.collectObjects = CollectObjects.Children;
     }
 
     private void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
     {
+        // Gestisci piani aggiunti
         foreach (var plane in eventArgs.added)
         {
-            if (detectionCoroutine == null)
+            if (!IsUnwantedPlane(plane.classifications))
             {
-                plane.gameObject.SetActive(false); // Disabilita il piano
-                return;
+                // Aggiungi il renderer per visualizzare il materiale se necessario
+                Renderer planeRenderer = plane.GetComponent<Renderer>();
+                if (planeRenderer == null)
+                {
+                    planeRenderer = plane.gameObject.AddComponent<MeshRenderer>();
+                }
+                //planeRenderer.material = navMeshMaterial;
+                
+                // Imposta il piano come figlio per includerlo nella NavMesh
+                plane.transform.SetParent(this.transform);
             }
-
-            // Instanzia una copia fisica del piano rilevato e disattiva l'originale
-            InstantiatePhysicalPlane(plane);
-            plane.gameObject.SetActive(false); // Disabilita il piano originale per evitare aggiornamenti
         }
+
+        // Gestisci piani aggiornati (se devono essere rimossi o aggiunti alla NavMesh)
+        foreach (var plane in eventArgs.updated)
+        {
+            if (IsUnwantedPlane(plane.classifications))
+            {
+                plane.gameObject.SetActive(false);
+            }
+            else
+            {
+                plane.gameObject.SetActive(true);
+            }
+        }
+
+        // Gestisci piani rimossi
+        foreach (var plane in eventArgs.removed)
+        {
+            plane.gameObject.SetActive(false);
+        }
+
+        // Aggiorna la NavMesh per riflettere i cambiamenti nei piani
+        UpdateNavMesh();
     }
 
+    private void UpdateNavMesh()
+    {
+        navMeshSurface.BuildNavMesh();
+    }
+
+
+   
+   
+    private bool IsUnwantedPlane(PlaneClassifications classifications )
+    {
+        List<PlaneClassification> labels = GetClassifications(classifications);
+        bool value = true;
+       // debuggingWindow.SetText("Piano etichette:");
+        string buffer = "";
+        foreach (var label in labels)
+        {
+            buffer += label;
+            if (label==PlaneClassification.Ceiling || label==PlaneClassification.Floor || label==PlaneClassification.Wall)
+            {
+              //  debuggingWindow.SetText("Ho trovato un piano visualizzabile ");
+                value=false;
+            }
+           
+        }
+     //   debuggingWindow.SetText(buffer);
+        return value;
+    }
+
+    public List<PlaneClassification> GetClassifications(PlaneClassifications classifications)
+    {
+        List<PlaneClassification> list = new List<PlaneClassification>();
+        if ((classifications & classifications & PlaneClassifications.Ceiling) != 0)
+        {
+            list.Add(PlaneClassification.Ceiling);
+        }
+        else if ((classifications & classifications & PlaneClassifications.Floor) != 0)
+        {
+            list.Add(PlaneClassification.Floor);
+        }
+        else if ((classifications & classifications & PlaneClassifications.Other) != 0)
+        {
+            list.Add(PlaneClassification.Other);
+        }
+        else if ((classifications & classifications & PlaneClassifications.WallFace) != 0)
+        {
+            list.Add(PlaneClassification.Wall);
+        }
+        else if ((classifications & classifications & PlaneClassifications.Ceiling) != 0)
+        {
+            list.Add(PlaneClassification.Ceiling);
+        }
+        else if ((classifications & classifications & PlaneClassifications.None) != 0)
+        {
+            list.Add(PlaneClassification.None);
+        }
+        return list;
+
+    }
+    // unused function
     private void InstantiatePhysicalPlane(ARPlane plane)
     {
         // Instanzia il prefab alla posizione e rotazione del piano AR
@@ -59,6 +150,7 @@ public class PlaneManager : MonoBehaviour
         DisableARComponents(physicalPlane);
     }
 
+    
     private void DisableARComponents(GameObject planeObject)
     {
         // Rimuovi o disabilita i componenti AR dal prefab istanziato
@@ -82,7 +174,21 @@ public class PlaneManager : MonoBehaviour
 
         debuggingWindow.SetText("Componenti AR disabilitati dal prefab istanziato.");
     }
+    
+    private IEnumerator WaitForPlanesDetection()
+    {
+        // Attendi per un periodo definito senza rilevamenti di nuovi piani
+        yield return new WaitForSeconds(detectionTimeout);
 
+        // Disabilita l'ARPlaneManager dopo il timeout
+        planeManager.enabled = false;
+        debuggingWindow.SetText("Plane Manager disabilitato.");
+        Debug.Log("Rilevamento dei piani completato, ARPlaneManager disabilitato.");
+
+        // Annulla l'iscrizione all'evento planesChanged
+        planeManager.planesChanged -= OnPlanesChanged;
+    }
+    
     private async void AddAnchorToPlane(GameObject planeObject, ARPlane originalPlane)
     {
         if (anchorManager != null && planeObject != null)
@@ -100,19 +206,5 @@ public class PlaneManager : MonoBehaviour
                 Debug.LogWarning("Impossibile creare un'ancora alla posizione specificata.");
             }
         }
-    }
-
-    private IEnumerator WaitForPlanesDetection()
-    {
-        // Attendi per un periodo definito senza rilevamenti di nuovi piani
-        yield return new WaitForSeconds(detectionTimeout);
-
-        // Disabilita l'ARPlaneManager dopo il timeout
-        planeManager.enabled = false;
-        debuggingWindow.SetText("Plane Manager disabilitato.");
-        Debug.Log("Rilevamento dei piani completato, ARPlaneManager disabilitato.");
-
-        // Annulla l'iscrizione all'evento planesChanged
-        planeManager.planesChanged -= OnPlanesChanged;
     }
 }

@@ -12,12 +12,12 @@ public class DynamicNavMeshForFloor : MonoBehaviour
 
     void OnEnable()
     {
-        planeManager.planesChanged += OnPlanesChanged;
+      //  planeManager.planesChanged += OnPlanesChanged;
     }
 
     void OnDisable()
     {
-        planeManager.planesChanged -= OnPlanesChanged;
+     //   planeManager.planesChanged -= OnPlanesChanged;
     }
     void Start()
     {

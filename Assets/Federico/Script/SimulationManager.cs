@@ -121,7 +121,7 @@ public class SimulationManager : MonoBehaviour
       BoundingBoxManagerUI.OnSceneInizializationCompleted+=ChangeSimulationState;
       ValueVisualizer.onActionTimeChanged += SetTime;
       ScreenshotManager.screenShotTaken += CompletedAction;
-      Debug.Log("Storyboarding Avviato");
+     // Debug.Log("Storyboarding Avviato");
      // DebuggingStartStoryBoarding();
         
     }
@@ -148,7 +148,8 @@ public class SimulationManager : MonoBehaviour
     
     public void StartStoryBoarding(TMP_Text txtcomponent)
     {
-        consoleDebuggin.SetText("starStoryboarding Chiamata");
+        consoleDebuggin.SetText("starStoryboarding Chiamata"+ status);
+        Debug.Log("Start Storyboarding avviato");
         if (status == 0)
         {
             status = 1;

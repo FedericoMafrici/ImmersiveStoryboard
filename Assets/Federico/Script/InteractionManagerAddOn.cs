@@ -15,6 +15,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     [SerializeField] public Material selectMaterial;
     [SerializeField] public SimulationManager _SimulationManager;
     [SerializeField] public MenuManager menuManager;
+    public ConsoleDebugger debuggingWindow;
     private ARAnchor _currentAnchor;
     private bool _objectHovered = false;
     private GameObject _currHoveredObj = null;
@@ -33,21 +34,13 @@ public class InteractionManagerAddOn : MonoBehaviour
        {
            Debug.LogError("Simulation manager di :" + gameObject.name + " non trovato");
        }
-       CreateAnchor();
+     //  CreateAnchor();
+       debuggingWindow= FindObjectOfType<ConsoleDebugger>();
+       SimulationManager.startStoryboarding += DisableMoving;
+       SimulationManager.pauseStoryboarding += EnableMoving;
        
     }
-
-    void Start()
-    {
-        _SimulationManager=  GameObject.Find("SimulationManager").GetComponent<SimulationManager>() ;
-        if (_SimulationManager==null)
-        {
-            Debug.LogError("Simulation manager di :" + gameObject.name + " non trovato");
-        }
-
-        SimulationManager.startStoryboarding += DisableMoving;
-        SimulationManager.pauseStoryboarding += EnableMoving;
-    }
+    
     
     public void PlaceOnNavMesh()
     {
@@ -68,6 +61,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     
     public void DisableMoving(object sender, EventArgs obj)
     {
+        Debug.Log("l'oggetto è pronto per la fase di storyboarding");
          XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
          if (_xrInt != null)
          {
@@ -76,6 +70,11 @@ public class InteractionManagerAddOn : MonoBehaviour
              _xrInt.trackScale = false;
              
              interactionEnabled = true;
+         }
+         else
+         {
+             Debug.LogError("componenete grabbable non trovato");
+             debuggingWindow.SetText("Componente xrGRABBBABLE NON TROVATO ATTENTION!!");
          }
 
          if (this.gameObject.CompareTag("Player"))
@@ -143,17 +142,20 @@ public class InteractionManagerAddOn : MonoBehaviour
     // Deve essere void per poter essere visualizzata nell'Inspector
     public void onSelectionEnter(SelectEnterEventArgs args)
     {
+        debuggingWindow.SetText("Hai interagito con il personaggio interaction settata a" +interactionEnabled);
+        debuggingWindow.SetText(this.transform.parent.gameObject.name);
         if (!interactionEnabled)
         {
             Debug.Log("hai selezionato l'oggetto: " + this.gameObject.name);
             _currSelectedObj = args.interactableObject.transform.gameObject;
-            Destroy(_currentAnchor.gameObject);
+           // Destroy(_currentAnchor.gameObject);
             _currentAnchor = null;
             transform.parent = null; // Rimuove la parentela per la manipolazione libera
             
         }
         else
         {
+            debuggingWindow.SetText("Ho chiamato la Set Active Character");
             onObjectSelected.Invoke(this,EventArgs.Empty);
            Debug.Log("Set Active character chiamata");
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
@@ -163,7 +165,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     public void OnSelectionExit(SelectExitEventArgs args)
     {
         // Crea una nuova ancora alla posizione attuale quando l'oggetto viene rilasciato
-        CreateAnchor();
+       // CreateAnchor();
     }
     
     public void MenuObjectSelected()
