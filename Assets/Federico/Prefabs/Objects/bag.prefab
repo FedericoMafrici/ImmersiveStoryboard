@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7308700648630222211}
   - component: {fileID: 4238713219252841702}
   - component: {fileID: 3437788206427607353}
+  - component: {fileID: 298444384737179857}
   m_Layer: 0
   m_Name: bag
   m_TagString: Untagged
@@ -150,7 +151,19 @@ MonoBehaviour:
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4431810146058154225}
+        m_TargetAssemblyTypeName: InteractionManagerAddOn, Assembly-CSharp
+        m_MethodName: OnSelectionExit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -240,6 +253,7 @@ MonoBehaviour:
   selectMaterial: {fileID: 0}
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 0}
+  debuggingWindow: {fileID: 0}
   interactionEnabled: 0
 --- !u!114 &6185106010903146420
 MonoBehaviour:
@@ -328,6 +342,19 @@ MonoBehaviour:
   place: 
   hitColliders: []
   isBoundingBox: 0
+--- !u!114 &298444384737179857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6942615624695211225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91dad42d4f2b64a5eb48fe9395e44117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorManager: {fileID: 0}
 --- !u!1001 &7653420567585035000
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -64,6 +64,7 @@ public class ControllerManager : MonoBehaviour
         controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
 
         controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
+        DeactivateLaser();
     }
 
     public void KeyboardPressed(InputAction.CallbackContext ctx)
@@ -114,7 +115,6 @@ public class ControllerManager : MonoBehaviour
     
     public void Ypressed(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Y button pressed");
 
         if (possibleInteraction)
         {
@@ -166,15 +166,12 @@ public class ControllerManager : MonoBehaviour
 
                       public void Apressed(InputAction.CallbackContext ctx)
                       {
-                          Debug.Log("A pressed");
-                          _ConsoleDebugger.SetText("A pressed");
-                         // SpawnAnchor();
                       }
 
                       public void Bpressed(InputAction.CallbackContext ctx)
                       {
-                          Debug.Log("B pressed");
-                          _ConsoleDebugger.SetText("B pressed");
+                          
+                        
                        //   StopBoundingBoxPlaneEdit.Invoke(this, EventArgs.Empty);
                       }
                       public async void SpawnAnchor()
@@ -212,9 +209,7 @@ public class ControllerManager : MonoBehaviour
         // Visualizza lo screenshot sulla UI
         _screenshot.texture = screenShot;
         _screenshot.enabled = true;  // Abilita la visualizzazione
-
-        Debug.Log("Screenshot visualizzato sulla UI: " + _screenshot.name);
-        _ConsoleDebugger.AddText("Screenshot visualizzato sulla UI: " + _screenshot.name);
+        
     }
         
     private void Update()
@@ -283,8 +278,6 @@ public class ControllerManager : MonoBehaviour
     
     private void OnGripHold(InputAction.CallbackContext context)
     {
-        Debug.Log("grip pressed");
-        _ConsoleDebugger.SetText("Grip Pressed");
         // Controlla se il ray interactor sta selezionando il piano
         if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit))
         {
@@ -304,8 +297,6 @@ public class ControllerManager : MonoBehaviour
     
     private void OnGripRelease(InputAction.CallbackContext context)
     {
-        Debug.Log("Grip Released");
-        // Ferma il movimento del piano
         isMovingPlane = false;
     }
 
@@ -313,7 +304,7 @@ public class ControllerManager : MonoBehaviour
 
     public void changeLaserState()
     {
-        Debug.Log("Y button pressed");
+       
         possibleInteraction = true;
 
         // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato

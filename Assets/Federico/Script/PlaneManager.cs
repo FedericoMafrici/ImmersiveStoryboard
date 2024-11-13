@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +17,39 @@ public class PlaneManager : MonoBehaviour
     private Coroutine detectionCoroutine;
     private NavMeshSurface navMeshSurface;
     [SerializeField] private Material navMeshMaterial; // Materiale per la visualizzazione della NavMesh
+    private float rebuildInterval = 10f; // Intervallo in secondi
+    public static EventHandler<EventArgs> onNavMeshRebuildRequest;
+    
+    
     private void OnEnable()
     {
         planeManager.planesChanged += OnPlanesChanged;
+        onNavMeshRebuildRequest += UpdateNavMesh;
     }
 
     private void OnDisable()
     {
         planeManager.planesChanged -= OnPlanesChanged;
+        onNavMeshRebuildRequest -= UpdateNavMesh;
     }
 
     private void Start()
     {
         navMeshSurface = gameObject.AddComponent<NavMeshSurface>();
         navMeshSurface.collectObjects = CollectObjects.Children;
+        StartCoroutine(RequestNavMeshRebuild());
     }
-
+    private IEnumerator RequestNavMeshRebuild()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(rebuildInterval);
+            
+            // Lancia l'evento di richiesta di ricostruzione della NavMesh
+            onNavMeshRebuildRequest?.Invoke(this, EventArgs.Empty);
+            Debug.Log("Evento di richiesta ricostruzione NavMesh lanciato.");
+        }
+    }
     private void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
     {
         // Gestisci piani aggiunti
@@ -72,10 +90,9 @@ public class PlaneManager : MonoBehaviour
         }
 
         // Aggiorna la NavMesh per riflettere i cambiamenti nei piani
-        UpdateNavMesh();
     }
 
-    private void UpdateNavMesh()
+    private void UpdateNavMesh(object sender, EventArgs e )
     {
         navMeshSurface.BuildNavMesh();
     }

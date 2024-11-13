@@ -19,6 +19,8 @@ public class AnimaPersonaggio : MonoBehaviour
     
     [Header("Personaggio ed oggetti attivi")] 
     [SerializeField] public PhraseGenerator phraseGenerator;
+
+    [SerializeField] public ConsoleDebugger debuggingWindow;
     
     [Header("Variabili Booleane")]
     // Gestione camminata 
@@ -74,6 +76,11 @@ public class AnimaPersonaggio : MonoBehaviour
      */
     public void SetCharacter(GameObject obj)
     {
+        if (debuggingWindow == null)
+        {
+            Debug.LogError("ERRORE DEBUGGIN WINDOW INSPIEGABILMENTE NULL");
+        }
+        
         // null check section
         if (obj == null)
         {
@@ -95,6 +102,8 @@ public class AnimaPersonaggio : MonoBehaviour
            if (GameObject.Find("ParticleActive") == false)
            { _simulationManager.CreateParticleActive(_simulationManager.activeCharacter); }
            _self = true; // per ora lo mettimao non sono sicuro serva a qualcosa 
+           Debug.Log(obj.name);
+           debuggingWindow.SetText("oggetto attivo"+obj.gameObject.name);
            ShowAloneActions();
            return; 
        }
@@ -117,6 +126,7 @@ public class AnimaPersonaggio : MonoBehaviour
        if (_simulationManager.activeCharacter != null && _simulationManager.activeCharacter != _character)
        {
            _self = false;
+           debuggingWindow.SetText("oggetto attivo"+obj.gameObject.name+"oggetto con cui si interagisce"+_character);
            ShowActions();
        }
     }
@@ -192,6 +202,7 @@ public class AnimaPersonaggio : MonoBehaviour
                 _character.GetComponent<State>().state, _self);
         ClearContainer(container);
         // update dei contenuti 
+        debuggingWindow.SetText(_selectedActionsList.ToString());
         foreach (string s in _selectedActionsList)
         {
             if( s==null)

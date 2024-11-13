@@ -39,7 +39,7 @@ public class MenuManager : MonoBehaviour
                myDictionary.Add(keys[i], values[i]);
            }
        }
-       SetTableTop();
+       SetSceneObjects();
        SelectObject("Woman");
     }
 

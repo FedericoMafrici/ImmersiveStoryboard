@@ -24,7 +24,14 @@ public class ConsoleDebugger : MonoBehaviour
 
     public void SetText(string txt)
     {
-        _text.text += "\n" + txt + "\n";
+        if (_text != null)
+        {
+            _text.text += "\n" + txt + "\n";
+        }
+        else
+        {
+            Debug.LogError("Testo del console debugger non inizalizzato");
+        }
     }
 
     public void AddText(string txt)

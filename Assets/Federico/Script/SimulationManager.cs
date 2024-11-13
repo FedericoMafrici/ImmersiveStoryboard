@@ -161,6 +161,11 @@ public class SimulationManager : MonoBehaviour
             status = 0;
             pauseStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Start";
+            activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+            activeCharacter = null;
+            characterAnimationManager._character = null;
+            characterAnimationManager._interactionObject = null;
+            
         }
     }
    
@@ -302,6 +307,7 @@ public class SimulationManager : MonoBehaviour
      */
     public void SetActiveCharacter(GameObject obj) {
         // se il personaggio attivo è gia esistente allora potrei starne selezionando un altro se non c'è allora semplicemente sostituisci con la reference
+        consoleDebuggin.SetText("Simulation Manager r310: " + obj.name+ "TAG"+ obj.tag);
         if (status == 1) {
             if (activeCharacter != null && activeCharacter != obj && obj.CompareTag("Player"))
             {
@@ -313,17 +319,20 @@ public class SimulationManager : MonoBehaviour
                 // abilita in modo il pulsante di get Control per far diventare quel personaggio il principale 
                 
               //   activeCharacter = obj.transform.GetChild(0).gameObject;
-                characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.transform.GetChild(0).gameObject); 
+              consoleDebuggin.SetText("Sono entrato nel primo ramo dell'if e l'oggetto che passo è "+obj.transform.GetChild(0).gameObject.name);
+              characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.transform.GetChild(0).gameObject); 
             }
             else
             {
                 if (obj.CompareTag("Player"))
                 {
                     activeCharacter = obj.transform.GetChild(0).gameObject;
+                    consoleDebuggin.SetText("Sono entrato nel secondo ramo dell'if e l'oggetto che passo è "+obj.transform.GetChild(0).gameObject.name);
                     characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.transform.GetChild(0).gameObject);
                 }
                 else
                 {
+                    consoleDebuggin.SetText("Sono entrato nel terzo ramo dell'if e l'oggetto che passo è "+obj.gameObject.name);
                     characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.gameObject);
                 }
                

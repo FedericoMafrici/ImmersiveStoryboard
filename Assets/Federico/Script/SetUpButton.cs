@@ -35,10 +35,4 @@ public class SetUpButton : MonoBehaviour
         _simulationManager.getControlOfsecondCharacter();
     }
     
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
 }

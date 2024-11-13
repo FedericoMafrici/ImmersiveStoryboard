@@ -22,6 +22,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private PhraseGenerator phraseGenerator;
     [SerializeField] private SimulationManager simulationManager;
     [SerializeField] public string type;
+    [SerializeField] private InteractionManagerAddOn interactionManagerAddOn;
     public bool simulation = false;
     public bool isWalking;
     public bool walkMode = true;
@@ -52,6 +53,7 @@ public class CharacterManager : MonoBehaviour
         phraseGenerator = FindObjectOfType<PhraseGenerator>();
         simulationManager = FindObjectOfType<SimulationManager>();
         charAnim = this.GetComponent<Animator>();
+        
         SimulationManager.setUpMovement +=EnableCharacterMovement;
         
         if (!loadedObject || type=="")
@@ -65,7 +67,7 @@ public class CharacterManager : MonoBehaviour
         isWalking = false;
         newPlace = false;
 
-        CursorVisual = GameObject.Find("CursorVisual");
+        //CursorVisual = GameObject.Find("CursorVisual");
 
     }
 
@@ -88,7 +90,7 @@ public class CharacterManager : MonoBehaviour
                     {
                         // Il personaggio ha raggiunto la destinazione, ferma il movimento
                         StopWalking();
-                        this.gameObject.AddComponent<ARAnchor>();
+                       interactionManagerAddOn.characterAnchorManager.CreateAnchor();
                     }
                 }
             }
@@ -124,7 +126,11 @@ public class CharacterManager : MonoBehaviour
     }
     public void Move(RaycastHit hitInfo)
     {
-        Destroy(this.GetComponent<ARAnchor>());
+        if (interactionManagerAddOn == null)
+        {
+            Debug.LogError("L'interactionmanagerAddon collegato al personaggio è risultato nullo");
+        }
+        interactionManagerAddOn.characterAnchorManager.DestroyAnchor();
         var agent = this.GetComponent<NavMeshAgent>();
         
         if (agent == null)

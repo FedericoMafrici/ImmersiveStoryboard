@@ -9985,6 +9985,7 @@ GameObject:
   - component: {fileID: 6793452089335840809}
   - component: {fileID: 7120998104475886605}
   - component: {fileID: 8693747265442139366}
+  - component: {fileID: 5143612314774106419}
   m_Layer: 9
   m_Name: Personaggio2
   m_TagString: Player
@@ -10209,6 +10210,19 @@ MonoBehaviour:
   m_MinimumScaleRatio: 0.25
   m_MaximumScaleRatio: 3
   m_ScaleMultiplier: 0.25
+--- !u!114 &5143612314774106419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9115762771079033493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91dad42d4f2b64a5eb48fe9395e44117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorManager: {fileID: 0}
 --- !u!1 &9160168797164062964
 GameObject:
   m_ObjectHideFlags: 0
@@ -10900,7 +10914,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4264504016231814536}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.01
+  m_Radius: 0.005
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -10929,6 +10943,8 @@ MonoBehaviour:
   selectMaterial: {fileID: 0}
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 0}
+  characterAnchorManager: {fileID: 5143612314774106419}
+  debuggingWindow: {fileID: 0}
   interactionEnabled: 0
 --- !u!114 &2850995367612915517
 MonoBehaviour:
@@ -10969,6 +10985,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: flyn
+  interactionManagerAddOn: {fileID: 4800446761327461023}
   simulation: 0
   isWalking: 0
   walkMode: 1
@@ -11001,8 +11018,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.021946918, y: 0.026876299, z: 0.020542763}
-  m_Center: {x: -0.0040329285, y: 0.00982141, z: -0.00017236535}
+  m_Size: {x: 0.00843336, y: 0.026876299, z: 0.012247847}
+  m_Center: {x: -0.0010093265, y: 0.00982141, z: -0.00018999746}
 --- !u!95 &7387437993209156936 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 4f0702c9f15d0454e98d16a64737fa16, type: 3}

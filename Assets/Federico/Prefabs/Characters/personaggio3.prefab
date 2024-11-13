@@ -1083,6 +1083,7 @@ GameObject:
   - component: {fileID: 1783971755318298660}
   - component: {fileID: 8372403725204062148}
   - component: {fileID: 6026274345731493934}
+  - component: {fileID: 3750168891749642340}
   m_Layer: 9
   m_Name: personaggio3
   m_TagString: Player
@@ -1307,6 +1308,19 @@ MonoBehaviour:
   m_MinimumScaleRatio: 0.25
   m_MaximumScaleRatio: 3
   m_ScaleMultiplier: 0.25
+--- !u!114 &3750168891749642340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2567637209581034524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91dad42d4f2b64a5eb48fe9395e44117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorManager: {fileID: 0}
 --- !u!1 &2780809220447884441
 GameObject:
   m_ObjectHideFlags: 0
@@ -4136,9 +4150,9 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 433817047456496923}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 0.12
+  m_Radius: 0.09
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -4215,6 +4229,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: rapunzel
+  interactionManagerAddOn: {fileID: 1979452972533104402}
   simulation: 0
   isWalking: 0
   walkMode: 1
@@ -4243,6 +4258,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: rapunzel
+  interactionManagerAddOn: {fileID: 1979452972533104402}
   simulation: 0
   isWalking: 0
   walkMode: 1
@@ -4275,8 +4291,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.24719615, y: 0.3209499, z: 0.27347466}
-  m_Center: {x: 0.0033250095, y: 0.15853517, z: -0.0017171979}
+  m_Size: {x: 0.16173601, y: 0.32094988, z: 0.111475505}
+  m_Center: {x: -0.002596283, y: 0.15853517, z: -0.0192733}
 --- !u!114 &1979452972533104402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4293,6 +4309,8 @@ MonoBehaviour:
   selectMaterial: {fileID: 0}
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 0}
+  characterAnchorManager: {fileID: 0}
+  debuggingWindow: {fileID: 0}
   interactionEnabled: 0
 --- !u!4 &958962031247452065 stripped
 Transform:

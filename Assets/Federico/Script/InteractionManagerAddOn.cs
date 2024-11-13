@@ -15,6 +15,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     [SerializeField] public Material selectMaterial;
     [SerializeField] public SimulationManager _SimulationManager;
     [SerializeField] public MenuManager menuManager;
+    public CharacterAnchorManager characterAnchorManager;
     public ConsoleDebugger debuggingWindow;
     private ARAnchor _currentAnchor;
     private bool _objectHovered = false;
@@ -27,18 +28,40 @@ public class InteractionManagerAddOn : MonoBehaviour
 
     public static EventHandler<EventArgs> onObjectSelected;
     // Start is called before the first frame update
-    private void Awake()
+    private void Start()
     {
        _SimulationManager=  GameObject.Find("SimulationManager").GetComponent<SimulationManager>() ;
        if (_SimulationManager==null)
        {
            Debug.LogError("Simulation manager di :" + gameObject.name + " non trovato");
        }
-     //  CreateAnchor();
+
+       if (this.CompareTag("Player"))
+       {
+           characterAnchorManager = this.GetComponentInParent<CharacterAnchorManager>();
+       }
+       else
+       {
+           characterAnchorManager = this.GetComponent<CharacterAnchorManager>();
+       }
+
+       if (characterAnchorManager == null)
+       {
+           Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
+       }
        debuggingWindow= FindObjectOfType<ConsoleDebugger>();
+       
        SimulationManager.startStoryboarding += DisableMoving;
        SimulationManager.pauseStoryboarding += EnableMoving;
-       
+       if (characterAnchorManager == null)
+       {
+           Debug.LogError(" il componenete character Anchor Manager del personaggio non è stato configurato");
+       }
+       else
+       {
+           characterAnchorManager.CreateAnchor();     
+       }
+      
     }
     
     
@@ -57,18 +80,15 @@ public class InteractionManagerAddOn : MonoBehaviour
             Debug.LogError("Impossibile trovare una posizione sulla NavMesh vicina.");
         }
     }
-
-    
     public void DisableMoving(object sender, EventArgs obj)
     {
-        Debug.Log("l'oggetto è pronto per la fase di storyboarding");
+         Debug.Log("l'oggetto"+ this.name +"è pronto per la fase di storyboarding");
          XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
          if (_xrInt != null)
          {
              _xrInt.trackPosition = false;
              _xrInt.trackRotation = false;
              _xrInt.trackScale = false;
-             
              interactionEnabled = true;
          }
          else
@@ -100,9 +120,7 @@ public class InteractionManagerAddOn : MonoBehaviour
                  navMeshObstacle.enabled = true;
              }
          }
-         
     }
-
     public void EnableMoving(object sender, EventArgs obj)
     {
         XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>(); 
@@ -114,7 +132,6 @@ public class InteractionManagerAddOn : MonoBehaviour
             
             interactionEnabled = false;
         }
-
         if (this.gameObject.CompareTag("Player"))
         {
             var navmeshAgent = this.GetComponent<NavMeshAgent>();
@@ -137,100 +154,50 @@ public class InteractionManagerAddOn : MonoBehaviour
                 navMeshObstacle.enabled = false;
             }
         }
-
     }
     // Deve essere void per poter essere visualizzata nell'Inspector
     public void onSelectionEnter(SelectEnterEventArgs args)
     {
-        debuggingWindow.SetText("Hai interagito con il personaggio interaction settata a" +interactionEnabled);
-        debuggingWindow.SetText(this.transform.parent.gameObject.name);
+       // debuggingWindow.SetText("Hai interagito con il personaggio interaction settata a" +interactionEnabled);
+       // debuggingWindow.SetText(this.transform.parent.gameObject.name);
+        characterAnchorManager.DestroyAnchor();
+        if (this.GetComponent<SnapToPlane>() != null)
+        {
+          //  debuggingWindow.SetText(this.GetComponent<SnapToPlane>().ToString());
+        }
+        else
+        {
+         //   debuggingWindow.SetText("componenete SnapToPlane non trovato: oggetto" + this.gameObject.name + " padre" + this.transform.parent.gameObject.name);
+        }
         if (!interactionEnabled)
         {
             Debug.Log("hai selezionato l'oggetto: " + this.gameObject.name);
             _currSelectedObj = args.interactableObject.transform.gameObject;
-           // Destroy(_currentAnchor.gameObject);
-            _currentAnchor = null;
-            transform.parent = null; // Rimuove la parentela per la manipolazione libera
             
         }
         else
         {
-            debuggingWindow.SetText("Ho chiamato la Set Active Character");
+            //debuggingWindow.SetText("Ho chiamato la Set Active Character per l'oggetto +"+ _currSelectedObj.name);
             onObjectSelected.Invoke(this,EventArgs.Empty);
-           Debug.Log("Set Active character chiamata");
+            _currSelectedObj = args.interactableObject.transform.gameObject;
+            Debug.Log("Set Active character chiamata nome oggetto"+_currSelectedObj.gameObject.name + "\n figli:"+_currSelectedObj.transform.GetChild(0).name);
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
            //interactionEnabled = false;
        }
     }
     public void OnSelectionExit(SelectExitEventArgs args)
     {
-        // Crea una nuova ancora alla posizione attuale quando l'oggetto viene rilasciato
-       // CreateAnchor();
+        characterAnchorManager.CreateAnchor();
     }
     
     public void MenuObjectSelected()
     {
-    
         var txt=  this.transform.Find("Image/Text").GetComponent<Text>();
-        
         if (txt == null)
         {
             Debug.LogError("l'oggetto selezionato non ha un campo nome errore");
             return;
         }
         menuManager.SelectObject(txt.text);
-    
     }
-    
-    
-    //Probabilmente non usate queste due 
-    public void onHoverEnter(HoverEnterEventArgs args)
-    {
-        Debug.Log("hai appena iniziato a guardare l'oggetto");
-        _time = 0.0f;
-      //  _objectHovered = true;
-        _currHoveredObj = args.interactableObject.transform.gameObject;
-        
-    }
-    public void onHover(HoverEnterEventArgs args)
-    {
-     Debug.Log("stai guardando l'oggteto");
-     //TODO 
-    }
-    
-    public void onHoverExit(HoverExitEventArgs args)
-    {
-        Debug.Log("non stai piu guardando l'oggetto");
-        _objectHovered = false;
-        _time = 0.0f;
-        _currHoveredObj= null;
-    }
-//@@@@@@ GESTIONE FUNZIONI ANCORAGGIO @@@@@@@
-    private async void CreateAnchor()
-    {
-        // Controlla se esiste già un'ancora e la rimuove se presente
-        if (_currentAnchor != null)
-        {
-            Destroy(_currentAnchor);
-        }
-
-        // Crea una nuova ancora alla posizione e rotazione attuali
-        ARAnchorManager anchorManager = FindObjectOfType<ARAnchorManager>();
-        if (anchorManager != null)
-        {
-            var result = await anchorManager.TryAddAnchorAsync(new Pose(transform.position, transform.rotation));
-            if (result.status.IsSuccess())
-            {
-                _currentAnchor = result.value; // Assegna l'ancora creata a _currentAnchor
-                transform.parent = _currentAnchor.transform; // Rende l'oggetto figlio dell'ancora
-                Debug.Log("Ancora creata e assegnata con successo.");
-            }
-            else
-            {
-                Debug.LogWarning("Impossibile creare un'ancora alla posizione specificata.");
-            }
-        }
-    }
-    
- 
 }

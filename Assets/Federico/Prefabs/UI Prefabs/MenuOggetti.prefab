@@ -289,6 +289,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2923940163978215994, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3983320976348100918, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -312,6 +316,10 @@ PrefabInstance:
     - target: {fileID: 4824890587069924905, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
       propertyPath: m_Text
       value: Sedia
+      objectReference: {fileID: 0}
+    - target: {fileID: 5053195453771052525, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5063007953966311663, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -461,6 +469,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 27ec0fbdd921f4d95a20ca3095bea683, type: 3}
+    - target: {fileID: 6201609462492302229, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6844529568714829519, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -520,6 +532,10 @@ PrefabInstance:
     - target: {fileID: 8797348050729225672, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8876693191628748494, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9141357762683301025, guid: 1c20ddad27df842ba825c7bcc8ced981, type: 3}
       propertyPath: m_IsActive
@@ -654,6 +670,7 @@ MonoBehaviour:
   selectMaterial: {fileID: 0}
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 7078992635934745150}
+  debuggingWindow: {fileID: 0}
   interactionEnabled: 0
 --- !u!114 &5851453790109426389 stripped
 MonoBehaviour:

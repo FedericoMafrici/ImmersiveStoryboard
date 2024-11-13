@@ -30,6 +30,11 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public bool planeRotation = false;
 
     public List<ObjectType> oggettiInScena;
+   
+    private CharacterAnchorManager _characterAnchorManager;
+    
+    //[SerializeField] private BoundingBoxInteractionManager interactionManagerAddOn;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public class ObjectType
     {
@@ -54,6 +59,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             SimulationManager.startStoryboarding += DisableMoving;
             ControllerManager.OnBoundingBoxPlaneEdit += AllowEditPlane;
             ControllerManager.StopBoundingBoxPlaneEdit += StopEditPlane;
+            
             simulationManager = FindObjectOfType<SimulationManager>();
             Debug.Log("Iscrizione all'evento OnBoundingBoxPlacement completata");
             labelUI = this.transform.Find("BoundingBoxLabel").gameObject;
@@ -79,21 +85,29 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              objects.Add(new ObjectType("wardrobe", possibleStates, "closed"));
              possibleStates.Clear();
              ObjectsMap.Add("wardrobe",objects[1]);
-
-           // SetLabel("chair");
+             //gestione ancore
+             _characterAnchorManager = this.GetComponent<CharacterAnchorManager>();
+             if (_characterAnchorManager == null)
+             {
+                 Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
+             }
     }
 
     public void OnSelectionEnter(SelectEnterEventArgs args)
     {
         Debug.Log("hai selezionato l'oggetto: " +this.gameObject.name);
         _currSelectedObj = this.gameObject;
+        _characterAnchorManager.DestroyAnchor();
         if (interactionEnabled)
         {
             simulationManager.SetActiveCharacter(_currSelectedObj);
             interactionEnabled = false;
         }
     }
-    
+    public void OnSelectionExit(SelectExitEventArgs args)
+    {
+      //  _characterAnchorManager.CreateAnchor();
+    }
     
   
     public void ObjectHoveredEntered(HoverEnterEventArgs args)
@@ -238,7 +252,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     public bool isPlaneNeeded(string label)
     {
-        if (label == "chair" || label == "table")
+        if (label == "chair")
         {
             return true;
         }

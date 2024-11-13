@@ -13,8 +13,8 @@ public class SnapToPlane : XRGrabInteractable
 
     private ARPlane closestPlane;
     private bool isSnapping = false;
-
-
+    
+    
     protected void Start()
     {
        planeManager= GameObject.Find("XR Origin (XR Rig)").GetComponent<ARPlaneManager>();
@@ -91,8 +91,13 @@ public class SnapToPlane : XRGrabInteractable
             SnapToClosestPlane();
         }
     }
-    
 
+    public override string ToString()
+    {
+        string res;
+        res = "Questo oggetto ha il componente SnapToPlane attivo ed operativo";
+        return res;
+    }
    
     
 

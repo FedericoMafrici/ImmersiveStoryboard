@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 277438987084434683}
   - component: {fileID: 1862997330969448765}
   - component: {fileID: 3320890362594388745}
+  - component: {fileID: 5613364729495164392}
   m_Layer: 0
   m_Name: wardrobe
   m_TagString: Untagged
@@ -105,6 +106,8 @@ MonoBehaviour:
   selectMaterial: {fileID: 0}
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 0}
+  characterAnchorManager: {fileID: 5613364729495164392}
+  debuggingWindow: {fileID: 0}
   interactionEnabled: 0
 --- !u!114 &302733042894723199
 MonoBehaviour:
@@ -121,6 +124,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: wardrobe
+  interactionManagerAddOn: {fileID: 4797690262140317339}
   simulation: 0
   isWalking: 0
   walkMode: 0
@@ -220,7 +224,19 @@ MonoBehaviour:
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1862997330969448765}
+        m_TargetAssemblyTypeName: InteractionManagerAddOn, Assembly-CSharp
+        m_MethodName: OnSelectionExit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -333,6 +349,8 @@ MonoBehaviour:
   selectMaterial: {fileID: 0}
   _SimulationManager: {fileID: 0}
   menuManager: {fileID: 0}
+  characterAnchorManager: {fileID: 5613364729495164392}
+  debuggingWindow: {fileID: 0}
   interactionEnabled: 0
 --- !u!208 &3320890362594388745
 NavMeshObstacle:
@@ -350,6 +368,19 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.03, y: 0.61, z: -0.48}
   m_TimeToStationary: 0.5
+--- !u!114 &5613364729495164392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6683974226756806044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91dad42d4f2b64a5eb48fe9395e44117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorManager: {fileID: 0}
 --- !u!1001 &8963293736513150299
 PrefabInstance:
   m_ObjectHideFlags: 0
