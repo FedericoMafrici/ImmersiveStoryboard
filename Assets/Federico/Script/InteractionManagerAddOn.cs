@@ -17,7 +17,6 @@ public class InteractionManagerAddOn : MonoBehaviour
     [SerializeField] public MenuManager menuManager;
     public CharacterAnchorManager characterAnchorManager;
     public ConsoleDebugger debuggingWindow;
-    private ARAnchor _currentAnchor;
     private bool _objectHovered = false;
     private GameObject _currHoveredObj = null;
     private float _time = 0.0f;
@@ -56,10 +55,11 @@ public class InteractionManagerAddOn : MonoBehaviour
        if (characterAnchorManager == null)
        {
            Debug.LogError(" il componenete character Anchor Manager del personaggio non è stato configurato");
+           debuggingWindow.SetText("componenete characterAnchorManager non trovato per l'oggetto"+this.gameObject.name);
        }
        else
        {
-           characterAnchorManager.CreateAnchor();     
+           characterAnchorManager.AttachObjectToAnchor();     
        }
       
     }
@@ -158,17 +158,10 @@ public class InteractionManagerAddOn : MonoBehaviour
     // Deve essere void per poter essere visualizzata nell'Inspector
     public void onSelectionEnter(SelectEnterEventArgs args)
     {
-       // debuggingWindow.SetText("Hai interagito con il personaggio interaction settata a" +interactionEnabled);
-       // debuggingWindow.SetText(this.transform.parent.gameObject.name);
-        characterAnchorManager.DestroyAnchor();
-        if (this.GetComponent<SnapToPlane>() != null)
-        {
-          //  debuggingWindow.SetText(this.GetComponent<SnapToPlane>().ToString());
-        }
-        else
-        {
-         //   debuggingWindow.SetText("componenete SnapToPlane non trovato: oggetto" + this.gameObject.name + " padre" + this.transform.parent.gameObject.name);
-        }
+        #if !UNITY_EDITOR
+        debuggingWindow.SetText("Oggetto selezionato ho distrutto l'ancora"); 
+        characterAnchorManager.DetachFromAnchor();
+        #endif
         if (!interactionEnabled)
         {
             Debug.Log("hai selezionato l'oggetto: " + this.gameObject.name);
@@ -177,17 +170,19 @@ public class InteractionManagerAddOn : MonoBehaviour
         }
         else
         {
-            //debuggingWindow.SetText("Ho chiamato la Set Active Character per l'oggetto +"+ _currSelectedObj.name);
+            
             onObjectSelected.Invoke(this,EventArgs.Empty);
             _currSelectedObj = args.interactableObject.transform.gameObject;
             Debug.Log("Set Active character chiamata nome oggetto"+_currSelectedObj.gameObject.name + "\n figli:"+_currSelectedObj.transform.GetChild(0).name);
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
-           //interactionEnabled = false;
+           debuggingWindow.SetText("Ho chiamato la Set Active Character per l'oggetto +"+ _currSelectedObj.name);
+           interactionEnabled = false;
        }
     }
     public void OnSelectionExit(SelectExitEventArgs args)
     {
-        characterAnchorManager.CreateAnchor();
+        characterAnchorManager.AttachObjectToAnchor();
+        debuggingWindow.SetText("Ancora instanziata nuovamente");
     }
     
     public void MenuObjectSelected()

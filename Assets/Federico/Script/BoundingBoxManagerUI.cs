@@ -96,7 +96,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
                     _showTutorialButton.onClick.RemoveListener( HandleTutorial);
                     _showTutorialButton.onClick.AddListener(_tutorialSecondPart.HandleTutorial);
                     OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
-                    enviroment.FadeSkybox(false);
+                    enviroment.FadeSkybox(true);
                     currActiveCard.SetActive(false);
                     _currCardCounter = 0;
                     _tutorial.SetActive(false);

@@ -17,7 +17,7 @@ public class PlaneManager : MonoBehaviour
     private Coroutine detectionCoroutine;
     private NavMeshSurface navMeshSurface;
     [SerializeField] private Material navMeshMaterial; // Materiale per la visualizzazione della NavMesh
-    private float rebuildInterval = 10f; // Intervallo in secondi
+    private float rebuildInterval = 20f; // Intervallo in secondi
     public static EventHandler<EventArgs> onNavMeshRebuildRequest;
     
     
@@ -38,7 +38,18 @@ public class PlaneManager : MonoBehaviour
         navMeshSurface = gameObject.AddComponent<NavMeshSurface>();
         navMeshSurface.collectObjects = CollectObjects.Children;
         StartCoroutine(RequestNavMeshRebuild());
+       // StartCoroutine(DisablePlaneManager());
     }
+
+    private IEnumerator DisablePlaneManager()
+    {
+        yield return new WaitForSeconds(5); 
+        planeManager.enabled = false;
+        planeManager.planesChanged -= OnPlanesChanged;
+        debuggingWindow.SetText("Ho interroto l'update ai piani non dovrebbero più essere aggiornati");
+       
+    }
+
     private IEnumerator RequestNavMeshRebuild()
     {
         while (true)
@@ -52,6 +63,7 @@ public class PlaneManager : MonoBehaviour
     }
     private void OnPlanesChanged(ARPlanesChangedEventArgs eventArgs)
     {
+      //  debuggingWindow.SetText("è stata chiamata la OnPlanesChanged");
         // Gestisci piani aggiunti
         foreach (var plane in eventArgs.added)
         {

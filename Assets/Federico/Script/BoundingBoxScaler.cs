@@ -21,10 +21,17 @@ public class BoundingBoxScaler : MonoBehaviour
 
     public void updateBoxSize(object sender,EventArgs e)
     {
-        box.transform.localScale = _boundingBox.size;
-        boxEmptyController.transform.position = _boundingBox.transform.position;
-        boxEmptyController.transform.rotation = _boundingBox.transform.rotation;
-        boxEmptyController.GetComponent<BoundingBoxInteractionManager>().setBoundingBoxSize(_boundingBox.size);
+        if (boxEmptyController != null && box != null)
+        {
+            box.transform.localScale = _boundingBox.size;
+            boxEmptyController.transform.position = _boundingBox.transform.position;
+            boxEmptyController.transform.rotation = _boundingBox.transform.rotation;
+            boxEmptyController.GetComponent<BoundingBoxInteractionManager>().setBoundingBoxSize(_boundingBox.size);
+        }
+        else
+        {
+            Debug.LogError("è stata chiamata l'updateBoxSize ma il boxempty o il box è nullo");
+        }
     }
     public void SetBoundingBox(GameObject emptyController, GameObject cube, ARBoundingBox boundingBox)
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
@@ -20,7 +21,7 @@ public class BoundingBoxManager : MonoBehaviour
     
     [SerializeField] private ARBoundingBoxManager bbManager; // Databa
     [SerializeField] public ARAnchorManager anchorManager;
-    
+    private bool isListening = false;
     public static EventHandler<EventArgs> onBoundingBoxChanged;
     void Start()
     {
@@ -62,21 +63,11 @@ public class BoundingBoxManager : MonoBehaviour
        //facciamo in modo che il prefab possa regolare la sua dimensione in modo appropriato e settare la label
         scaler.SetBoundingBox(prefab,wrapper,boundingBox);
     }
-    
-    void OnDestroy()
-    {
-        // Rimozione dell'evento
-    //    ARBoundingBoxManager.boundingBoxDetected -= OnBoundingBoxDetected;
-    }
-
     // Funzione chiamata quando viene rilevata una bounding box
     private void OnBoundingBoxDetected(ARBoundingBox box)
     {
        CreateCubeFromBoundingBox(box);
     }
-
-   
-
     // Applica il materiale alla bounding box
     private void ApplyMaterialToBoundingBox(ARBoundingBox box)
     {
@@ -87,31 +78,40 @@ public class BoundingBoxManager : MonoBehaviour
         }
     }
     
+    private void StartListeningToBoundingBoxChanges()
+    {
+        if (!isListening)
+        {
+            bbManager.trackablesChanged.AddListener(OnTrackablesChanged);
+            isListening = true;
+        }
+    }
+
+    private void StopListeningToBoundingBoxChanges()
+    {
+        if (isListening)
+        {
+            bbManager.trackablesChanged.RemoveListener(OnTrackablesChanged);
+            isListening = false;
+        }
+    }
+
     public void OnTrackablesChanged(ARTrackablesChangedEventArgs<ARBoundingBox> changes)
     {
-       
+        // Esegui le azioni per ogni bounding box aggiunta
         foreach (var boundingBox in changes.added)
         {
-           
-          //  _debuggingWindow.SetText("Bounding box trovata la aggiungo");
             OnBoundingBoxDetected(boundingBox);
         }
 
-        if (changes.updated.Count != 0)
-        {
-            onBoundingBoxChanged?.Invoke(this,EventArgs.Empty);
-        }
-        /*
-        foreach (var boundingBox in changes.updated)
-        {
-            
-        }
-        
-        foreach (var boundingBox in changes.removed)
-        {
-            // handle removed bounding boxes
-        }
-        */
+        // Disiscriviti dall'evento e attendi prima di riscriversi
+        StopListeningToBoundingBoxChanges();
+        StartCoroutine(ReEnableBoundingBoxListening());
+    }
+    private IEnumerator ReEnableBoundingBoxListening()
+    {
+        yield return new WaitForSeconds(40); // Attendi un intervallo di tempo (es. 10 secondi)
+        StartListeningToBoundingBoxChanges();
     }
     void Update()
     {

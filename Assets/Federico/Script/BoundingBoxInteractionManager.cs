@@ -91,13 +91,15 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              {
                  Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
              }
+
+            // SetLabel("chair");
     }
 
     public void OnSelectionEnter(SelectEnterEventArgs args)
     {
         Debug.Log("hai selezionato l'oggetto: " +this.gameObject.name);
         _currSelectedObj = this.gameObject;
-        _characterAnchorManager.DestroyAnchor();
+        _characterAnchorManager.DetachFromAnchor();
         if (interactionEnabled)
         {
             simulationManager.SetActiveCharacter(_currSelectedObj);
@@ -106,7 +108,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     }
     public void OnSelectionExit(SelectExitEventArgs args)
     {
-      //  _characterAnchorManager.CreateAnchor();
+        _characterAnchorManager.AttachObjectToAnchor();
     }
     
   

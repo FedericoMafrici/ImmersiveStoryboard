@@ -90,7 +90,7 @@ public class CharacterManager : MonoBehaviour
                     {
                         // Il personaggio ha raggiunto la destinazione, ferma il movimento
                         StopWalking();
-                       interactionManagerAddOn.characterAnchorManager.CreateAnchor();
+                       interactionManagerAddOn.characterAnchorManager.AttachObjectToAnchor();
                     }
                 }
             }
@@ -130,7 +130,7 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.LogError("L'interactionmanagerAddon collegato al personaggio è risultato nullo");
         }
-        interactionManagerAddOn.characterAnchorManager.DestroyAnchor();
+        interactionManagerAddOn.characterAnchorManager.DetachFromAnchor();
         var agent = this.GetComponent<NavMeshAgent>();
         
         if (agent == null)

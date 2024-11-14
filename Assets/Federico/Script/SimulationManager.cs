@@ -121,9 +121,6 @@ public class SimulationManager : MonoBehaviour
       BoundingBoxManagerUI.OnSceneInizializationCompleted+=ChangeSimulationState;
       ValueVisualizer.onActionTimeChanged += SetTime;
       ScreenshotManager.screenShotTaken += CompletedAction;
-     // Debug.Log("Storyboarding Avviato");
-     // DebuggingStartStoryBoarding();
-        
     }
 
     public void  Update()
@@ -155,18 +152,37 @@ public class SimulationManager : MonoBehaviour
             status = 1;
             startStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Stop";
+            consoleDebuggin.SetText("Storyboarding Avviato"+ status);
+            Debug.Log("Start Storyboarding avviato");
+            if (activeCharacter != null)
+            {
+                activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+            }
+
+            activeCharacter = null;
+            characterAnimationManager._character = null;
+            characterAnimationManager._interactionObject = null;
+            consoleDebuggin.SetText("Storyboarding fermato"+ status);
+            Debug.Log("Start Storyboarding fermato");
+            
         }
         else
         {
             status = 0;
             pauseStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Start";
-            activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+            if (activeCharacter != null)
+            {
+                activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+            }
+
             activeCharacter = null;
             characterAnimationManager._character = null;
             characterAnimationManager._interactionObject = null;
-            
+            consoleDebuggin.SetText("Storyboarding fermato"+ status);
+            Debug.Log("Start Storyboarding fermato");
         }
+        
     }
    
     private void NewLight()
@@ -390,10 +406,7 @@ public class SimulationManager : MonoBehaviour
         {
             if (activeCharacter != null && activeCharacter != obj && obj.CompareTag("Player"))
             {
-
                 characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj);
-               
-              
             }
             else
             {

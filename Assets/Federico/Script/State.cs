@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine.AI;
 public class State : MonoBehaviour
 {
     public List<string> state; //Lista di stati correnti, per implementare eventualmente il multi-stato
+    public  List<string> defaultState;
     public List<string> possibleStates;
     public ActionsDataBase DataBase;
     [SerializeField] private SimulationManager _simulationManager;
@@ -24,6 +26,7 @@ public class State : MonoBehaviour
     void Start()
     {
         state = new List<string>();
+        defaultState = state;
         nearObjs = new List<string>();
 
         //surname = gameObject.name;
@@ -45,6 +48,9 @@ public class State : MonoBehaviour
         {
             initialState = state[0];
         }
+
+        SimulationManager.pauseStoryboarding += ResetState;
+
     }
 
     public void Update()
@@ -172,6 +178,10 @@ public void ChangeState(string action) {
         
     }
 
+    public void ResetState(object s,EventArgs e)
+    {
+        state = defaultState;
+    }
     public string GetCurrentState()
     {
     //    return state[0];

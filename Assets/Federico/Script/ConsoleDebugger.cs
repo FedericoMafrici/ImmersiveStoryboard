@@ -22,6 +22,10 @@ public class ConsoleDebugger : MonoBehaviour
         
     }
 
+    public void ClearText()
+    {
+        _text.text = "";
+    }
     public void SetText(string txt)
     {
         if (_text != null)

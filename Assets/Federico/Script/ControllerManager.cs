@@ -89,6 +89,8 @@ public class ControllerManager : MonoBehaviour
             _ConsoleDebugger.SetText("hai premuto l'analog a destra, valori rilevati: " + analogValue.x + " " + analogValue.y);
 
             Debug.Log("Hai premuto l'analog verso destra bravo!");
+            Debug.Log("hai selezionato una bounding box ?"+boundingBoxSelected.gameObject.name);
+            _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
             if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
             {
                 boundingBoxSelected.RotatePlane(1);
@@ -100,6 +102,7 @@ public class ControllerManager : MonoBehaviour
         {
             Debug.Log("Hai premuto l'analog verso sinistra bravissimo!");
             _ConsoleDebugger.SetText("hai premuto l'analog a sinistra , valori rilevati: " + analogValue.x + " " + analogValue.y);
+            _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
             if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
             {
                 boundingBoxSelected.RotatePlane(-1);
@@ -136,7 +139,16 @@ public class ControllerManager : MonoBehaviour
                           {
                               if (hitInfo.transform.gameObject.layer==9)
                               {
-                                  Destroy(hitInfo.transform.gameObject);
+                                 var anchorManager= hitInfo.transform.gameObject.GetComponent<CharacterAnchorManager>();
+                                 if (anchorManager != null)
+                                 {
+                                     anchorManager.DetachFromAnchor();
+                                 }
+                                 else
+                                 {
+                                     _ConsoleDebugger.SetText("Componente anchor manager non reperito oggetto:"+hitInfo.transform.gameObject.name);
+                                 }
+                                 Destroy(hitInfo.transform.gameObject);
                               }
                               else
                               {
@@ -144,9 +156,9 @@ public class ControllerManager : MonoBehaviour
                                {   SpawnObject(); }
                                else
                                {
-                               boundingBoxSelected=hitInfo.transform.gameObject.GetComponent<BoundingBoxInteractionManager>();
+                                   boundingBoxSelected=hitInfo.transform.gameObject.GetComponent<BoundingBoxInteractionManager>();
                                boundingBoxSelected.EnablePlaneRotation();
-                               
+                               _ConsoleDebugger.SetText("Piano colpito con successo può essere ruotato");
                                }
                                
                               }

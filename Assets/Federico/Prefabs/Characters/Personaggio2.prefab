@@ -10223,6 +10223,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchorManager: {fileID: 0}
+  sceneAnchorManager: {fileID: 0}
+  currentAnchor: {fileID: 0}
 --- !u!1 &9160168797164062964
 GameObject:
   m_ObjectHideFlags: 0
@@ -11018,8 +11020,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.00843336, y: 0.026876299, z: 0.012247847}
-  m_Center: {x: -0.0010093265, y: 0.00982141, z: -0.00018999746}
+  m_Size: {x: 0.00843336, y: 0.022898955, z: 0.012247847}
+  m_Center: {x: -0.0010093265, y: 0.0118100885, z: -0.00018999746}
 --- !u!95 &7387437993209156936 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 4f0702c9f15d0454e98d16a64737fa16, type: 3}

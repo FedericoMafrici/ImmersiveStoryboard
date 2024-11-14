@@ -344,7 +344,17 @@ public class AnimaPersonaggio : MonoBehaviour
             var r = Quaternion.LookRotation(_simulationManager.activeCharacter.transform.position - _character.transform.position);
             _character.transform.rotation = r;
         }
-        
+
+        if (action == "search")
+        {
+            Transform characterTransform = _simulationManager.activeCharacter.transform;
+
+            // Ottieni la posizione dell'oggetto di interazione
+            Vector3 targetPosition = _interactionObject.transform.position;
+
+            // Fai in modo che il character guardi verso l'oggetto di interazione
+            _simulationManager.activeCharacter.transform.LookAt(targetPosition);
+        }
 
         if (action == "talk" || action == "talk to")
         {
