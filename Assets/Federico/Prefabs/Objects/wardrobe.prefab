@@ -124,7 +124,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: wardrobe
-  interactionManagerAddOn: {fileID: 4797690262140317339}
+  characterInteractionManagerAddOn: {fileID: 0}
   simulation: 0
   isWalking: 0
   walkMode: 0
@@ -152,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state:
   - closed
+  defaultState: []
   possibleStates:
   - open
   - closed
@@ -365,7 +366,7 @@ NavMeshObstacle:
   m_Extents: {x: 0.225, y: 0.375, z: 0.15}
   m_MoveThreshold: 0.1
   m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_CarveOnlyStationary: 0
   m_Center: {x: -0.03, y: 0.67, z: -0.48}
   m_TimeToStationary: 0.5
 --- !u!114 &5613364729495164392
@@ -381,6 +382,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchorManager: {fileID: 0}
+  sceneAnchorManager: {fileID: 0}
+  currentAnchor: {fileID: 0}
 --- !u!1001 &8963293736513150299
 PrefabInstance:
   m_ObjectHideFlags: 0

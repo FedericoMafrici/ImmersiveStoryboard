@@ -269,6 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: []
+  defaultState: []
   possibleStates: []
   DataBase: {fileID: 0}
   _simulationManager: {fileID: 0}
@@ -312,7 +313,7 @@ NavMeshObstacle:
   m_Extents: {x: 0.415, y: 0.2734315, z: 0.285}
   m_MoveThreshold: 0.1
   m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_CarveOnlyStationary: 0
   m_Center: {x: 0.03, y: -0.02, z: -0.13}
   m_TimeToStationary: 0.5
 --- !u!114 &3437788206427607353
@@ -330,7 +331,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: bag
-  interactionManagerAddOn: {fileID: 0}
+  characterInteractionManagerAddOn: {fileID: 0}
   simulation: 0
   isWalking: 0
   walkMode: 1
@@ -357,6 +358,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchorManager: {fileID: 0}
+  sceneAnchorManager: {fileID: 0}
+  currentAnchor: {fileID: 0}
 --- !u!1001 &7653420567585035000
 PrefabInstance:
   m_ObjectHideFlags: 0

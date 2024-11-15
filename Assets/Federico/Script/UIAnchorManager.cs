@@ -1,14 +1,12 @@
-using System;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class CharacterAnchorManager : MonoBehaviour
+public class UIAnchorManager : CharacterAnchorManager
 {
     [SerializeField] private ARAnchorManager anchorManager;
     [SerializeField] private SceneAnchorManager sceneAnchorManager;
     public ARAnchor currentAnchor;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         anchorManager = FindObjectOfType<ARAnchorManager>();
@@ -23,18 +21,5 @@ public class CharacterAnchorManager : MonoBehaviour
             Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
         }
         AttachObjectToAnchor();
-    }
-
-    public void AttachObjectToAnchor()
-    {
-        sceneAnchorManager.AttachObjectToAnchor(this);
-    }
-
-    public void DetachFromAnchor()
-    {
-        if (sceneAnchorManager != null)
-        {
-            sceneAnchorManager.DetachObjectFromAnchor(this);
-        }
     }
 }

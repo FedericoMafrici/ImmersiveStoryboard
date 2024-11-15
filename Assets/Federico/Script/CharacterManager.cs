@@ -22,7 +22,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private PhraseGenerator phraseGenerator;
     [SerializeField] private SimulationManager simulationManager;
     [SerializeField] public string type;
-    [SerializeField] private InteractionManagerAddOn interactionManagerAddOn;
+    [SerializeField] private InteractionManagerAddOn characterInteractionManagerAddOn;
     public bool simulation = false;
     public bool isWalking;
     public bool walkMode = true;
@@ -90,7 +90,8 @@ public class CharacterManager : MonoBehaviour
                     {
                         // Il personaggio ha raggiunto la destinazione, ferma il movimento
                         StopWalking();
-                       interactionManagerAddOn.characterAnchorManager.AttachObjectToAnchor();
+                       characterInteractionManagerAddOn.characterAnchorManager.AttachObjectToAnchor();
+                       characterInteractionManagerAddOn.DisableNavMeshAgent();
                     }
                 }
             }
@@ -123,14 +124,16 @@ public class CharacterManager : MonoBehaviour
     public void EnableCharacterMovement(object sender, EventArgs e)
     {   
         this.walkMode = true;
+        characterInteractionManagerAddOn.EnableNavMeshAgent(); 
     }
     public void Move(RaycastHit hitInfo)
     {
-        if (interactionManagerAddOn == null)
+       
+        if (characterInteractionManagerAddOn == null)
         {
             Debug.LogError("L'interactionmanagerAddon collegato al personaggio è risultato nullo");
         }
-        interactionManagerAddOn.characterAnchorManager.DetachFromAnchor();
+        characterInteractionManagerAddOn.characterAnchorManager.DetachFromAnchor();
         var agent = this.GetComponent<NavMeshAgent>();
         
         if (agent == null)

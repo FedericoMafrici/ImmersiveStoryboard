@@ -8,6 +8,7 @@ using System.IO;
 using UnityEngine.AI;
 using System;
 using System.Linq;
+using Unity.XR.CoreUtils;
 using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
@@ -206,79 +207,6 @@ public class SimulationManager : MonoBehaviour
 
         canvasNewLight.SetActive(false);
     }
-    
-        /*
-    public void StartSimulation() 
-    {
-        startSimulationPremuto = true;
-        
-        //menuManoOggetti.SetActive(false);
-        BottoneRinominaOggetto.SetActive(false); // lascio nome oggetto ma disattivo Bottone che serve a rinominare in fase di storyboard
-
-        //sceneMenu.SetActive(false);
-        _buttonRenameScene.SetActive(false);
-        if (_buttonSaveScene.activeSelf) _buttonSaveScene.SetActive(false);
-        _buttonStartStoryboarding.SetActive(false);
-
-        _buttonStopStoryboarding.SetActive(true);
-
-        _buttonStoryboard.SetActive(true);
-
-
-
-
-    //    SceneMenuButtonGridObjectCollection.UpdateCollection();
-
-       
-
-        imageOculus.GetComponent<Image>().material = ComandiOculusStoryboard;
-
-        characterAnimationManager.enabled = true;
-        objectCollection.SetActive(false);
-
-        //Attiva Camera e oggetti collegati quando premo Start Storyboarding
-        secondCamera.SetActive(true);
-        ButtonScreenshot.SetActive(true);
-        StepPinchSliderFocalLength.SetActive(true);
-
-        //characterAnimationManager.GetComponent<AnimaPersonaggio>().enabled = true;
-
-       // objectManagerVR.StopManipulation();
-        
-        //controlla che ci sia almeno un personaggio
-        var atleast1pg = false;
-        GameObject empty = GameObject.FindGameObjectWithTag("emptyPlane");
-        
-        foreach (Transform child in empty.transform)
-        {
-            if (child.CompareTag("Player"))
-                atleast1pg = true;
-        }
-        if (atleast1pg)
-        {
-
-            status = 1;
-            //DeactivateTriggers();
-            activeCharacterText.SetActive(true);
-            activeCharacterText.GetComponent<TextMeshPro>().text = "Active player: none";
-            
-        }
-
-       /* // tolgo parentela messa in StopSimulation
-        moveButton.transform.parent = null;
-        StopAndPlayButton.transform.parent = null;
-        actionsPanel.transform.parent = null;*/
-
-        // tolgo parentela messa in StopSimulation
-  /*
-        moveButton.transform.SetParent(ManuAzioniTasti.transform);
-        StopAndPlayButton.transform.SetParent(StopAndPlayButtonPadre.transform);
-        actionsPanel.transform.SetParent(ManuAzioniTasti.transform);
-        SfondoAzioni.transform.SetParent(StopAndPlayButtonPadre.transform);
-    }
-*/
-    
-
     public void ChangeMaxTime() { }
     public void ChangeCurrentTime() { }
     public void ChangeCurrentTimeManual() { }
@@ -323,19 +251,11 @@ public class SimulationManager : MonoBehaviour
      */
     public void SetActiveCharacter(GameObject obj) {
         // se il personaggio attivo è gia esistente allora potrei starne selezionando un altro se non c'è allora semplicemente sostituisci con la reference
-        consoleDebuggin.SetText("Simulation Manager r310: " + obj.name+ "TAG"+ obj.tag);
+        consoleDebuggin.SetText("Simulation Manager r326: " + obj.name+ "TAG"+ obj.tag);
         if (status == 1) {
             if (activeCharacter != null && activeCharacter != obj && obj.CompareTag("Player"))
             {
-           
-                //TODO da eseguire se il personaggio deve essere selezionato come nuovo personaggio attivo
-                // non so cosa faccia l'instruzione sotto scoprilo 
-                //activeCharacter = obj.transform.GetChild(0).gameObject;
-                //characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(activeCharacter); 
-                // abilita in modo il pulsante di get Control per far diventare quel personaggio il principale 
-                
-              //   activeCharacter = obj.transform.GetChild(0).gameObject;
-              consoleDebuggin.SetText("Sono entrato nel primo ramo dell'if e l'oggetto che passo è "+obj.transform.GetChild(0).gameObject.name);
+                consoleDebuggin.SetText(activeCharacter.name +" oggetto:"+ obj.name);
               characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.transform.GetChild(0).gameObject); 
             }
             else
@@ -343,12 +263,12 @@ public class SimulationManager : MonoBehaviour
                 if (obj.CompareTag("Player"))
                 {
                     activeCharacter = obj.transform.GetChild(0).gameObject;
-                    consoleDebuggin.SetText("Sono entrato nel secondo ramo dell'if e l'oggetto che passo è "+obj.transform.GetChild(0).gameObject.name);
+                    consoleDebuggin.SetText(activeCharacter.name +" oggetto:"+ obj.name);
                     characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.transform.GetChild(0).gameObject);
                 }
                 else
                 {
-                    consoleDebuggin.SetText("Sono entrato nel terzo ramo dell'if e l'oggetto che passo è "+obj.gameObject.name);
+                    consoleDebuggin.SetText(activeCharacter.name +" oggetto:"+ obj.name);
                     characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.gameObject);
                 }
                
@@ -372,13 +292,14 @@ public class SimulationManager : MonoBehaviour
 
     public void getControlOfsecondCharacter()
     {
-        // 
+        Debug.Log("Personaggio attivo"+characterAnimationManager.GetComponent<AnimaPersonaggio>()._character);
         characterAnimationManager.GetComponent<AnimaPersonaggio>().HideActions();
         activeCharacter=characterAnimationManager.GetComponent<AnimaPersonaggio>()._character;
+        activeCharacterAnimator = activeCharacter.GetComponent<Animator>();
+        consoleDebuggin.SetText("animatore impostato "+activeCharacterAnimator.name);
        characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(activeCharacter);
     }
     
-    //TODO probabilmente può essere cancellata visto che ho creato un sistema ad eventi per gesitre il movimento
     public void SetupMovement()
     {
        setUpMovement.Invoke(this,new EventArgs());
@@ -450,11 +371,11 @@ public class SimulationManager : MonoBehaviour
         {
             foreach (AnimationClip ac in activeCharacterAnimator.runtimeAnimatorController.animationClips)
             {
+                consoleDebuggin.SetText("Azione lanciata "+ action + " personaggio "+ activeCharacter.name +" animator:"+activeCharacterAnimator.name);
                 if (ac.name == action)
                 {
                     activeCharacterAnimator.speed = 0.5f;
                     activeCharacterAnimator.Play(ac.name);
-                    
                 }
             }
             //In assenza di animazioni specifiche per l'azione selezionata, viene eseguita l'animazione generica di interazione

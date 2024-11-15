@@ -6,16 +6,21 @@ using UnityEngine.XR.ARFoundation;
 public class SceneAnchorManager : MonoBehaviour
 {
     [SerializeField] private ARAnchorManager anchorManager;
-
+    [SerializeField] private ConsoleDebugger _consoleDebugger;
     // Prefab da istanziare per ogni ancora
     [SerializeField] private GameObject anchorPrefab;
 
     // Dizionario per tracciare le ancore e gli oggetti associati
     private Dictionary<ARAnchor, List<GameObject>> anchorReferences = new Dictionary<ARAnchor, List<GameObject>>();
-    float minDistance = 2.0f;
+    float minDistance = 5.0f;
 
     void Start()
     {
+        _consoleDebugger=FindObjectOfType<ConsoleDebugger>();
+        if (_consoleDebugger == null)
+        {
+            Debug.LogError("Console debugger non trovato");
+        }
         if (anchorManager == null)
         {
             anchorManager = FindObjectOfType<ARAnchorManager>();
@@ -44,11 +49,13 @@ public class SceneAnchorManager : MonoBehaviour
             obj.transform.parent = nearestAnchor.transform;
             AddReference(nearestAnchor, obj.gameObject);
             Debug.Log("Ancora vicina trovata, procedo ad assegnarla.");
+         //   _consoleDebugger.SetText("Ancora attaccata all'oggetto"+obj.gameObject.name);    
         }
         else
         {
             // Nessuna ancora trovata, crea una nuova
             CreateAnchor(obj);
+         //   _consoleDebugger.SetText("Nuova ancora creata");
         }
     }
 
@@ -59,7 +66,7 @@ public class SceneAnchorManager : MonoBehaviour
             RemoveReference(obj.currentAnchor, obj.gameObject);
             obj.transform.parent = null;
             obj.currentAnchor = null;
-            Debug.Log("Oggetto scollegato dall'ancora.");
+         //   Debug.Log("Oggetto scollegato dall'ancora.");
         }
     }
 
@@ -138,7 +145,8 @@ public class SceneAnchorManager : MonoBehaviour
         if (anchorReferences.ContainsKey(anchor))
         {
             anchorReferences[anchor].Add(obj);
-        }
+         //  _consoleDebugger.SetText("Ho attaccato l'oggetto all'ancora di"+anchorReferences[anchor][0].gameObject.name);
+        } 
         else
         {
             anchorReferences[anchor] = new List<GameObject> { obj };
@@ -160,6 +168,6 @@ public class SceneAnchorManager : MonoBehaviour
                 Debug.Log("Ancora distrutta poiché non ha più oggetti associati.");
             }
         }
-        Debug.Log("Riferimento all'ancora rimosso.");
+     //   Debug.Log("Riferimento all'ancora rimosso.");
     }
 }

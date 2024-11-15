@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class SnapToPlane : XRGrabInteractable
 {
     [SerializeField] public ARPlaneManager planeManager;
-    [SerializeField] private float snapDistanceThreshold = 0.5f; // Distanza alla quale avviene lo snap
+    [SerializeField] private float snapDistanceThreshold = 0.2f; // Distanza alla quale avviene lo snap
     private bool isBeingManipulated = false; // Aggiungi questa variabile
 
     private ARPlane closestPlane;

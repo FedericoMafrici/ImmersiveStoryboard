@@ -114,21 +114,22 @@ public class AnimaPersonaggio : MonoBehaviour
            {
                obj.transform.parent.Find("GetControl").gameObject.SetActive(true);
                _interactionObject = obj;
+               if (_simulationManager.activeCharacter != null && _simulationManager.activeCharacter != obj)
+               {
+                   _self = false;
+                   debuggingWindow.SetText("oggetto attivo"+obj.gameObject.name+"oggetto con cui si interagisce"+_character);
+               }
+               
            }
            else
            {
                _interactionObject = obj;       
            }
-        
+           ShowActions();
        }
     
 
-       if (_simulationManager.activeCharacter != null && _simulationManager.activeCharacter != _character)
-       {
-           _self = false;
-           debuggingWindow.SetText("oggetto attivo"+obj.gameObject.name+"oggetto con cui si interagisce"+_character);
-           ShowActions();
-       }
+      
     }
 
     private void ShowAloneActions()
@@ -233,8 +234,7 @@ public class AnimaPersonaggio : MonoBehaviour
     {
         obj.transform.parent.Find("GetControl").gameObject.SetActive(false);
     }
-      public void 
-          StopOldLongAnimation()
+      public void StopOldLongAnimation()
     {
         if (!_simulationManager.contemporaryAction)
         {
@@ -376,12 +376,8 @@ public class AnimaPersonaggio : MonoBehaviour
 
         else
         {
-          
-
             //notifica il simulation manager di avviare animazione del personaggio attivo
-            _simulationManager.PlayActiveCharacterAnimation(action);
-
-           
+             _simulationManager.PlayActiveCharacterAnimation(action);
              phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
              if (action != "sit" && action!="is tied" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
              {
@@ -451,7 +447,7 @@ public class AnimaPersonaggio : MonoBehaviour
 
         
          
-                _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
+              //  _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
                 
                 _interactionObject = null;
                 //per nascondere il personaggio

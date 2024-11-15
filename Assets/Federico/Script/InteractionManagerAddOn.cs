@@ -49,7 +49,10 @@ public class InteractionManagerAddOn : MonoBehaviour
            Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
        }
        debuggingWindow= FindObjectOfType<ConsoleDebugger>();
-       
+       if (debuggingWindow == null)
+       {
+           Debug.LogError("ATTENZIONE CONSOLE DI DEBUGGING NON TROVATA");
+       }
        SimulationManager.startStoryboarding += DisableMoving;
        SimulationManager.pauseStoryboarding += EnableMoving;
        if (characterAnchorManager == null)
@@ -82,13 +85,16 @@ public class InteractionManagerAddOn : MonoBehaviour
     }
     public void DisableMoving(object sender, EventArgs obj)
     {
-         Debug.Log("l'oggetto"+ this.name +"è pronto per la fase di storyboarding");
-         XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
+        
+        if (this.name != null)
+        {
+            Debug.Log("l'oggetto" + this.name + "è pronto per la fase di storyboarding");
+        }
+        XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
          if (_xrInt != null)
          {
              _xrInt.trackPosition = false;
              _xrInt.trackRotation = false;
-             _xrInt.trackScale = false;
              interactionEnabled = true;
          }
          else
@@ -96,55 +102,35 @@ public class InteractionManagerAddOn : MonoBehaviour
              Debug.LogError("componenete grabbable non trovato");
              debuggingWindow.SetText("Componente xrGRABBBABLE NON TROVATO ATTENTION!!");
          }
-
-         if (this.gameObject.CompareTag("Player"))
-         {
-             var navmeshAgent = this.GetComponent<NavMeshAgent>();
-             var animator = this.GetComponent<Animator>();
-             if (navmeshAgent != null && this.gameObject.CompareTag("Player"))
-             { 
-                 navmeshAgent.enabled = true;
-                PlaceOnNavMesh();   
-             }
-
-             if (animator != null)
-             {
-                 animator.enabled = true;
-             }
-         }
-         else
-         {
-             var navMeshObstacle = this.GetComponent<NavMeshObstacle>();
-             if (navMeshObstacle != null)
-             {
-                 navMeshObstacle.enabled = true;
-             }
-         }
+         DisableNavMeshAgent();
     }
-    public void EnableMoving(object sender, EventArgs obj)
-    {
-        XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>(); 
-        if (_xrInt != null)
-        {
-            _xrInt.trackPosition = true;
-            _xrInt.trackRotation = true;
-            _xrInt.trackScale = true;
-            
-            interactionEnabled = false;
-        }
-        if (this.gameObject.CompareTag("Player"))
-        {
-            var navmeshAgent = this.GetComponent<NavMeshAgent>();
-            var animator = this.GetComponent<Animator>();
-            if (navmeshAgent != null && this.gameObject.CompareTag("Player"))
-            {
-                navmeshAgent.enabled = false;
-            }
 
-            if (animator != null)
+    public void EnableNavMeshAgent()
+    {
+        var navmeshAgent = this.GetComponent<NavMeshAgent>();
+        var animator = this.GetComponent<Animator>();
+        if (navmeshAgent != null && this.gameObject.CompareTag("Player"))
+        { 
+            navmeshAgent.enabled = true;
+            PlaceOnNavMesh();   
+        }
+        else
+        {
+            var navMeshObstacle = this.GetComponent<NavMeshObstacle>();
+            if (navMeshObstacle != null)
             {
-                animator.enabled = false;
+                navMeshObstacle.enabled = true;
             }
+        }
+    }
+
+    public void DisableNavMeshAgent()
+    {
+        var navmeshAgent = this.GetComponent<NavMeshAgent>();
+        var animator = this.GetComponent<Animator>();
+        if (navmeshAgent != null && this.gameObject!=null && this.gameObject.CompareTag("Player"))
+        { 
+            navmeshAgent.enabled = false;
         }
         else
         {
@@ -155,11 +141,32 @@ public class InteractionManagerAddOn : MonoBehaviour
             }
         }
     }
+    public void EnableMoving(object sender, EventArgs obj)
+    {
+        // debuggingWindow.SetText("Sto prendendo il componente grabbable di" + this.name);
+        if (this.transform.parent != null)
+        {
+            XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
+
+
+            if (_xrInt != null)
+            {
+                if (_xrInt != null)
+                {
+                    _xrInt.trackPosition = true;
+                    _xrInt.trackRotation = true;
+                    interactionEnabled = false;
+                }
+
+                DisableNavMeshAgent();
+            }
+        }
+    }
     // Deve essere void per poter essere visualizzata nell'Inspector
     public void onSelectionEnter(SelectEnterEventArgs args)
     {
         #if !UNITY_EDITOR
-        debuggingWindow.SetText("Oggetto selezionato ho distrutto l'ancora"); 
+     //  debuggingWindow.SetText("Oggetto selezionato ho distrutto l'ancora"); 
         characterAnchorManager.DetachFromAnchor();
         #endif
         if (!interactionEnabled)
@@ -175,14 +182,14 @@ public class InteractionManagerAddOn : MonoBehaviour
             _currSelectedObj = args.interactableObject.transform.gameObject;
             Debug.Log("Set Active character chiamata nome oggetto"+_currSelectedObj.gameObject.name + "\n figli:"+_currSelectedObj.transform.GetChild(0).name);
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
-           debuggingWindow.SetText("Ho chiamato la Set Active Character per l'oggetto +"+ _currSelectedObj.name);
-           interactionEnabled = false;
        }
     }
     public void OnSelectionExit(SelectExitEventArgs args)
     {
+#if !UNITY_EDITOR
         characterAnchorManager.AttachObjectToAnchor();
-        debuggingWindow.SetText("Ancora instanziata nuovamente");
+      //  debuggingWindow.SetText("Ancora instanziata nuovamente");
+#endif
     }
     
     public void MenuObjectSelected()

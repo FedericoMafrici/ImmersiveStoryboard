@@ -17,7 +17,7 @@ public class PlaneManager : MonoBehaviour
     private Coroutine detectionCoroutine;
     private NavMeshSurface navMeshSurface;
     [SerializeField] private Material navMeshMaterial; // Materiale per la visualizzazione della NavMesh
-    private float rebuildInterval = 20f; // Intervallo in secondi
+    private float rebuildInterval = 40f; // Intervallo in secondi
     public static EventHandler<EventArgs> onNavMeshRebuildRequest;
     
     

@@ -10156,7 +10156,7 @@ MonoBehaviour:
   m_SmoothRotation: 1
   m_SmoothRotationAmount: 8
   m_TightenRotation: 0.1
-  m_TrackScale: 1
+  m_TrackScale: 0
   m_SmoothScale: 1
   m_SmoothScaleAmount: 0.8
   m_TightenScale: 0.4
@@ -10202,11 +10202,11 @@ MonoBehaviour:
   m_PermittedDisplacementAxes: -1
   m_ConstrainedAxisDisplacementMode: 1
   m_TwoHandedRotationMode: 1
-  m_AllowOneHandedScaling: 1
-  m_AllowTwoHandedScaling: 1
+  m_AllowOneHandedScaling: 0
+  m_AllowTwoHandedScaling: 0
   m_OneHandedScaleSpeed: 0.5
   m_ThresholdMoveRatioForScale: 0.01
-  m_ClampScaling: 1
+  m_ClampScaling: 0
   m_MinimumScaleRatio: 0.25
   m_MaximumScaleRatio: 3
   m_ScaleMultiplier: 0.25
@@ -10914,7 +10914,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4264504016231814536}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.005
   m_Speed: 3.5
@@ -10962,6 +10962,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state:
   - standing
+  defaultState: []
   possibleStates:
   - standing
   - sitting
@@ -10987,7 +10988,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: flyn
-  interactionManagerAddOn: {fileID: 4800446761327461023}
+  characterInteractionManagerAddOn: {fileID: 0}
   simulation: 0
   isWalking: 0
   walkMode: 1
