@@ -24,12 +24,30 @@ public class InteractionManagerAddOn : MonoBehaviour
     private bool _objectSelected = false;
     public bool interactionEnabled = false;
     private GameObject _currSelectedObj = null;
-
+                            
     public static EventHandler<EventArgs> onObjectSelected;
     // Start is called before the first frame update
+
+    private void OnEnable()
+    {
+        SimulationManager.startStoryboarding += DisableMoving;
+        SimulationManager.pauseStoryboarding += EnableMoving;
+    }
+    private void OnDisable()
+    {
+        SimulationManager.startStoryboarding -= DisableMoving;
+        SimulationManager.pauseStoryboarding -= EnableMoving;
+    }
+    private void OnDestroy()
+    {
+        SimulationManager.startStoryboarding -= DisableMoving;
+        SimulationManager.pauseStoryboarding -= EnableMoving;
+    }
+    
+    
     private void Start()
     {
-       _SimulationManager=  GameObject.Find("SimulationManager").GetComponent<SimulationManager>() ;
+        _SimulationManager=  GameObject.Find("SimulationManager").GetComponent<SimulationManager>() ;
        if (_SimulationManager==null)
        {
            Debug.LogError("Simulation manager di :" + gameObject.name + " non trovato");
@@ -53,8 +71,6 @@ public class InteractionManagerAddOn : MonoBehaviour
        {
            Debug.LogError("ATTENZIONE CONSOLE DI DEBUGGING NON TROVATA");
        }
-       SimulationManager.startStoryboarding += DisableMoving;
-       SimulationManager.pauseStoryboarding += EnableMoving;
        if (characterAnchorManager == null)
        {
            Debug.LogError(" il componenete character Anchor Manager del personaggio non è stato configurato");
@@ -62,12 +78,12 @@ public class InteractionManagerAddOn : MonoBehaviour
        }
        else
        {
+           #if !UNITY_EDITOR 
            characterAnchorManager.AttachObjectToAnchor();     
+            #endif
        }
       
     }
-    
-    
     public void PlaceOnNavMesh()
     {
         NavMeshHit navMeshHit;
@@ -102,16 +118,23 @@ public class InteractionManagerAddOn : MonoBehaviour
              Debug.LogError("componenete grabbable non trovato");
              debuggingWindow.SetText("Componente xrGRABBBABLE NON TROVATO ATTENTION!!");
          }
-         DisableNavMeshAgent();
+         EnableNavMeshAgent();
     }
 
     public void EnableNavMeshAgent()
     {
+        if (this == null || gameObject == null)
+        {
+            Debug.LogError("Questo oggetto o il gameObject è stato distrutto in EnableNavMeshAgent.");
+            return;
+        }
+        
         var navmeshAgent = this.GetComponent<NavMeshAgent>();
         var animator = this.GetComponent<Animator>();
         if (navmeshAgent != null && this.gameObject.CompareTag("Player"))
         { 
             navmeshAgent.enabled = true;
+            Debug.Log("Oggetto piazzato nella navmesh");
             PlaceOnNavMesh();   
         }
         else
@@ -122,6 +145,7 @@ public class InteractionManagerAddOn : MonoBehaviour
                 navMeshObstacle.enabled = true;
             }
         }
+        Debug.Log("Funzione EnableNavMeshAgent terminata con successo");
     }
 
     public void DisableNavMeshAgent()
@@ -157,7 +181,6 @@ public class InteractionManagerAddOn : MonoBehaviour
                     _xrInt.trackRotation = true;
                     interactionEnabled = false;
                 }
-
                 DisableNavMeshAgent();
             }
         }
@@ -177,7 +200,6 @@ public class InteractionManagerAddOn : MonoBehaviour
         }
         else
         {
-            
             onObjectSelected.Invoke(this,EventArgs.Empty);
             _currSelectedObj = args.interactableObject.transform.gameObject;
             Debug.Log("Set Active character chiamata nome oggetto"+_currSelectedObj.gameObject.name + "\n figli:"+_currSelectedObj.transform.GetChild(0).name);

@@ -49,13 +49,13 @@ public class SceneAnchorManager : MonoBehaviour
             obj.transform.parent = nearestAnchor.transform;
             AddReference(nearestAnchor, obj.gameObject);
             Debug.Log("Ancora vicina trovata, procedo ad assegnarla.");
-         //   _consoleDebugger.SetText("Ancora attaccata all'oggetto"+obj.gameObject.name);    
+           _consoleDebugger.SetText("Ancora attaccata all'oggetto"+obj.gameObject.name);    
         }
         else
         {
             // Nessuna ancora trovata, crea una nuova
             CreateAnchor(obj);
-         //   _consoleDebugger.SetText("Nuova ancora creata");
+            _consoleDebugger.SetText("Nuova ancora creata");
         }
     }
 

@@ -17,7 +17,7 @@ public class PlaneManager : MonoBehaviour
     private Coroutine detectionCoroutine;
     private NavMeshSurface navMeshSurface;
     [SerializeField] private Material navMeshMaterial; // Materiale per la visualizzazione della NavMesh
-    private float rebuildInterval = 40f; // Intervallo in secondi
+    private float rebuildInterval = 5f; // Intervallo in secondi
     public static EventHandler<EventArgs> onNavMeshRebuildRequest;
     
     
@@ -37,8 +37,9 @@ public class PlaneManager : MonoBehaviour
     {
         navMeshSurface = gameObject.AddComponent<NavMeshSurface>();
         navMeshSurface.collectObjects = CollectObjects.Children;
+        UpdateNavMesh(this,EventArgs.Empty);
+        StartCoroutine(FirstNavMeshBuild());
         StartCoroutine(RequestNavMeshRebuild());
-       // StartCoroutine(DisablePlaneManager());
     }
 
     private IEnumerator DisablePlaneManager()
@@ -50,6 +51,11 @@ public class PlaneManager : MonoBehaviour
        
     }
 
+    private IEnumerator FirstNavMeshBuild()
+    {
+        yield return new WaitForSeconds(2);
+        UpdateNavMesh(this,EventArgs.Empty);
+    }
     private IEnumerator RequestNavMeshRebuild()
     {
         while (true)

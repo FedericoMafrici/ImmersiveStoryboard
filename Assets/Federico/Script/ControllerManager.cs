@@ -428,9 +428,8 @@ public class ControllerManager : MonoBehaviour
 
              // Aggiungi l'oggetto alla lista degli oggetti spawnati
           _SimulationManager.spawnedGameObjects.Add(spawnedObject);
-          
+        
           OnObjectPlaced.Invoke(this,EventArgs.Empty);
-      
      }
      else
       {

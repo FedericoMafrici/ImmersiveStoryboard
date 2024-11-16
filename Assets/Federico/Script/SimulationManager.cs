@@ -302,7 +302,16 @@ public class SimulationManager : MonoBehaviour
     
     public void SetupMovement()
     {
-       setUpMovement.Invoke(this,new EventArgs());
+       //setUpMovement.Invoke(this,new EventArgs());
+       var charManager = activeCharacter.GetComponent<CharacterManager>();
+       if (charManager != null)
+       {
+           charManager.EnableCharacterMovement();
+       }
+       else
+       {
+           Debug.LogError(" r313 Componenete char manager non trovato, nome personaggio"+activeCharacter.name);
+       }
     }
 
     public void MoveAlert(string place, string placeType)
@@ -325,7 +334,7 @@ public class SimulationManager : MonoBehaviour
 
         if (status == 1)
         {
-            if (activeCharacter != null && activeCharacter != obj && obj.CompareTag("Player"))
+            if (activeCharacter != null && activeCharacter == obj && obj.CompareTag("Player"))
             {
                 characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj);
             }

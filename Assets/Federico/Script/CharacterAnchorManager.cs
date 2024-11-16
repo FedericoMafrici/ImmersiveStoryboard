@@ -23,7 +23,9 @@ public class CharacterAnchorManager : MonoBehaviour
         {
             Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
         }
+        #if !UNITY_EDITOR
         AttachObjectToAnchor();
+        #endif
     }
 
     public void AttachObjectToAnchor()

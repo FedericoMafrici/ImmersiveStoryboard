@@ -49,7 +49,7 @@ woman-chair,sit
 woman-Cheese,pick,eat
 woman-bench,sit
 man-bench,sit
-flyn-self,faint,stand up
+flyn-self,faint,stand up,is freed 
 flyn-chair,is tied
 flyn-rapunzel,talk 
 rapunzel-flyn,talk to,hit

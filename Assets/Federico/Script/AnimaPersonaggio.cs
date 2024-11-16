@@ -123,6 +123,7 @@ public class AnimaPersonaggio : MonoBehaviour
            }
            else
            {
+               _self = false;
                _interactionObject = obj;       
            }
            ShowActions();
@@ -189,8 +190,6 @@ public class AnimaPersonaggio : MonoBehaviour
             Debug.LogError("ui del personaggio non trovata personaggio: "+ this.gameObject.name);
         }
         ui.SetActive(true);
-       // var tmp = ui.transform.Find("Front");
-       // ui.transform.localPosition = new Vector3(2.78f, -0.78f, 1.07f);
         ui= _simulationManager.activeCharacter.transform.parent.Find("PersonaggioAttivo").gameObject;
         ui.SetActive(true);
         var container = ui.transform.Find("Front/Scrollview Canvas/Panel/Pannello/Viewport/Content");
@@ -273,7 +272,7 @@ public class AnimaPersonaggio : MonoBehaviour
             }
             else if (_simulationManager.activeCharacter.GetComponent<State>().GetCurrentState() == "is tied")
             {                                                                                               
-                string azione = "stand up";                                                                 
+                string azione = "is freed";                                                                 
                 _simulationManager.activeCharacter.GetComponent<State>().ChangeState(azione);               
                 _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = false;            
                 _simulationManager.activeCharacter.transform.Translate(0, 0, +0.05f);                       
@@ -378,8 +377,8 @@ public class AnimaPersonaggio : MonoBehaviour
         {
             //notifica il simulation manager di avviare animazione del personaggio attivo
              _simulationManager.PlayActiveCharacterAnimation(action);
-             phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
-             if (action != "sit" && action!="is tied" && action != "stand up" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
+             phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.transform.GetChild(0).name, _character.GetComponent<CharacterManager>().type, _self);
+             if (action != "sit" && action!="is tied" && action != "stand up" && action != "is freed" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
              {
                  //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
                  _character.GetComponent<State>().ChangeState(action);

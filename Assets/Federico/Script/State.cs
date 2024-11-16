@@ -23,6 +23,17 @@ public class State : MonoBehaviour
     public List<string> nearObjs; //Oggetti vicini, validi solo per i Players
 
     //Questo script � assegnato ad ogni oggetto al momento della sua creazione in creation mode, nel BuildingManager (metodo SelectObject)
+
+    public void OnEnable()
+    {
+        SimulationManager.pauseStoryboarding += ResetState;
+    }
+
+    public void OnDisable()
+    {
+        SimulationManager.pauseStoryboarding -= ResetState;
+    }
+    
     void Start()
     {
         state = new List<string>();
@@ -49,7 +60,7 @@ public class State : MonoBehaviour
             initialState = state[0];
         }
 
-        SimulationManager.pauseStoryboarding += ResetState;
+     
 
     }
 

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6409029152904877389}
   - component: {fileID: 7738142588334038726}
+  - component: {fileID: 3320890362594388745}
   - component: {fileID: 704543108529411328}
   - component: {fileID: 4797690262140317339}
   - component: {fileID: 302733042894723199}
@@ -17,7 +18,6 @@ GameObject:
   - component: {fileID: 337125836968605306}
   - component: {fileID: 277438987084434683}
   - component: {fileID: 1862997330969448765}
-  - component: {fileID: 3320890362594388745}
   - component: {fileID: 5613364729495164392}
   m_Layer: 9
   m_Name: wardrobe
@@ -69,6 +69,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!208 &3320890362594388745
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6683974226756806044}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.225, y: 0.42, z: 0.155}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0.42, z: 0.02}
+  m_TimeToStationary: 0.5
 --- !u!65 &704543108529411328
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -88,8 +104,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.49276108, y: 0.7610152, z: 0.38257772}
-  m_Center: {x: -0.018312138, y: 0.6657536, z: -0.46393925}
+  m_Size: {x: 0.45444942, y: 0.80846083, z: 0.32956138}
+  m_Center: {x: 0.00084363425, y: 0.42434213, z: -0.0020510224}
 --- !u!114 &4797690262140317339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,22 +369,6 @@ MonoBehaviour:
   characterAnchorManager: {fileID: 5613364729495164392}
   debuggingWindow: {fileID: 0}
   interactionEnabled: 0
---- !u!208 &3320890362594388745
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6683974226756806044}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.225, y: 0.375, z: 0.15}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: -0.03, y: 0.67, z: -0.48}
-  m_TimeToStationary: 0.5
 --- !u!114 &5613364729495164392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,11 +398,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2dc821d2aff54a44490aeb60f66cf76f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.63
+      value: 0.425
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2dc821d2aff54a44490aeb60f66cf76f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.467
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2dc821d2aff54a44490aeb60f66cf76f, type: 3}
       propertyPath: m_LocalRotation.w

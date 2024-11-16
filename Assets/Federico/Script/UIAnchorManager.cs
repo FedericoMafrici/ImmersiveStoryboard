@@ -20,6 +20,8 @@ public class UIAnchorManager : CharacterAnchorManager
         {
             Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
         }
+        #if !UNITY_EDITOR
         AttachObjectToAnchor();
+        #endif
     }
 }

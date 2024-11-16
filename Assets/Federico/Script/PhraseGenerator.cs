@@ -176,7 +176,7 @@ public class PhraseGenerator : MonoBehaviour
             }
 
             //Se il verbo � riflessivo non c'� il complemento (perch� coincide con il soggetto)
-            if (/*System.Array.IndexOf(reflexList, action) > -1*/ self)
+            if (self)
             {
                 phrase.text += sub + " " + ac + ". ";
 
@@ -194,7 +194,7 @@ public class PhraseGenerator : MonoBehaviour
 
                 if (ac == "lock up")
                 {
-                    phrase.text += sub + " " + "is locked up" + " inside the " + com + ". ";
+                    phrase.text += sub + " " + "is locked up" + " inside the " + "wardrobe" + ". ";
                 }
             }
 

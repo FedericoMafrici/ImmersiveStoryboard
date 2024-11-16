@@ -8,21 +8,10 @@ using UnityEngine.XR.ARFoundation;
 
 public class CharacterManager : MonoBehaviour
 {
-   /* TODO quando implementari tutto il resto 
-    
-    public ObjectManagerVR objectManagerVR;
-    public SimulationManager simulationManager;
-    public AnimaPersonaggio animaPersonaggio;
-    public PhraseGenerator phraseGenerator;
-    public SaveLoadStage saveLoadManager;
-    
-    */
-    //private TapToPlace ttp;
-    //private BoundsControl bc;
     [SerializeField] private PhraseGenerator phraseGenerator;
     [SerializeField] private SimulationManager simulationManager;
     [SerializeField] public string type;
-    [SerializeField] private InteractionManagerAddOn characterInteractionManagerAddOn;
+    [SerializeField] public InteractionManagerAddOn characterInteractionManagerAddOn;
     public bool simulation = false;
     public bool isWalking;
     public bool walkMode = true;
@@ -53,9 +42,6 @@ public class CharacterManager : MonoBehaviour
         phraseGenerator = FindObjectOfType<PhraseGenerator>();
         simulationManager = FindObjectOfType<SimulationManager>();
         charAnim = this.GetComponent<Animator>();
-        
-        SimulationManager.setUpMovement +=EnableCharacterMovement;
-        
         if (!loadedObject || type=="")
         {
             type = gameObject.name;
@@ -66,16 +52,12 @@ public class CharacterManager : MonoBehaviour
 
         isWalking = false;
         newPlace = false;
-
-        //CursorVisual = GameObject.Find("CursorVisual");
-
     }
 
     // Update is called once per frame
     void Update()
     {
         var navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-    
         // Controlla se il personaggio è in movimento
         if (isWalking)
         {
@@ -96,7 +78,6 @@ public class CharacterManager : MonoBehaviour
                 }
             }
         }
-        
     }
    
     public void CheckForward()
@@ -120,10 +101,22 @@ public class CharacterManager : MonoBehaviour
         }
       //  else phraseGenerator.UpdateForward("");
     }
-
-    public void EnableCharacterMovement(object sender, EventArgs e)
+    public void EnableCharacterMovement()
     {   
+        if (this == null || gameObject == null)
+        {
+            Debug.LogError("Questo oggetto o il gameObject è stato distrutto.");
+            return;
+        }
+
+        if (characterInteractionManagerAddOn == null)
+        {
+            Debug.LogError("characterInteractionManagerAddOn è null.");
+            return;
+        }
+        
         this.walkMode = true;
+        
         characterInteractionManagerAddOn.EnableNavMeshAgent(); 
     }
     public void Move(RaycastHit hitInfo)

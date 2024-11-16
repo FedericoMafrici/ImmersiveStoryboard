@@ -6129,7 +6129,7 @@ Transform:
   m_GameObject: {fileID: 6225621188417093453}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.14236613, y: -1.9216607, z: -0.39144796}
+  m_LocalPosition: {x: -0.14236188, y: -1.9216607, z: -0.39144796}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -7848,7 +7848,7 @@ Transform:
   m_GameObject: {fileID: 7061702736331689781}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.14236613, y: -1.9216607, z: -0.39144796}
+  m_LocalPosition: {x: -0.14236188, y: -1.9216607, z: -0.39144796}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -8159,7 +8159,7 @@ Transform:
   m_GameObject: {fileID: 7593092147581340525}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -53.954277, y: -101.40026, z: -49.634193}
+  m_LocalPosition: {x: -53.95428, y: -101.40026, z: -49.634193}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -9228,13 +9228,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 7251841749604326440}
+        m_TargetAssemblyTypeName: SetUpButton, Assembly-CSharp
+        m_MethodName: moveButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -10002,7 +10002,7 @@ Transform:
   m_GameObject: {fileID: 9115762771079033493}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4811692, y: -0.9228467, z: -3.151}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10160,7 +10160,7 @@ MonoBehaviour:
   m_SmoothScale: 1
   m_SmoothScaleAmount: 0.8
   m_TightenScale: 0.4
-  m_ThrowOnDetach: 1
+  m_ThrowOnDetach: 0
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -10988,7 +10988,7 @@ MonoBehaviour:
   phraseGenerator: {fileID: 0}
   simulationManager: {fileID: 0}
   type: flyn
-  characterInteractionManagerAddOn: {fileID: 0}
+  characterInteractionManagerAddOn: {fileID: 4800446761327461023}
   simulation: 0
   isWalking: 0
   walkMode: 1

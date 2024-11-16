@@ -11,7 +11,6 @@ Library: /Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/T
 --float-mode=Fast
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Temp/Burst
---debug=LineOnly
 --key-folder=/Applications/Unity/Hub/Editor/6000.0.20f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Library/Burst
 --output=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Temp/BurstOutput/tempburstlibs/arm64-v8a/lib_burst_generated
@@ -29,7 +28,6 @@ Library: /Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/T
 --target-framework=NetFramework
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Temp/Burst
---debug=LineOnly
 --key-folder=/Applications/Unity/Hub/Editor/6000.0.20f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Library/Burst
 --output=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Temp/BurstOutput/tempburstlibs/arm64-v8a/lib_burst_generated
@@ -145,7 +143,6 @@ Library: /Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/T
 --target-framework=NetFramework
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Temp/Burst
---debug=LineOnly
 --key-folder=/Applications/Unity/Hub/Editor/6000.0.20f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Library/Burst
 --output=/Users/federicomafrici/ImmersiveStoryboardProject/ImmersiveStoryboard/Temp/BurstOutput/tempburstlibs/arm64-v8a/lib_burst_generated
