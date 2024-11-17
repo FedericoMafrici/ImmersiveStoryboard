@@ -241,11 +241,11 @@ public class PhraseGenerator : MonoBehaviour
         {
             if (place == "room")
             {
-                phrase.text = "The " + name + " walks. ";
+                phrase.text += "The " + name + " walks. ";
             }
             else
             {
-                phrase.text = "The " + name + " walks towards ";
+                phrase.text += "The " + name + " walks towards ";
                 if (place == placeType)
                 {
                     phrase.text += "the " + place + ". ";

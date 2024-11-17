@@ -112,7 +112,7 @@ public class OutputGenerator : MonoBehaviour
 
                 _html += "<h3 style = \"text-align:center; margin-top: 20px\">Shot #" + j + "</h3>" +
                     "<div class= \"flex-container\"  style=\"display: flex; flex-direction: row; justify-content: center; margin: 8px; align-items: center; background-color:#c0e9fa;\" >" +
-                        "<div><img src=\"screenshots/" + "img_" + t + ".png\" width=\"550\" height=\"300\" style=\"padding: 20px; margin: 10px\" onerror=\"this.src = 'not_found.png'; \"> </div>" +
+                        "<div><img src=\"Screenshots/" + "img_" + t + ".png\" width=\"550\" height=\"300\" style=\"padding: 20px; margin: 10px\" onerror=\"this.src = 'not_found.png'; \"> </div>" +
                         "<div contenteditable = \"true\">" +
                             "<p>Duration: " + _screenshotManager.actionTimes[t] + " sec</p>" +
                             "<p> Focal length: " + _screenshotManager.focalTable[t] + " mm</p>" +

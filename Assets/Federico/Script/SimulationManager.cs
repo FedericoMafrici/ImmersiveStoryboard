@@ -148,13 +148,21 @@ public class SimulationManager : MonoBehaviour
     {
         consoleDebuggin.SetText("starStoryboarding Chiamata"+ status);
         Debug.Log("Start Storyboarding avviato");
+        
+        if (txtcomponent == null)
+        {
+            Debug.LogError("txtcomponent è null! Assicurati di passarlo correttamente.");
+            return;
+        }
+
+        
         if (status == 0)
         {
             status = 1;
             startStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Stop";
             consoleDebuggin.SetText("Storyboarding Avviato"+ status);
-            Debug.Log("Start Storyboarding avviato");
+            Debug.Log("Start Storyboarding avviato personaggio attivo"+activeCharacter);
             if (activeCharacter != null)
             {
                 activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
@@ -174,9 +182,12 @@ public class SimulationManager : MonoBehaviour
             txtcomponent.text = "Start";
             if (activeCharacter != null)
             {
-                activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+               characterAnimationManager.HideActions();
+               DestroyParticles();
+               DestroyParticlesActive();
+               DestroyParticlesComplement();
             }
-
+            
             activeCharacter = null;
             characterAnimationManager._character = null;
             characterAnimationManager._interactionObject = null;

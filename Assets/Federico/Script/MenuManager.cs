@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -21,6 +22,15 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private List<GameObject> values = new List<GameObject>();
     [SerializeField] public Dictionary<string, GameObject> myDictionary = new Dictionary<string, GameObject >();
     
+    //SCRIPT 
+    public int currentPage = 0;
+    public int totalPageNumber=0;
+    public List<Texture> imagesTexture = new List<Texture>();
+    [SerializeField] private RawImage currentImage;
+
+    [SerializeField] private GameObject previousButton;
+
+    [SerializeField] private GameObject nextButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +50,10 @@ public class MenuManager : MonoBehaviour
            }
        }
        SetSceneObjects();
+       SetTableTop();
        SelectObject("Woman");
+       ResetPageNumber();
+       totalPageNumber=imagesTexture.Count;
     }
 
     public void SetSceneObjects()
@@ -53,6 +66,10 @@ public class MenuManager : MonoBehaviour
       
         sceneObjectPanel.SetActive(true);
         sceneObjectPanelOutline.SetActive(true);
+     
+        previousButton.SetActive(false);
+        nextButton.SetActive(false);
+        ResetPageNumber();
     }
 
     public void SetBoundingBoxes()
@@ -65,8 +82,11 @@ public class MenuManager : MonoBehaviour
       
         boundingBoxesPanel.SetActive(true);
         boundingBoxesPanelOutline.SetActive(true);
+        ResetPageNumber();
+        previousButton.SetActive(false);
+        nextButton.SetActive(false);
+        
     }
-
     public void SetTableTop()
     {
         
@@ -78,8 +98,10 @@ public class MenuManager : MonoBehaviour
       
         tableTopObjectsPanel.SetActive(true);
         tableTopObjectsPanelOutline.SetActive(true);
+        ResetPageNumber();
+        previousButton.SetActive(true);
+        nextButton.SetActive(true);
     }
-    
     public void SelectObject(string obj )
     {
         GameObject prefab;
@@ -92,10 +114,26 @@ public class MenuManager : MonoBehaviour
             Debug.LogError("oggetto non trovato stringa passata " + obj);
         }
     }
-    
-    // Update is called once per frame
-    void Update()
+    public void ResetPageNumber()
     {
+        currentPage = 0;
+        currentImage.texture = imagesTexture[currentPage];
+    }
+    public void NextPage()
+    {
+        if(currentPage<totalPageNumber-1)
+        {currentPage++;}
+        currentImage.texture = imagesTexture[currentPage];
         
+        
+    }
+    public void PreviousPage()
+    {
+        if (currentPage!=0)
+        {
+            currentPage--;
+        }
+        
+        currentImage.texture = imagesTexture[currentPage];
     }
 }

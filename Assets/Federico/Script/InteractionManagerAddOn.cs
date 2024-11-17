@@ -165,6 +165,17 @@ public class InteractionManagerAddOn : MonoBehaviour
             }
         }
     }
+
+    public void DestroyObject()
+    {
+        #if !UNITY_EDITOR 
+        characterAnchorManager.DetachFromAnchor();
+        #endif
+     Destroy(this.transform.parent.gameObject);
+        
+    }
+    
+    
     public void EnableMoving(object sender, EventArgs obj)
     {
         // debuggingWindow.SetText("Sto prendendo il componente grabbable di" + this.name);
@@ -206,6 +217,8 @@ public class InteractionManagerAddOn : MonoBehaviour
            _SimulationManager.SetActiveCharacter(_currSelectedObj);
        }
     }
+    
+    
     public void OnSelectionExit(SelectExitEventArgs args)
     {
 #if !UNITY_EDITOR
@@ -224,4 +237,7 @@ public class InteractionManagerAddOn : MonoBehaviour
         }
         menuManager.SelectObject(txt.text);
     }
+    
+    
+    
 }

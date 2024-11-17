@@ -16,6 +16,11 @@ public class AttachInteraction : MonoBehaviour
     void Start()
     {
         _characterAnimationaManager = GameObject.Find("CharacterAnimationManager").GetComponent<AnimaPersonaggio>();
+        UI = GameObject.Find("UI");
+        if (UI == null)
+        {
+            Debug.LogError("errore nell'ottenimento della risorsa UI attachinteraction menu hand setup");
+        }
     }
 
    public void onValueChanged(string value)
@@ -30,15 +35,20 @@ public class AttachInteraction : MonoBehaviour
 
     public void HandleUi(TextMeshProUGUI txt)
     {
+        Debug.Log("oggetto UI acquisito"+UI.name);
         if (hiddenUI)
         {
             txt.text = "hide";
             ShowUI();
+            Debug.Log("UI stato attuale (dopo Hide): " + UI.activeSelf);
+            Debug.Log("visualizzo la ui");
         }
         else
         {
             txt.text = "show";
             HideUi();
+            Debug.Log("UI stato attuale (dopo show): " + UI.activeSelf);
+            Debug.Log("nascondo la ui");
         }
     }
     public void HideUi()

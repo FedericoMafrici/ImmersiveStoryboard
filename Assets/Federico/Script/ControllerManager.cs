@@ -89,8 +89,12 @@ public class ControllerManager : MonoBehaviour
             _ConsoleDebugger.SetText("hai premuto l'analog a destra, valori rilevati: " + analogValue.x + " " + analogValue.y);
 
             Debug.Log("Hai premuto l'analog verso destra bravo!");
-            Debug.Log("hai selezionato una bounding box ?"+boundingBoxSelected.gameObject.name);
-            _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
+            if (boundingBoxSelected != null)
+            {
+                Debug.Log("hai selezionato una bounding box ?" + boundingBoxSelected.gameObject.name);
+                _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
+            }
+
             if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
             {
                 boundingBoxSelected.RotatePlane(1);
@@ -148,7 +152,18 @@ public class ControllerManager : MonoBehaviour
                                  {
                                      _ConsoleDebugger.SetText("Componente anchor manager non reperito oggetto:"+hitInfo.transform.gameObject.name);
                                  }
-                                 Destroy(hitInfo.transform.gameObject);
+                                    if(hitInfo.transform.gameObject.CompareTag("Player"))
+                                    {
+                                        var interaction=hitInfo.transform.gameObject.GetComponentInChildren<InteractionManagerAddOn>();
+                                        if (interaction != null)
+                                        {
+                                            interaction.DestroyObject();
+                                        }
+                                        else
+                                        {
+                                            Debug.LogError("non ho trovato il componente interactionManager dal personaggio");
+                                        }
+                                    }
                               }
                               else
                               {

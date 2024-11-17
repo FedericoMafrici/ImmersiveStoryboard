@@ -216,10 +216,18 @@ public class AnimaPersonaggio : MonoBehaviour
 
     public void HideActions()
     {
+        HideGetControlPanel( _simulationManager.activeCharacter);
         var ui =  _simulationManager.activeCharacter.transform.parent.Find("CharacterUI").gameObject;
-       
+        if (ui == null)
+        {
+            Debug.LogError("ui non trovata");
+        }
         ui.SetActive(false);
         ui= _simulationManager.activeCharacter.transform.parent.Find("PersonaggioAttivo").gameObject;
+        if (ui == null)
+        {
+            Debug.LogError("ui non trovata");
+        }
         ui.SetActive(false);
         var container = ui.transform.Find("Front/Scrollview Canvas/Panel/Pannello/Viewport/Content");
         if (container == null)
@@ -227,11 +235,20 @@ public class AnimaPersonaggio : MonoBehaviour
             Debug.LogError("Null reference exception nella gestione della ui dell'oggetto " + _character.name);
         }
         ClearContainer(container);
+        //eventually we close also the action of the other characters 
+        HideGetControlPanel(_character);
     }
 
     public void HideGetControlPanel(GameObject obj)
     {
-        obj.transform.parent.Find("GetControl").gameObject.SetActive(false);
+        if (obj.CompareTag("Player"))
+        {
+            obj.transform.parent.Find("GetControl").gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("Attenzione oggetto non player nome:"+obj.gameObject.name);
+        }
     }
       public void StopOldLongAnimation()
     {
