@@ -229,6 +229,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Grip",
+                    "type": "Button",
+                    "id": "ce63640d-c697-4751-be27-46630bc5c0e8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "dff74ffa-5e7a-46a3-ad8f-017d8417825d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Analog",
+                    "type": "Button",
+                    "id": "7ed4b720-3fe0-496a-bff5-ccd792201ba8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -240,6 +267,72 @@
                     "processors": "",
                     "groups": "",
                     "action": "B",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "40625f9c-da6e-440b-86bf-e432a7199b4f",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Analog",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "142b5ede-63f8-4b85-9cc2-ae70500b0c93",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Analog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "8b76f491-21e5-470b-896a-d15f37c296bf",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Analog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "52b58df7-3894-42b8-91ad-25aaa05589fb",
+                    "path": "<Keyboard>/#(A)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Analog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "215f6f8f-9cf3-4c4c-ab58-ac0e7827b1ec",
+                    "path": "<Keyboard>/#(D)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Analog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "87e6f4f2-c22d-416e-bf50-c7cb842f7b02",
+                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Analog",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -268,11 +361,55 @@
                 {
                     "name": "",
                     "id": "d1f6afdf-cc35-4302-8f3a-743bf22c34d6",
-                    "path": "<XRSimulatedController>/secondaryButton",
+                    "path": "<XRSimulatedController>{RightHand}/secondaryButton",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d5bdd22-a486-4038-86a3-21f18567e24c",
+                    "path": "<XRController>{RightHand}/{GripButton}",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "273464f4-882c-4757-9374-e90c7696bb70",
+                    "path": "<XRSimulatedController>{RightHand}/gripButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0c26b4c-1708-4fc1-bb3f-01142c220fbd",
+                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "162dc6f8-35c3-4fbb-9aea-2912ce085cc6",
+                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

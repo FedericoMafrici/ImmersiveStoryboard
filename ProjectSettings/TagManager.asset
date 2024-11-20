@@ -43,6 +43,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: New Layer 1
+    uniqueID: 410193993
+    locked: 0
+  - name: UI panel
+    uniqueID: 2671339625
+    locked: 0
+  - name: Tutorial
+    uniqueID: 1126871891
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1

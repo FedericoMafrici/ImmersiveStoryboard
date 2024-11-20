@@ -39,17 +39,23 @@ namespace Trev3d.Quest.ScreenCapture
 		public UnityEvent OnNewFrameHandled = new();
 		public static readonly Vector2Int Size = new(1024, 1024);
 
+		public bool canShowVideo = false;
 		private void Awake()
 		{
 			Instance = this;
 			screenTexture = new Texture2D(Size.x, Size.y, TextureFormat.RGBA32, 1, false);
 		}
 
+		public void OnDisable()
+		{
+			ControllerManager.OnPanelsSpawned -= AllowVideoShowcasing;
+		}
+
 		private void Start()
 		{
 			
 				UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-				 UnityPlayerActivityWithMediaProjector = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+				    UnityPlayerActivityWithMediaProjector = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 				if (UnityPlayerActivityWithMediaProjector != null)
 				{
 					Debug.Log("currentActivity ottenuto con successo.");
@@ -70,6 +76,12 @@ namespace Trev3d.Quest.ScreenCapture
 					StartScreenCapture();
 				}
 				bufferSize = Size.x * Size.y * 4; // RGBA_8888 format: 4 bytes per pixe
+				ControllerManager.OnPanelsSpawned += AllowVideoShowcasing;
+		}
+
+		private void AllowVideoShowcasing(object sender, EventArgs e)
+		{
+			canShowVideo = true;
 		}
 
 		private unsafe void InitializeByteBufferRetrieved()

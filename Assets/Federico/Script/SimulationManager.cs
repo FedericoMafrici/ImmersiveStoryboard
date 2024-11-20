@@ -263,7 +263,7 @@ public class SimulationManager : MonoBehaviour
     public void SetActiveCharacter(GameObject obj) {
         // se il personaggio attivo è gia esistente allora potrei starne selezionando un altro se non c'è allora semplicemente sostituisci con la reference
         consoleDebuggin.SetText("Simulation Manager r326: " + obj.name+ "TAG"+ obj.tag);
-        if (status == 1) {
+            if (status == 1) {
             if (activeCharacter != null && activeCharacter != obj && obj.CompareTag("Player"))
             {
                 consoleDebuggin.SetText(activeCharacter.name +" oggetto:"+ obj.name);
@@ -714,7 +714,15 @@ public class SimulationManager : MonoBehaviour
                  phraseGenerator.AggiornaTesto();
      
              }
+             else
+             {
+                 SetActiveCharacterActionClick(activeCharacter);
+                 DeleteSentencesUndo();
+                 phraseGenerator.AggiornaTesto();
+             }
+             
          }
+    
 
     public void ResetDestination()
     {

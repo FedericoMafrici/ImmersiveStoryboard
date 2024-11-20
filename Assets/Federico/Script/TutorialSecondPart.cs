@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TutorialSecondPart : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class TutorialSecondPart : MonoBehaviour
     [SerializeField] private List<GameObject> Cards;
     [SerializeField] private TextMeshProUGUI textHandMenu;
     [SerializeField] private GameObject _tutorial;
-
+    [SerializeField] private Button ShowButton;
     private int _cardCounter = 0;
     private int _currCardCounter = 0;
     private GameObject currActiveCard;
@@ -33,6 +34,9 @@ public class TutorialSecondPart : MonoBehaviour
         this.gameObject.SetActive(true);
         isActive = true;
         currActiveCard.SetActive(true);
+        //ShowButton.onClick.RemoveAllListeners();
+        //ShowButton.onClick.AddListener(HandleTutorial);
+        //ShowTutorial();
     }
     // Update is called once per frame
     public void HideTutorial()
@@ -59,6 +63,18 @@ public class TutorialSecondPart : MonoBehaviour
             
         }
     }
+
+    public void MoveToPreviousPanel()
+    {
+        if (_currCardCounter > 0)
+        {
+            currActiveCard.SetActive(false);
+            _currCardCounter--;
+                currActiveCard = Cards[_currCardCounter];
+                currActiveCard.SetActive(true);
+        }
+        
+    }
     public void MoveToNextPanel()
     {
         if (_currCardCounter < _cardCounter)
@@ -70,10 +86,16 @@ public class TutorialSecondPart : MonoBehaviour
                 currActiveCard = Cards[_currCardCounter];
                 currActiveCard.SetActive(true);
             }
+            else
+            {
+                this.gameObject.SetActive(false);
+            }
 
             switch (_currCardCounter)
             {
-                default: 
+                case 2:
+                    Debug.Log("ora gli oggetti possono spawnare");
+                    ControllerManager.OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
                     break;
             }
         }

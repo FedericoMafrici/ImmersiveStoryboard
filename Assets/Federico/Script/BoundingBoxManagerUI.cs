@@ -19,12 +19,13 @@ public class BoundingBoxManagerUI : MonoBehaviour
     private int _currCardCounter=0;
     private GameObject currActiveCard;
     public static EventHandler<EventArgs> OnTutorialFirstPartCompleted;
-    
+    public static EventHandler<EventArgs> OnBoundingBoxPlacement;
     public static EventHandler<EventArgs> OnBoundingBoxPlacementCompleted;
-
+    public static EventHandler<EventArgs> e;
     public static EventHandler<EventArgs> OnSceneInizializationCompleted;
-
-    
+   
+    [SerializeField] public GameObject leftHandButton;
+    [SerializeField] public GameObject rightHandButton;
     private bool isActive = true;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,7 +34,9 @@ public class BoundingBoxManagerUI : MonoBehaviour
         _cardCounter = Cards.Count;
         _currCardCounter = 0;
         currActiveCard = Cards[_currCardCounter];
-        _showTutorialButton.onClick.AddListener(HandleTutorial);
+        leftHandButton.SetActive(false);
+        rightHandButton.SetActive(false);
+        textHandMenu.text = "Hide";
     }
 
     // Update is called once per frame
@@ -51,6 +54,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
     public void ShowTutorial()
     {
         _tutorial.SetActive(true);
+        textHandMenu.text = "Hide";
     }
 
     public void HandleTutorial()
@@ -68,6 +72,47 @@ public class BoundingBoxManagerUI : MonoBehaviour
             }
         
     }
+
+    public void MoveToPreviousPanel()
+    {
+        if (_currCardCounter > 0)
+        {
+            currActiveCard.SetActive(false);
+            _currCardCounter--;
+            currActiveCard = Cards[_currCardCounter];
+            currActiveCard.SetActive(true);
+            
+            switch (_currCardCounter)
+            {
+                case 2:
+                    leftHandButton.SetActive(false);
+                    rightHandButton.SetActive(false);
+                    break;
+                case 3:
+                    leftHandButton.SetActive(true);
+                    rightHandButton.SetActive(true);
+                    break;
+                case 4:
+                    leftHandButton.SetActive(false);
+                    rightHandButton.SetActive(false);
+                    Debug.Log("Non è più possibile spostare le bounding Box");
+                    OnBoundingBoxPlacement?.Invoke(this,EventArgs.Empty);
+                    break;
+                case 5:
+                    Debug.Log("Non è più possibile spostare le bounding Box");
+                    OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
+                    break;
+                case 6:
+                    Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
+                    ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    break;
+                case 7:
+                    break;
+                default: 
+                    break;
+            }
+        }
+    }
     public void MoveToNextPanel()
     {
         if (_currCardCounter < _cardCounter)
@@ -82,25 +127,47 @@ public class BoundingBoxManagerUI : MonoBehaviour
 
             switch (_currCardCounter)
             {
-                case 2:
+                case 1:
+                    leftHandButton.SetActive(false); 
+                    rightHandButton.SetActive(false); 
+                    break;
+                case 2: 
+                     leftHandButton.SetActive(false); 
+                     rightHandButton.SetActive(false); 
+                     break;
+                 case 3: 
+                     leftHandButton.SetActive(true); 
+                     rightHandButton.SetActive(true); 
+                     break;
+                 case 4: 
+                     leftHandButton.SetActive(false); 
+                     rightHandButton.SetActive(false); 
+                     break;
+                 case 5:
                     Debug.Log("Non è più possibile spostare le bounding Box");
                     OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
-                break;
-                case 3:
+                     break;
+                 case 6:
                     Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
                     ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    enviroment.FadeSkybox(true);
                     break;
-                case 4:
+                 case 7:
                     Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");
                     ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
-                    _showTutorialButton.onClick.RemoveListener( HandleTutorial);
-                    _showTutorialButton.onClick.AddListener(_tutorialSecondPart.HandleTutorial);
-                    OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
-                    enviroment.FadeSkybox(true);
-                    currActiveCard.SetActive(false);
-                    _currCardCounter = 0;
-                    _tutorial.SetActive(false);
                     break;
+                 case 9:
+                     OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
+                     ControllerManager.OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
+                     ControllerManager.OnPanelsSpawned?.Invoke(this,EventArgs.Empty);
+                     break;
+                 case 16:
+                     _currCardCounter = 0;
+                     currActiveCard.SetActive(false);
+                     currActiveCard = Cards[_currCardCounter];
+                     currActiveCard.SetActive(true);
+                     HideTutorial();
+                     break;
                 default: 
                     break;
             }

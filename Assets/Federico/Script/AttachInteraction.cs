@@ -8,7 +8,7 @@ public class AttachInteraction : MonoBehaviour
 {
   
     [SerializeField] private AnimaPersonaggio _characterAnimationaManager;
-
+    [SerializeField] private CenterUIPanel centerUIPanel;
     [SerializeField] private GameObject UI;
 
     private bool hiddenUI = false;
@@ -39,16 +39,18 @@ public class AttachInteraction : MonoBehaviour
         if (hiddenUI)
         {
             txt.text = "hide";
-            ShowUI();
+            centerUIPanel.ShowPanels();
             Debug.Log("UI stato attuale (dopo Hide): " + UI.activeSelf);
             Debug.Log("visualizzo la ui");
+            hiddenUI = false;
         }
         else
         {
             txt.text = "show";
-            HideUi();
+            centerUIPanel.HidePanels();
             Debug.Log("UI stato attuale (dopo show): " + UI.activeSelf);
             Debug.Log("nascondo la ui");
+            hiddenUI = true;
         }
     }
     public void HideUi()

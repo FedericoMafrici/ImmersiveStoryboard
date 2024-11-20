@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.Interaction.Toolkit.Feedback;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class SnapToPlane : XRGrabInteractable
 {
@@ -23,6 +25,20 @@ public class SnapToPlane : XRGrabInteractable
            Debug.LogError("planemanager non trovato");
        }
 
+       IXRInteractor leftInteractor = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller/Near-Far Interactor").GetComponent<IXRInteractor>();
+       IXRInteractor righInteractor = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Right Controller/Near-Far Interactor").GetComponent<IXRInteractor>();
+       if (leftInteractor == null || righInteractor == null)
+       {
+           Debug.LogError("non ho reperito i near far interactor components");
+       }
+       var hapticFeedbackComponents = this.gameObject.GetComponents<SimpleHapticFeedback>();
+       if (hapticFeedbackComponents.Length != 0)
+       {
+           hapticFeedbackComponents[0].enabled = true;
+           hapticFeedbackComponents[1].enabled = true;
+           hapticFeedbackComponents[0].SetInteractorSource(leftInteractor);
+           hapticFeedbackComponents[1].SetInteractorSource(righInteractor);
+       }
     }
     protected override void OnEnable()
     {
@@ -54,6 +70,7 @@ public class SnapToPlane : XRGrabInteractable
 
     private void Update()
     {
+        /*
         // Verifica se l'oggetto è abbastanza vicino a un piano
         if (isSelected && TryGetClosestPlane(out closestPlane) && !isBeingManipulated)
         {
@@ -65,6 +82,7 @@ public class SnapToPlane : XRGrabInteractable
         {
             isSnapping = false;
         }
+        */
     }
 
     private bool TryGetClosestPlane(out ARPlane closestPlane)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Trev3d.Quest.ScreenCapture;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -19,7 +20,10 @@ public class ControllerManager : MonoBehaviour
     [SerializeField] public PersistentAnchorManager persistentAnchorManager;
     [SerializeField] public XRRayInteractor leftControllerRay;
     [SerializeField] public XRRayInteractor rightControllerRay;
+    [SerializeField] public XRRayInteractor activeControllerRay;
     [SerializeField] public ARAnchorManager anchorManager;
+    [SerializeField] public ScreenshotManager screenshotManager;
+    [SerializeField] public CenterUIPanel centerUIPanel;
     public GameObject leftXRController;
     public GameObject rightXRController;
     [SerializeField] public RawImage _screenshot;
@@ -34,9 +38,16 @@ public class ControllerManager : MonoBehaviour
     public GameObject currSelectedObject;
     
     public static EventHandler<EventArgs> OnObjectPlaced;
+    public static EventHandler<EventArgs> OnObjectsSpawnable; //da invocare
     public static EventHandler<EventArgs> OnBoundingBoxPlaneEdit;
     public static EventHandler<EventArgs> StopBoundingBoxPlaneEdit;
-   
+    public static EventHandler<EventArgs> OnPanelsSpawned;
+    public static EventHandler<EventArgs> OnBoundingBoxFounded;
+    // bool per gestire lo stato del controller manager
+    public bool objectCanSpawn = false;
+    public bool canRotatePlane = true;
+
+    public bool allowPanelsRecentering = false;
     // manipolazione piano interno alla bounding box 
     public bool isMovingPlane=false;
     private float initialControllerY;
@@ -46,27 +57,142 @@ public class ControllerManager : MonoBehaviour
     public int offset = 0;
     [SerializeField] public GameObject woman;
     private BoundingBoxInteractionManager boundingBoxSelected;
-    void Start()
+
+    public bool debuggingTool = false;
+    public bool isFirstTimeSettingUpController = true;
+    
+    //eventi
+    private void OnDisable()
     {
-        controlli = new ButtonController();
-        controlli.Left.Enable();
-        controlli.Left.Y.performed += ctx => Ypressed(ctx);
-     //   controlli.Left.Y.canceled += ctx => Yreleased(ctx);
-        controlli.Left.X.performed += ctx => X(ctx);
-        controlli.Right.Enable();
-        controlli.Right.A.performed += ctx => Apressed(ctx);
-        controlli.Right.B.performed += ctx => Bpressed(ctx);
-
-        controlli.Left.Grip.performed += ctx => OnGripHold(ctx);
-        controlli.Left.Grip.canceled += ctx => OnGripRelease(ctx);
-
-        controlli.Keyboard.Enable();
-        controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
-
-        controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
-        DeactivateLaser();
+        if (controlli != null)
+        {
+            controlli.Left.Disable();
+            controlli.Right.Disable();
+            controlli.Keyboard.Disable();
+            
+        }
+        
+        OnObjectsSpawnable -= AllowObjectSpawn;
+        OnBoundingBoxPlaneEdit -= AllowEditPlane;
+        StopBoundingBoxPlaneEdit -= DenyEditPlane;
+        OnBoundingBoxFounded -= AllowRecenteringOfPanels;
     }
 
+    private void OnDestroy()
+    {
+        if (controlli != null)
+        {
+            controlli.Left.Disable();
+            controlli.Right.Disable();
+            controlli.Keyboard.Disable();
+        }
+        OnObjectsSpawnable -= AllowObjectSpawn;
+        OnBoundingBoxPlaneEdit -= AllowEditPlane;
+        StopBoundingBoxPlaneEdit -= DenyEditPlane;
+        OnBoundingBoxFounded -= AllowRecenteringOfPanels;
+    }
+    void Start()
+    {
+        DeactivateLaser();
+        OnObjectsSpawnable += AllowObjectSpawn;
+        OnBoundingBoxPlaneEdit += AllowEditPlane;
+        StopBoundingBoxPlaneEdit += DenyEditPlane;
+        OnPanelsSpawned += AllowRecenteringOfPanels;
+       // SetUpForLeftHanded();
+        if (debuggingTool)
+        {
+            OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
+            OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
+        }
+    }
+
+   
+
+    public void SetUpForLeftHanded()
+    {
+        if (isFirstTimeSettingUpController)
+        {
+            Debug.Log("Configuro i comandi per i mancini");
+            controlli = new ButtonController();
+            controlli.Left.Enable();
+            controlli.Right.Enable();
+            controlli.Left.Y.performed += ctx => Ypressed(ctx);
+            controlli.Left.X.performed += ctx => X(ctx);
+            controlli.Right.A.performed += ctx => Apressed(ctx);
+            controlli.Right.B.performed += ctx => Bpressed(ctx);
+
+            controlli.Left.Grip.performed += ctx => OnGripHold(ctx);
+            controlli.Left.Grip.canceled += ctx => OnGripRelease(ctx);
+
+            controlli.Keyboard.Enable();
+            controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
+
+            controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
+            activeControllerRay = leftControllerRay;
+            DeactivateLaser();
+            isFirstTimeSettingUpController = false;
+        }
+        else
+        {
+            Debug.Log("controller gia configurato");
+            return;
+        }
+    }
+
+    public void SetUpForRightHanded()
+    {
+        if (isFirstTimeSettingUpController)
+        {
+            Debug.Log("Configuro i comandi per destri");
+            controlli = new ButtonController();
+            controlli.Left.Enable();
+            controlli.Right.Enable();
+            controlli.Left.Y.performed += ctx => Bpressed(ctx);
+            //   controlli.Left.Y.canceled += ctx => Yreleased(ctx);
+            controlli.Left.X.performed += ctx => Apressed(ctx);
+            controlli.Right.A.performed += ctx => Ypressed(ctx);
+            controlli.Right.B.performed += ctx => X(ctx);
+
+            controlli.Right.Grip.performed += ctx => OnGripHold(ctx);
+            controlli.Right.Grip.canceled += ctx => OnGripRelease(ctx);
+
+            controlli.Keyboard.Enable();
+            controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
+
+            controlli.Right.Analog.performed += ctx => AnalogTouched(ctx);
+            activeControllerRay = rightControllerRay;
+            DeactivateLaser();
+            isFirstTimeSettingUpController = false;
+        }
+        else
+        {
+            Debug.Log("controller gia configurato");
+        }
+    }
+    private void AllowEditPlane(object sender,EventArgs e)
+    {
+        Debug.Log("ora puoi ruotare il piano");
+        canRotatePlane = true;
+    }
+
+    private void DenyEditPlane(object sender,EventArgs e)
+    {
+        canRotatePlane = false;
+    }
+    private void AllowObjectSpawn(object sender, EventArgs e)
+    {
+        objectCanSpawn = true;
+    }
+    
+    private void DenyObjectSpawn(object sender, EventArgs e)
+    {
+        objectCanSpawn = false;
+    }
+    private void AllowRecenteringOfPanels(object sender, EventArgs e)
+    {
+        allowPanelsRecentering = true;
+    }
+    
     public void KeyboardPressed(InputAction.CallbackContext ctx)
     {
         Debug.Log("A from keyboard pressed");
@@ -81,8 +207,9 @@ public class ControllerManager : MonoBehaviour
     public void AnalogTouched(InputAction.CallbackContext ctx)
     {
         Vector2 analogValue = ctx.action.ReadValue<Vector2>();
+        
+        Debug.Log("Analog Rilevato");
       //  _ConsoleDebugger.SetText("hai premuto l'analog, valori rilevati: " + analogValue.x + " " + analogValue.y);
-
         // Controlla se l'analogico è inclinato a destra e l'azione non è stata ancora eseguita
         if (analogValue.x > 0.5f && !analogIsTilted)
         {
@@ -139,7 +266,7 @@ public class ControllerManager : MonoBehaviour
                           {
                               Debug.LogError("controller sinistro non trovato");
                           }
-                          if(leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo) && _SimulationManager.status == 0 )
+                          if(activeControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo) && _SimulationManager.status == 0 )
                           {
                               if (hitInfo.transform.gameObject.layer==9)
                               {
@@ -167,13 +294,17 @@ public class ControllerManager : MonoBehaviour
                               }
                               else
                               {
-                               if(!hitInfo.transform.CompareTag("BoundingBox") && !hitInfo.transform.CompareTag("Object"))
+                               if(objectCanSpawn && objectToSpawn!=null && !hitInfo.transform.CompareTag("BoundingBox") && !hitInfo.transform.CompareTag("Object"))
                                {   SpawnObject(); }
-                               else
+                               else if(canRotatePlane || hitInfo.transform.CompareTag("Object") || hitInfo.transform.CompareTag("BoundingBox"))
                                {
-                                   boundingBoxSelected=hitInfo.transform.gameObject.GetComponent<BoundingBoxInteractionManager>();
-                               boundingBoxSelected.EnablePlaneRotation();
-                               _ConsoleDebugger.SetText("Piano colpito con successo può essere ruotato");
+                                   boundingBoxSelected=hitInfo.transform.parent.gameObject.GetComponent<BoundingBoxInteractionManager>();
+                                   if (boundingBoxSelected != null)
+                                   {
+                                       OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
+                                       boundingBoxSelected.EnablePlaneRotation();
+                                       _ConsoleDebugger.SetText("Piano colpito con successo può essere ruotato");
+                                   }
                                }
                                
                               }
@@ -191,29 +322,39 @@ public class ControllerManager : MonoBehaviour
                           return;
                       }
 
-                      public void Apressed(InputAction.CallbackContext ctx)
-                      {
-                      }
-
-                      public void Bpressed(InputAction.CallbackContext ctx)
-                      {
-                          
-                        
-                       //   StopBoundingBoxPlaneEdit.Invoke(this, EventArgs.Empty);
-                      }
-                      public async void SpawnAnchor()
-                      {
-                          rightControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit);
-                          Pose hitPose = new Pose(hit.point, Quaternion.LookRotation(-hit.normal));
-                          var result = await anchorManager.TryAddAnchorAsync(hitPose);
-                          if (result.status.IsSuccess())
-                          {
-                                  var anchor = result.value;
-                                  _ConsoleDebugger.SetText("Ancora creata con suggesso posizione" + anchor.transform.position);
-                          }
-                      }
-
-                      private IEnumerator CaptureScreenshot()
+     public void Apressed(InputAction.CallbackContext ctx) 
+     {
+         if (_SimulationManager.status == 1)
+         {
+             screenshotManager.TakeScreenshot();
+         }
+     }
+     public void Bpressed(InputAction.CallbackContext ctx)
+     {
+        /*
+         if (allowPanelsRecentering)
+         {
+             Debug.Log("Ho ricentrato i pannelli");
+             _ConsoleDebugger.SetText("Ho ricentrato i pannelli");
+             centerUIPanel.CenterPanels();
+         }
+         else
+         {
+             Debug.Log("La variabile è false quindi non puoi ricentrare i panenlli");
+         }
+         */
+     }
+     public async void SpawnAnchor() 
+     {
+         rightControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit);
+         Pose hitPose = new Pose(hit.point, Quaternion.LookRotation(-hit.normal));
+         var result = await anchorManager.TryAddAnchorAsync(hitPose);
+         if (result.status.IsSuccess()) {
+             var anchor = result.value;
+             _ConsoleDebugger.SetText("Ancora creata con suggesso posizione" + anchor.transform.position);
+         }
+     }
+     private IEnumerator CaptureScreenshot()
     {
         yield return new WaitForEndOfFrame();  // Aspetta la fine del frame per assicurarsi che il rendering sia completato
 
@@ -238,7 +379,6 @@ public class ControllerManager : MonoBehaviour
         _screenshot.enabled = true;  // Abilita la visualizzazione
         
     }
-        
     private void Update()
     {
         // Se il piano sta muovendosi, aggiorna la posizione
@@ -247,7 +387,6 @@ public class ControllerManager : MonoBehaviour
             MovePlaneWithController(initialPlaneLocalPosition,boundingBoxSize);
         }
     }
-           
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
         // Se non c'è un primo interattore, lo assegniamo
@@ -269,7 +408,6 @@ public class ControllerManager : MonoBehaviour
             Debug.Log($"Initial Distance: {initialDistance}, Initial Scale: {initialScale}");
         }
     }
-
     private void OnSelectExited(SelectExitEventArgs args)
     {
         // Se il secondo interattore rilascia, lo resettiamo
@@ -283,12 +421,9 @@ public class ControllerManager : MonoBehaviour
             firstInteractor = secondInteractor;
             secondInteractor = null;
         }
-
-       
         // Se uno dei due interattori rilascia, aggiorniamo la scala attuale
         currSelectedObject.transform.localScale = currentScale;
         initialScale = currSelectedObject.transform.localScale;
-         
         // Dopo il rilascio di entrambi i controller, imposta la scala corrente come nuova scala iniziale
         if (firstInteractor == null && secondInteractor == null)
         {
@@ -299,14 +434,14 @@ public class ControllerManager : MonoBehaviour
     private void StartMovingPlane(Vector3 planePosition)
     {
         isMovingPlane = true;
-        initialControllerY = leftControllerRay.transform.position.y; // Memorizza la Y iniziale del controller
+        initialControllerY = activeControllerRay.transform.position.y; // Memorizza la Y iniziale del controller
         initialPlaneLocalPosition = planePosition;
     }
     
     private void OnGripHold(InputAction.CallbackContext context)
     {
         // Controlla se il ray interactor sta selezionando il piano
-        if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit))
+        if (activeControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit))
         {
             
             if (hit.transform.name=="Plane")
@@ -317,6 +452,13 @@ public class ControllerManager : MonoBehaviour
                 if (!isMovingPlane)
                 {
                     StartMovingPlane(hit.transform.localPosition);
+                }
+                boundingBoxSelected=hit.transform.parent.gameObject.GetComponent<BoundingBoxInteractionManager>();
+                if (boundingBoxSelected != null)
+                {
+                    OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
+                    boundingBoxSelected.EnablePlaneRotation();
+                    _ConsoleDebugger.SetText("Piano colpito con successo può essere ruotato");
                 }
             }
         }
@@ -346,7 +488,6 @@ public class ControllerManager : MonoBehaviour
     }
     public void ActivateLaser()
     {
-        Debug.Log("Y button pressed");
         possibleInteraction = true;
 
         // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato
@@ -406,8 +547,14 @@ public class ControllerManager : MonoBehaviour
  // function to spawn objects
  public async void SpawnObject()
  {
+     if (objectToSpawn == null)
+     {
+         Debug.LogError("l'oggetto è nullo");
+         return;
+     }
+     
      // Ottieni il punto di impatto e il GameObject colpito, se presente
-     if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo))
+     if (activeControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo))
      {
          Vector3 hitPosition = hitInfo.point; // Coordinate del punto di impatto
          Vector3 hitNormal = hitInfo.normal; // Normale della superficie colpita
@@ -421,30 +568,33 @@ public class ControllerManager : MonoBehaviour
        // persistentAnchorManager.CreateAnchor(hitPosition,objectToSpawn);
         
           // Instanzia l'oggetto da spawnare
-          GameObject spawnedObject = Instantiate(objectToSpawn);
-          spawnedObject.name = objectToSpawn.name;
-          // Imposta la posizione dell'oggetto
-          spawnedObject.transform.position = hitPosition;
+         
+              GameObject spawnedObject = Instantiate(objectToSpawn);
+              spawnedObject.name = objectToSpawn.name;
+              // Imposta la posizione dell'oggetto
+              spawnedObject.transform.position = hitPosition;
 
-          // Allinea l'oggetto alla superficie del piano utilizzando la normale della superficie
-          Quaternion surfaceRotation = Quaternion.LookRotation(hitNormal);
+              // Allinea l'oggetto alla superficie del piano utilizzando la normale della superficie
+              Quaternion surfaceRotation = Quaternion.LookRotation(hitNormal);
 
-          // Ottieni la direzione verso l'utente (ad esempio, la camera o il controller)
-          Vector3 directionToUser = (leftXRController.transform.position - hitPosition).normalized;
+              // Ottieni la direzione verso l'utente (ad esempio, la camera o il controller)
+              Vector3 directionToUser = (activeControllerRay.transform.position - hitPosition).normalized;
 
-          // Ignora la componente verticale della direzione (asse Y) per calcolare solo la direzione orizzontale
-          directionToUser.y = 0;  // Ignora l'altezza (asse Y) per evitare inclinazioni verso l'alto o il basso
+              // Ignora la componente verticale della direzione (asse Y) per calcolare solo la direzione orizzontale
+              directionToUser.y = 0; // Ignora l'altezza (asse Y) per evitare inclinazioni verso l'alto o il basso
 
-          // Calcola la rotazione in modo che l'oggetto guardi verso l'utente solo sull'asse XZ
-          Quaternion lookAtUserRotation = Quaternion.LookRotation(directionToUser, hitNormal);
+              // Calcola la rotazione in modo che l'oggetto guardi verso l'utente solo sull'asse XZ
+              Quaternion lookAtUserRotation = Quaternion.LookRotation(directionToUser, hitNormal);
 
-          // Applica la rotazione combinata all'oggetto spawnato
-          spawnedObject.transform.rotation = lookAtUserRotation;
+              // Applica la rotazione combinata all'oggetto spawnato
+              spawnedObject.transform.rotation = lookAtUserRotation;
 
-             // Aggiungi l'oggetto alla lista degli oggetti spawnati
-          _SimulationManager.spawnedGameObjects.Add(spawnedObject);
-        
-          OnObjectPlaced.Invoke(this,EventArgs.Empty);
+              // Aggiungi l'oggetto alla lista degli oggetti spawnati
+              _SimulationManager.spawnedGameObjects.Add(spawnedObject);
+
+              OnObjectPlaced.Invoke(this, EventArgs.Empty);
+          
+          
      }
      else
       {
@@ -454,7 +604,7 @@ public class ControllerManager : MonoBehaviour
 
  public void MoveCharacter(object sender, EventArgs obj)
  {
-     if (leftControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo))
+     if (activeControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hitInfo))
      {
          // trovo il personaggio
          var activeChar = _SimulationManager.activeCharacter;
@@ -473,9 +623,9 @@ public class ControllerManager : MonoBehaviour
      Debug.Log("Entering MovePlaneWithController");
      Debug.Log($"initialPlaneLocalPosition: {initialPlaneLocalPosition}, boundingBoxSize: {boundingBoxSize}");
 
-     float currentControllerY = leftControllerRay.transform.position.y; // Ottieni la Y attuale del controller
+     float currentControllerY = activeControllerRay.transform.position.y; // Ottieni la Y attuale del controller
      float deltaY = currentControllerY - initialControllerY; // Differenza rispetto alla Y iniziale
-     Debug.Log(leftControllerRay.transform.position);
+     Debug.Log(activeControllerRay.transform.position);
      // Calcola la nuova posizione del piano
      Vector3 newLocalPosition = initialPlaneLocalPosition + new Vector3(0, deltaY, 0);
 

@@ -855,7 +855,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &6985320115755129892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,7 +925,7 @@ MonoBehaviour:
   - {fileID: 6574735797710231955, guid: c939843aae0b943b4b66dd38f2df4d19, type: 3}
   currentPage: 0
   totalPageNumber: 0
-  images: []
+  imagesTexture: []
   currentImage: {fileID: 0}
   previousButton: {fileID: 0}
   nextButton: {fileID: 0}

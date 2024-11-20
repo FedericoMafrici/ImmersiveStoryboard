@@ -50,8 +50,8 @@ public class MenuManager : MonoBehaviour
            }
        }
        SetSceneObjects();
-       SetTableTop();
-       SelectObject("Woman");
+       //SetTableTop();
+      // SelectObject("Woman");
        ResetPageNumber();
        totalPageNumber=imagesTexture.Count;
     }

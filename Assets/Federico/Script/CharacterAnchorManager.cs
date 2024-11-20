@@ -30,7 +30,14 @@ public class CharacterAnchorManager : MonoBehaviour
 
     public void AttachObjectToAnchor()
     {
-        sceneAnchorManager.AttachObjectToAnchor(this);
+        if (sceneAnchorManager != null)
+        {
+            sceneAnchorManager.AttachObjectToAnchor(this);
+        }
+        else
+        {
+            Debug.LogError("lo scene anchor manager è nullo");
+        }
     }
 
     public void DetachFromAnchor()

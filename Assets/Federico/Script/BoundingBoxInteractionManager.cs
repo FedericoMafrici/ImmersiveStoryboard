@@ -32,6 +32,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public List<ObjectType> oggettiInScena;
    
     private CharacterAnchorManager _characterAnchorManager;
+
+    private SnapToPlane _snapToPlaneComponent;
     
     //[SerializeField] private BoundingBoxInteractionManager interactionManagerAddOn;
     
@@ -49,52 +51,99 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             currentState = objectcurrentState;
         }
     }
-
     private Dictionary<String, ObjectType> ObjectsMap=new Dictionary<String, ObjectType>();
-    
+
+    private bool labelChoosen = false;
+
+    public void OnDestroy()
+    {
+        BoundingBoxManagerUI.OnBoundingBoxPlacement -= AllowMoving;
+        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted -= AllowLabeling;
+        BoundingBoxManagerUI.OnSceneInizializationCompleted -= StopShowingLabeling;
+        SimulationManager.startStoryboarding -= DisableMoving;
+        ControllerManager.OnBoundingBoxPlaneEdit -= AllowEditPlane;
+        ControllerManager.StopBoundingBoxPlaneEdit -= StopEditPlane;
+    }
+
     public void Awake()
     {
-            BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += AllowLabeling;
-            BoundingBoxManagerUI.OnSceneInizializationCompleted += StopShowingLabeling;
-            SimulationManager.startStoryboarding += DisableMoving;
-            ControllerManager.OnBoundingBoxPlaneEdit += AllowEditPlane;
-            ControllerManager.StopBoundingBoxPlaneEdit += StopEditPlane;
-            
-            simulationManager = FindObjectOfType<SimulationManager>();
-            Debug.Log("Iscrizione all'evento OnBoundingBoxPlacement completata");
-            labelUI = this.transform.Find("BoundingBoxLabel").gameObject;
-            interactable = this.GetComponent<SnapToPlane>();
+        BoundingBoxManagerUI.OnBoundingBoxPlacement += AllowMoving;
+        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += AllowLabeling;
+        BoundingBoxManagerUI.OnSceneInizializationCompleted += StopShowingLabeling;
+        SimulationManager.startStoryboarding += DisableMoving;
+        ControllerManager.OnBoundingBoxPlaneEdit += AllowEditPlane;
+        ControllerManager.StopBoundingBoxPlaneEdit += StopEditPlane;
+        
+        // ACQUISIZIONE DEI COMPONENTI PRINCIPALI
+
+        _snapToPlaneComponent = this.GetComponent<SnapToPlane>();
+        if (_snapToPlaneComponent == null)
+        {
+            Debug.LogError("Componente SnapToPlane non trovato errore!");
+        }
+        simulationManager = FindObjectOfType<SimulationManager>();
+        Debug.Log("Iscrizione all'evento OnBoundingBoxPlacement completata");
+        labelUI = this.transform.Find("BoundingBoxLabel").gameObject;
+        interactable = this.GetComponent<SnapToPlane>();
             if (interactable == null || labelUI==null)
             {
                 Debug.LogError("errore nel reperimento del componente Snap To Plane o della label o del piano");
             }
-            boundingBoxplane = this.transform.Find("Plane").gameObject;
-            // qui andiamo ad aggiungere tutte le label degli oggetti, per ogni oggetti specifichiamo i campi con cui andare a corredare 
-            // poi il character manager e lo state con tutte le informazioni necessarie.  
-             List<String> possibleStates = new List<String>();
-             List<ObjectType> objects = new List<ObjectType>();
-             //chair 
-             possibleStates.Add("lifted");
-             possibleStates.Add("fallen");
-             objects.Add(new ObjectType("chair", possibleStates, "lifted"));
-             possibleStates.Clear();
-             ObjectsMap.Add("chair",objects[0]);
-             //wardrobe
-             possibleStates.Add("closed");
-             possibleStates.Add("open");
-             objects.Add(new ObjectType("wardrobe", possibleStates, "closed"));
-             possibleStates.Clear();
-             ObjectsMap.Add("wardrobe",objects[1]);
-             //gestione ancore
-             _characterAnchorManager = this.GetComponent<CharacterAnchorManager>();
+        boundingBoxplane = this.transform.Find("Plane").gameObject;
+        // qui andiamo ad aggiungere tutte le label degli oggetti, per ogni oggetti specifichiamo i campi con cui andare a corredare 
+        // poi il character manager e lo state con tutte le informazioni necessarie.  
+             
+        List<String> possibleStates = new List<String>();
+            
+        List<ObjectType> objects = new List<ObjectType>();
+             
+        //chair 
+        possibleStates.Add("lifted");
+        possibleStates.Add("fallen");
+        objects.Add(new ObjectType("chair", possibleStates, "lifted"));
+        possibleStates.Clear();
+        ObjectsMap.Add("chair",objects[0]);
+        //wardrobe
+        possibleStates.Add("closed");
+        possibleStates.Add("open");
+        objects.Add(new ObjectType("wardrobe", possibleStates, "closed"));
+        possibleStates.Clear();
+        ObjectsMap.Add("wardrobe",objects[1]);
+        //gestione ancore
+        _characterAnchorManager = this.GetComponent<CharacterAnchorManager>();
              if (_characterAnchorManager == null)
              {
                  Debug.LogError("Character Anchor manager di :" + gameObject.name + " non trovato");
              }
-
-            // SetLabel("chair");
+        _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
+        _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
+        
     }
 
+    public void HideCurrentLabel()
+    {
+        if (labelUI == null)
+        {
+            Debug.LogError("Non è possibile chiamare la HideCurrentLabel perchè labelUI è nullo");
+            return;
+        }
+
+        labelUI.SetActive(false);
+
+    }
+
+    public void ShowCurrentLabel()
+    {
+        if (labelUI == null)
+        {
+            Debug.LogError("Non è possibile chiamare la HideCurrentLabel perchè labelUI è nullo");
+            return;
+        }
+
+        labelUI.SetActive(true);
+    }
+    
+    
     public void OnSelectionEnter(SelectEnterEventArgs args)
     {
         Debug.Log("hai selezionato l'oggetto: " +this.gameObject.name);
@@ -119,7 +168,9 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             args.interactableObject.transform.Find("BoundingBoxLabel").gameObject.SetActive(true);
             return;
         }
+        
         labelUI.SetActive(true);
+           
     }
 
     
@@ -155,6 +206,10 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         {
             boundingBoxplane.SetActive(true);
         }
+        this.transform.Find("Front").gameObject.SetActive(false);
+        _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
+        _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
+        
     }
     
 
@@ -162,27 +217,45 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     {
         this.transform.Find("Front").gameObject.SetActive(false);
         this.GetComponent<SnapToPlane>().selectEntered.RemoveListener(DisplayLabeling);
+        //Mostriamo nuovamente L'etichetta'
+        _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
+        _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
     }
-    
+    public void AllowMoving(object  sender,EventArgs obj)
+    {
+        EnableMoving(this,EventArgs.Empty);
+        _snapToPlaneComponent.selectEntered.RemoveListener(DisplayLabeling);
+    }    
 
     public void AllowLabeling(object  sender,EventArgs obj)
     { 
       
         DisableMoving(this,EventArgs.Empty);
-        this.GetComponent<SnapToPlane>().selectEntered.AddListener(DisplayLabeling);
+        _snapToPlaneComponent.selectEntered.AddListener(DisplayLabeling);
+        
     }
 
     
     public void DisplayLabeling(SelectEnterEventArgs args)
     {
-       var front= this.transform.Find("Front");
-       front.gameObject.SetActive(true);
+       
+        // rimozione dell'evento di hovering
+        _snapToPlaneComponent.hoverEntered.RemoveListener(ObjectHoveredEntered);
+        _snapToPlaneComponent.hoverExited.RemoveListener(ObjectHoveredExited);
+        HideCurrentLabel();
+        
+        //mostro il menu a tendina 
+        var front= this.transform.Find("Front");
+        front.gameObject.SetActive(true);
+      
+      
+       
     }
     
     public void DisableMoving(object sender,EventArgs e)
     {
         Debug.Log("Disable Moving La bounding box non è più movibile");
-        XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
+        XRGrabInteractable _xrInt = this._snapToPlaneComponent;
         if (_xrInt != null)
         {
             _xrInt.trackPosition = false;
@@ -193,12 +266,31 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         var navmeshObstacle = this.GetComponent<NavMeshObstacle>();
         if (navmeshObstacle != null)
         {
+            Debug.Log("componente navmesh obstacle abilitato");
             navmeshObstacle.enabled = false;
         }
 
         interactionEnabled = true;
     }
+    public void EnableMoving(object sender,EventArgs e)
+    {
+        Debug.Log("Enable Moving La bounding box  è nuovamente movibile");
+        XRGrabInteractable _xrInt = this._snapToPlaneComponent;
+        if (_xrInt != null)
+        {
+            _xrInt.trackPosition = true;
+            _xrInt.trackRotation = true;
+            _xrInt.trackScale = true;
+        }
 
+        var navmeshObstacle = this.GetComponent<NavMeshObstacle>();
+        if (navmeshObstacle != null)
+        {
+            navmeshObstacle.enabled = false;
+        }
+
+        interactionEnabled = false;
+    }
     public void EnablePlaneRotation()
     {
         planeRotation = true;

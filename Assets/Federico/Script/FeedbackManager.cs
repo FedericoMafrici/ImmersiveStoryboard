@@ -21,19 +21,32 @@ public class FeedbackManager : MonoBehaviour
    [SerializeField] public GameObject ObjectPlaced;
    [SerializeField] public Image ObjectPlacedBackground;
    [SerializeField] public TextMeshProUGUI ObjectPlacedText;
+   [Header("Bounding box detected")]
+   [SerializeField] public GameObject boundingBoxDetected;
+   [SerializeField] public Image boundingBoxDetectedImage;
+   [SerializeField] public TextMeshProUGUI boundingBoxDetectedText;
+   
     private XROrigin _arSessionOrigin;
     private void Start()
     {
         ScreenshotManager.screenShotTaken += ScreenShotTaken;
         OutputGenerator.storyboardSaved += StoryboardSavedFeedback;
         ControllerManager.OnObjectPlaced += OnObjectPlaced;
+        ControllerManager.OnBoundingBoxFounded += BoundingBoxFounded;
         InteractionManagerAddOn.onObjectSelected += OnObjectPlaced;
         _arSessionOrigin = FindObjectOfType<XROrigin>();
         
         
     }
 
-   
+    private void OnDisable()
+    {
+        ScreenshotManager.screenShotTaken += ScreenShotTaken;
+        OutputGenerator.storyboardSaved += StoryboardSavedFeedback;
+        ControllerManager.OnObjectPlaced += OnObjectPlaced;
+        InteractionManagerAddOn.onObjectSelected += OnObjectPlaced;
+    }
+
     private void Update()
     {
         
@@ -96,5 +109,10 @@ public class FeedbackManager : MonoBehaviour
  private void OnObjectPlaced(object sender, EventArgs e)
     {
         StartCoroutine(FadeOut(ObjectPlacedBackground, ObjectPlacedText, fadeDuration));
+    }
+
+    public void BoundingBoxFounded(object sender, EventArgs e)
+    {
+        StartCoroutine(FadeOut(boundingBoxDetectedImage, boundingBoxDetectedText, fadeDuration));
     }
 }
