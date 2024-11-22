@@ -55,7 +55,8 @@ namespace Trev3d.Quest.ScreenCapture
 		{
 			
 				UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-				    UnityPlayerActivityWithMediaProjector = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+				#if !UNITY_EDITOR	
+				UnityPlayerActivityWithMediaProjector = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 				if (UnityPlayerActivityWithMediaProjector != null)
 				{
 					Debug.Log("currentActivity ottenuto con successo.");
@@ -64,6 +65,7 @@ namespace Trev3d.Quest.ScreenCapture
 				{
 					Debug.LogError("currentActivity è nullo.");
 				}
+				#endif
 				// Passa il nome del gameObject, larghezza e altezza
 				flipTexture = new RenderTexture(Size.x, Size.y, 1, RenderTextureFormat.ARGB32, 1);
 				flipTexture.Create();

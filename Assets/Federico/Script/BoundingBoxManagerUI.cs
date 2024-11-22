@@ -8,6 +8,8 @@ using Button = UnityEngine.UI.Button;
 
 public class BoundingBoxManagerUI : MonoBehaviour
 {
+
+    [SerializeField] private SimulationManager _simulationManager;
     
     [SerializeField] private List<GameObject> Cards;
     [SerializeField] private TextMeshProUGUI textHandMenu;
@@ -37,6 +39,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
         leftHandButton.SetActive(false);
         rightHandButton.SetActive(false);
         textHandMenu.text = "Hide";
+        _simulationManager = FindObjectOfType<SimulationManager>();
     }
 
     // Update is called once per frame
@@ -151,6 +154,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
                     Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
                     ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
                     enviroment.FadeSkybox(true);
+                    _simulationManager.changePasstroughToggle();
                     break;
                  case 7:
                     Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");

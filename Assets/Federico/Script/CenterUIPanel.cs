@@ -7,6 +7,8 @@ public class CenterUIPanel : MonoBehaviour
     public Transform userCamera;       // Riferimento alla camera dell'utente (es. Main Camera)
     public float distanceFromUser = 0.1f; // Distanza desiderata dal pannello all'utente
     [SerializeField] private List<GameObject> UIPanels;
+    [SerializeField] private List<GameObject> currentHiddenPanels;
+    
     void Start()
     {
         if (userCamera == null)
@@ -105,7 +107,6 @@ public class CenterUIPanel : MonoBehaviour
            obj.SetActive(false);
         }
     }
-    
     public void ShowPanels()
     {
         foreach (var obj in UIPanels)
@@ -113,5 +114,42 @@ public class CenterUIPanel : MonoBehaviour
             obj.SetActive(true);
         }
     }
-    
+    public void AddHiddenPanel(GameObject panel)
+    {
+        currentHiddenPanels.Add(panel);
+        panel.SetActive(false);
+    }
+    public void ShowHiddenPanels()
+    {
+        foreach (var panel in currentHiddenPanels)
+        {
+                panel.SetActive(true);    
+        }
+        currentHiddenPanels.Clear();
+    }
+
+    public void ShowNotHiddenPanels()
+    {
+        // Usa un HashSet per velocizzare il controllo di appartenenza
+        HashSet<string> hiddenPanelNames = new HashSet<string>();
+
+        // Popola l'HashSet con i nomi dei pannelli attualmente nascosti
+        foreach (var hiddenPanel in currentHiddenPanels)
+        {
+            if (hiddenPanel != null)
+            {
+                hiddenPanelNames.Add(hiddenPanel.name);
+            }
+        }
+
+        // Attiva tutti i pannelli che non sono nella lista dei nascosti
+        foreach (var panel in UIPanels)
+        {
+            if (panel != null && !hiddenPanelNames.Contains(panel.name))
+            {
+                panel.SetActive(true);
+            }
+        }
+    }
+
 }

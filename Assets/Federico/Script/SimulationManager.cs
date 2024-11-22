@@ -51,9 +51,12 @@ public class SimulationManager : MonoBehaviour
     [Header("Componenti UI ")]
     
     [SerializeField]  private Toggle toggleContemporaryAction;
-    
-    
-    
+
+    [SerializeField] private Toggle toggleSaveStoryboard;
+
+    [SerializeField] private Toggle passtrough;
+
+    private bool usingToggle = true;
     
     
     
@@ -62,60 +65,21 @@ public class SimulationManager : MonoBehaviour
 
  //   public ObjectManagerVR objectManagerVR;
     private GameObject canvasNewLight;
-
   //  public CameraManager cameraManager;
-   
-  
-
     public GameObject ParticleActive;
-
     [SerializeField] private GameObject moveButton;
     [SerializeField] private GameObject StopAndPlayButton;
-    
-
     public GameObject light;
     private GameObject newLight;
     //private int loopCount = 0;
     public int screenshotCount = 0;
     private int screenshotCountUndo = 0;
-    
     public bool firstAction = true;
-    
-
     private Camera mainCamera;
-    // public GameObject timeManager;
-    //public Slider timeSlider;
-
-    //public int time;
-
-    public bool controlCamera;
-
-    public bool dialogue; //booleano che � a true se � in corso un dialogo (pannello dialogo attivo). Settato dal phraseGenerator e controllato dal ThirdPersonMovement
-
-    public GameObject contemporaryButton;
-
-    public GameObject consecutiveButton;
-
     [SerializeField] private TextMeshPro numberIllustration = null;
-
-
-    public GameObject positionActiveObject;
-    public TextMeshPro NomeActiveCh;
-
-    public Material bordoScuro;
-
-    public Material bordoChiaro;
-
-    public TextMeshPro NomePersonaggioAttivo;
-
     public GameObject feedbackParticleActive;
     public GameObject feedbackParticleComplement;
-    public GameObject particleParent;
-
-    public GameObject NextPannelButton;
-
     [SerializeField] GameObject _pannelloFine;
-    
     private List<string> buffer;
     void Start()
     {
@@ -143,26 +107,26 @@ public class SimulationManager : MonoBehaviour
           
         }
     }
-    
+
     public void StartStoryBoarding(TMP_Text txtcomponent)
     {
-        consoleDebuggin.SetText("starStoryboarding Chiamata"+ status);
+        consoleDebuggin.SetText("starStoryboarding Chiamata" + status);
         Debug.Log("Start Storyboarding avviato");
-        
+
         if (txtcomponent == null)
         {
             Debug.LogError("txtcomponent è null! Assicurati di passarlo correttamente.");
             return;
         }
 
-        
+
         if (status == 0)
         {
             status = 1;
             startStoryboarding?.Invoke(this, new EventArgs());
             txtcomponent.text = "Stop";
-            consoleDebuggin.SetText("Storyboarding Avviato"+ status);
-            Debug.Log("Start Storyboarding avviato personaggio attivo"+activeCharacter);
+            consoleDebuggin.SetText("Storyboarding Avviato" + status);
+            Debug.Log("Start Storyboarding avviato personaggio attivo" + activeCharacter);
             if (activeCharacter != null)
             {
                 activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
@@ -171,53 +135,128 @@ public class SimulationManager : MonoBehaviour
             activeCharacter = null;
             characterAnimationManager._character = null;
             characterAnimationManager._interactionObject = null;
-            consoleDebuggin.SetText("Storyboarding fermato"+ status);
+            consoleDebuggin.SetText("Storyboarding fermato" + status);
             Debug.Log("Start Storyboarding fermato");
-            
+
+        }
+        else
+            {
+                status = 0;
+                pauseStoryboarding?.Invoke(this, new EventArgs());
+                txtcomponent.text = "Start";
+                if (activeCharacter != null)
+                {
+                    characterAnimationManager.HideActions();
+                    DestroyParticles();
+                    DestroyParticlesActive();
+                    DestroyParticlesComplement();
+                }
+
+                activeCharacter = null;
+                characterAnimationManager._character = null;
+                characterAnimationManager._interactionObject = null;
+                consoleDebuggin.SetText("Storyboarding fermato" + status);
+                Debug.Log("Start Storyboarding fermato");
+            }
+
+            if (status == 0)
+            {
+                status = 1;
+                startStoryboarding?.Invoke(this, new EventArgs());
+                toggleSaveStoryboard.isOn = true;
+                consoleDebuggin.SetText("Storyboarding Avviato" + status);
+                Debug.Log("Start Storyboarding avviato personaggio attivo" + activeCharacter);
+                if (activeCharacter != null)
+                {
+                    activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+                }
+
+                activeCharacter = null;
+                characterAnimationManager._character = null;
+                characterAnimationManager._interactionObject = null;
+                consoleDebuggin.SetText("Storyboarding fermato" + status);
+                Debug.Log("Start Storyboarding fermato");
+
+            }
+            else
+            {
+                status = 0;
+                pauseStoryboarding?.Invoke(this, new EventArgs());
+                toggleSaveStoryboard.isOn = true;
+                if (activeCharacter != null)
+                {
+                    characterAnimationManager.HideActions();
+                    DestroyParticles();
+                    DestroyParticlesActive();
+                    DestroyParticlesComplement();
+                }
+
+                activeCharacter = null;
+                characterAnimationManager._character = null;
+                characterAnimationManager._interactionObject = null;
+                consoleDebuggin.SetText("Storyboarding fermato" + status);
+                Debug.Log("Start Storyboarding fermato");
+            }
+    }
+    
+
+    public void StartStoryBoardingForToggle()
+    {
+        consoleDebuggin.SetText("starStoryboarding Chiamata"+ status);
+        Debug.Log("Start Storyboarding avviato");
+            if (status == 0)
+            {
+                status = 1;
+                startStoryboarding?.Invoke(this, new EventArgs());
+              //  toggleSaveStoryboard.isOn = true;
+                consoleDebuggin.SetText("Storyboarding Avviato" + status);
+                Debug.Log("Start Storyboarding avviato personaggio attivo" + activeCharacter);
+                if (activeCharacter != null)
+                {
+                    activeCharacter.GetComponent<AnimaPersonaggio>().HideActions();
+                }
+
+                activeCharacter = null;
+                characterAnimationManager._character = null;
+                characterAnimationManager._interactionObject = null;
+                consoleDebuggin.SetText("Storyboarding fermato" + status);
+                Debug.Log("Start Storyboarding fermato");
+
+            }
+            else
+            {
+                status = 0;
+                pauseStoryboarding?.Invoke(this, new EventArgs());
+              //  toggleSaveStoryboard.isOn = false;
+                if (activeCharacter != null)
+                {
+                    characterAnimationManager.HideActions();
+                    DestroyParticles();
+                    DestroyParticlesActive();
+                    DestroyParticlesComplement();
+                }
+                activeCharacter = null;
+                characterAnimationManager._character = null;
+                characterAnimationManager._interactionObject = null;
+                consoleDebuggin.SetText("Storyboarding fermato" + status);
+                Debug.Log("Start Storyboarding fermato");
+            }
+        }
+    
+    
+    public void changePasstroughToggle()
+    {
+        if (passtrough.isOn)
+        {
+            passtrough.isOn = false;
         }
         else
         {
-            status = 0;
-            pauseStoryboarding?.Invoke(this, new EventArgs());
-            txtcomponent.text = "Start";
-            if (activeCharacter != null)
-            {
-               characterAnimationManager.HideActions();
-               DestroyParticles();
-               DestroyParticlesActive();
-               DestroyParticlesComplement();
-            }
-            
-            activeCharacter = null;
-            characterAnimationManager._character = null;
-            characterAnimationManager._interactionObject = null;
-            consoleDebuggin.SetText("Storyboarding fermato"+ status);
-            Debug.Log("Start Storyboarding fermato");
+            passtrough.isOn = true;
         }
-        
-    }
-   
-    private void NewLight()
-    {
-        newLight = Instantiate(light);
-        newLight.transform.GetChild(0).name = newLight.transform.GetChild(0).name + UnityEngine.Random.Range(0,10000).ToString();
-
-
-        newLight.transform.position = mainCamera.transform.position;
-        newLight.transform.rotation = Quaternion.Euler(mainCamera.transform.rotation.eulerAngles);
-        //newLight.transform.SetPositionAndRotation(new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z + 0.3f), Quaternion.Euler(mainCamera.transform.rotation.eulerAngles));
-
-        canvasNewLight.SetActive(true);
-        StartCoroutine(DeactivatecanvasNewLight());
     }
 
 
-    private IEnumerator DeactivatecanvasNewLight()
-    {
-        yield return new WaitForSeconds(3);
-
-        canvasNewLight.SetActive(false);
-    }
     public void ChangeMaxTime() { }
     public void ChangeCurrentTime() { }
     public void ChangeCurrentTimeManual() { }

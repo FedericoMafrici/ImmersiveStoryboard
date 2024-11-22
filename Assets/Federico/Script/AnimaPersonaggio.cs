@@ -351,7 +351,7 @@ public class AnimaPersonaggio : MonoBehaviour
             _simulationManager.activeCharacter.GetComponent<Animator>().speed = 0.5f;
         }
 
-        // per geenrare il get control button
+        // per generare il get control button
         if (_character.CompareTag("Player") && _simulationManager.activeCharacter.CompareTag("Player") && _character != _simulationManager.activeCharacter)
         {
             var q = Quaternion.LookRotation(_character.transform.position - _simulationManager.activeCharacter.transform.position);
@@ -442,7 +442,6 @@ public class AnimaPersonaggio : MonoBehaviour
                             _simulationManager.activeCharacter.transform.Translate(0,0, +0.05f);
             
                         }
-            
                         else if (action == "stop play")
                         {
             
@@ -460,13 +459,7 @@ public class AnimaPersonaggio : MonoBehaviour
                             {
                                 interaction.interactionEnabled = true;
                             }
-
-        
-         
-              //  _simulationManager.activeCharacter.GetComponent<NavMeshAgent>().enabled = true;
-                
                 _interactionObject = null;
-                //per nascondere il personaggio
                 }
             else if (action == "play")
             {
@@ -482,7 +475,6 @@ public class AnimaPersonaggio : MonoBehaviour
                 {
                     rb.useGravity = false;
                     rb.isKinematic = true;
-                    
                 }
                 else
                 {
@@ -497,11 +489,6 @@ public class AnimaPersonaggio : MonoBehaviour
                 }
                 _simulationManager.activeCharacter.transform.position = new Vector3(bench.position.x , bench.position.y ,bench.position.z ); //+0.1f
             }
-
-            //
-
-            //HideActions();
-
             if (action == "work out" || action=="is tied" || action == "dance" || action == "play" || action == "sit" || action == "stop dance" || action == "stop work out" || action == "stop play" || action == "stand up")
             {
                 _simulationManager.SetActiveCharacterActionClick(_simulationManager.activeCharacter);
@@ -513,11 +500,7 @@ public class AnimaPersonaggio : MonoBehaviour
                 //crea particlle
                 _simulationManager.CreateParticleActive(_simulationManager.activeCharacter);
             }
-
-
-
             Debug.Log("Action: " + action);
-            
             if (action == "locked in")
             {
                 hiddenCharacter = _simulationManager.activeCharacter;
@@ -530,23 +513,17 @@ public class AnimaPersonaggio : MonoBehaviour
 
                 _simulationManager.activeCharacter = null;
             }
-
             if (action == "free")
             {
                 if(hiddenCharacter!=null){ hiddenCharacter.SetActive(true);}
                 hiddenCharacter = null;
             }
-                
-        
         }
-
         ChangeWalker();
-
         if (!_simulationManager.contemporaryAction)
         {
             _simulationManager.activeCharacter.GetComponent<CharacterManager>().StopWalking();
         }
-
          phraseGenerator.AggiornaTesto();
     }
 

@@ -361,7 +361,11 @@ public class PhraseGenerator : MonoBehaviour
         walking = "";
         forward = "";
     }
-    
+
+    public void  DeleteLastSentence()
+    {
+        buffer.RemoveAt(buffer.Count-1);
+    }
     public List<string> ClearBuffer()
     {
 

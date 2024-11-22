@@ -10,6 +10,7 @@ public class ScreenshotManager : MonoBehaviour
     [SerializeField] public List<RawImage> _screenshots=new List<RawImage>();
     [SerializeField] public List<Texture2D> screenshotsTexture = new List<Texture2D>();
     [SerializeField] public GameObject UI;
+    [SerializeField] public CenterUIPanel panelHandler;
     public List<byte[]> images = null;
     private int _screenshotCounter=0;
     public Hashtable focalTable = new Hashtable();
@@ -20,6 +21,7 @@ public class ScreenshotManager : MonoBehaviour
     private SimulationManager _simulationManager;
     private OutputGenerator _outputGenerator;
     private AnimaPersonaggio _animaPersonaggio;
+    private PhraseGenerator _phraseGenerator;
     
     private QuestScreenCaptureTextureManager _screenCaptureTextureManager;
 
@@ -33,7 +35,13 @@ public class ScreenshotManager : MonoBehaviour
         _outputGenerator = FindObjectOfType<OutputGenerator>();
         _animaPersonaggio = FindObjectOfType<AnimaPersonaggio>();
         _screenCaptureTextureManager= FindAnyObjectByType<QuestScreenCaptureTextureManager>();
-       _screenshotCounter = 0;
+        _phraseGenerator = FindObjectOfType<PhraseGenerator>();
+        _screenshotCounter = 0;
+        if (_simulationManager == null || _phraseGenerator == null || _screenCaptureTextureManager == null
+            || _animaPersonaggio == null)
+        {
+            Debug.LogError("errore nella generazione dello script");
+        }
        int length = _screenshots.Count;
        for (int i = 0; i < length; i++)
        {
@@ -43,8 +51,7 @@ public class ScreenshotManager : MonoBehaviour
 
     public void TakeScreenshot()
     {
-        UI.SetActive(false);
-        
+        panelHandler.HidePanels();
         if (_screenCaptureTextureManager == null)
         {
             Debug.LogError("Errore capturetexturemanager non trovato");
@@ -63,7 +70,64 @@ public class ScreenshotManager : MonoBehaviour
         _screenshotCounter++;
         _simulationManager.screenshotCount++;
         screenShotTaken.Invoke(this,EventArgs.Empty);
-        UI.SetActive(true);
+        panelHandler.ShowNotHiddenPanels();
+    }
+
+    public void DeleteScreenshot()
+    {
+        if (_screenshotCounter > 0)
+        {
+            // Decrementa il counter degli screenshot
+            _screenshotCounter--;
+        
+            // Ottieni l'indice dello screenshot da eliminare
+            string indexToDelete = _simulationManager.GetScreenshotCount().ToString();
+
+            // Rimuovi gli elementi dalla Hashtable focalTable
+            if (focalTable.ContainsKey(indexToDelete))
+            {
+                focalTable.Remove(indexToDelete);
+            }
+        
+            // Rimuovi gli elementi dalla Hashtable actionTimes
+            if (actionTimes.ContainsKey(indexToDelete))
+            {
+                actionTimes.Remove(indexToDelete);
+            }
+
+            // Rimuovi l'immagine dallo screenshot list
+            if (_screenshots.Count > _screenshotCounter)
+            {
+                _screenshots.RemoveAt(_screenshotCounter);
+            }
+
+            // Rimuovi la texture dallo screenshotTexture list
+            if (screenshotsTexture.Count > _screenshotCounter)
+            {
+                Texture2D textureToClear = screenshotsTexture[_screenshotCounter];
+                RenderTexture tempRenderTexture = RenderTexture.GetTemporary(textureToClear.width, textureToClear.height);
+                RenderTexture.active = tempRenderTexture;
+
+                GL.Clear(true, true, Color.white);
+                textureToClear.ReadPixels(new Rect(0, 0, textureToClear.width, textureToClear.height), 0, 0);
+                textureToClear.Apply();
+
+                RenderTexture.ReleaseTemporary(tempRenderTexture);
+
+                // Rimuovi la texture dalla lista
+                screenshotsTexture.RemoveAt(_screenshotCounter);
+            }
+
+            // Riduci il conteggio degli screenshot nel SimulationManager
+            _simulationManager.screenshotCount--;
+        
+            Debug.Log($"Screenshot {indexToDelete} eliminato correttamente.");
+        }
+        else
+        {
+            Debug.LogError("Nessuno screenshot da eliminare.");
+        }
+        
     }
     public void AddNewValue(string index, string focal)
     {

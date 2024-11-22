@@ -34,7 +34,7 @@ public class CharacterManager : MonoBehaviour
     public Collider[] hitColliders;
 
     private GameObject CursorVisual;
-
+    public static EventHandler<EventArgs> OnDestinationReached;
     public bool isBoundingBox=false;
     // Start is called before the first frame update
     void Start()
@@ -71,6 +71,7 @@ public class CharacterManager : MonoBehaviour
                     if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
                     {
                         // Il personaggio ha raggiunto la destinazione, ferma il movimento
+                        OnDestinationReached?.Invoke(this,EventArgs.Empty);
                         StopWalking();
                        characterInteractionManagerAddOn.characterAnchorManager.AttachObjectToAnchor();
                        characterInteractionManagerAddOn.DisableNavMeshAgent();

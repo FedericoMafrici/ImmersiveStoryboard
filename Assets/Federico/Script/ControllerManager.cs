@@ -291,6 +291,18 @@ public class ControllerManager : MonoBehaviour
                                             Debug.LogError("non ho trovato il componente interactionManager dal personaggio");
                                         }
                                     }
+                                    else
+                                    {
+                                        var interaction = hitInfo.transform.gameObject.GetComponent<InteractionManagerAddOn>();
+                                        if (interaction != null)
+                                        {
+                                            interaction.DestroyObject();
+                                        }
+                                        else
+                                        {
+                                            Debug.LogError("non ho trovato il componente interactionManager dal personaggio");
+                                        }
+                                    }
                               }
                               else
                               {

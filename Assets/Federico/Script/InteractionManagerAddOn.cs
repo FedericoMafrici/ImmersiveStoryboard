@@ -171,8 +171,14 @@ public class InteractionManagerAddOn : MonoBehaviour
         #if !UNITY_EDITOR 
         characterAnchorManager.DetachFromAnchor();
         #endif
-     Destroy(this.transform.parent.gameObject);
-        
+        if (this.CompareTag("Player"))
+        {
+            Destroy(this.transform.parent.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
     
     
