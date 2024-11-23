@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Samples.Hands;
 
@@ -8,7 +11,8 @@ public class CenterUIPanel : MonoBehaviour
     public float distanceFromUser = 0.1f; // Distanza desiderata dal pannello all'utente
     [SerializeField] private List<GameObject> UIPanels;
     [SerializeField] private List<GameObject> currentHiddenPanels;
-    
+    [SerializeField] private List<GameObject> UIhandles;
+    [SerializeField] private float panelSpacing = 2.0f; // Distanza tra i pannelli
     void Start()
     {
         if (userCamera == null)
@@ -17,89 +21,76 @@ public class CenterUIPanel : MonoBehaviour
             userCamera = Camera.main.transform;
         }
         
-        CenterPanels();
+        // Avvia la coroutine che attende l'inizializzazione della camera
+        StartCoroutine(WaitForCameraAndCenterPanels());
     }
 
-   public void CenterPanels()
-{
-    // Check if userCamera is null
-    if (userCamera == null)
+    public void CenterPanels()
     {
-        Debug.LogError("userCamera is null!");
-        return;
-    }
-
-    // Calculate the desired position
-    Vector3 desiredPosition = userCamera.position + userCamera.forward * distanceFromUser;
-
-    // Iterate through UIPanels
-    foreach (var obj in UIPanels)
-    {
-        // Get CharacterAnchorManager component
-        var anchorManager = obj.GetComponent<CharacterAnchorManager>();
-        if (anchorManager == null)
+        Debug.Log("Eseguo la CenterPanels");
+        // Check if userCamera is null
+        if (userCamera == null)
         {
-            Debug.LogError($"CharacterAnchorManager not found on {obj.name}.");
-            continue;
+            Debug.LogError("userCamera is null!");
+            return;
         }
+
+        // Calculate the desired position in front of the user
+        Vector3 desiredPosition = userCamera.position + userCamera.forward * distanceFromUser;
+        int index = 0;
+        // Iterate through UIPanels
+        foreach (var obj in UIPanels)
+        {
+            // Get CharacterAnchorManager component
+            var anchorManager = obj.GetComponent<CharacterAnchorManager>();
+            if (anchorManager == null)
+            {
+                Debug.LogError($"CharacterAnchorManager not found on {obj.name}.");
+                continue;
+            }
         
-        #if !UNITY_EDITOR
-                Debug.Log("Detaching from anchor and moving the component");
-                anchorManager.DetachFromAnchor();
-        #endif
-        if (obj == null)
-        {
-            Debug.LogError("An entry in UIPanels is null.");
-            continue;
+#if !UNITY_EDITOR
+            Debug.Log("Detaching from anchor and moving the component");
+            anchorManager.DetachFromAnchor();
+#endif
+            if (obj == null)
+            {
+                Debug.LogError("An entry in UIPanels is null.");
+                continue;
+            }
+
+            // Check if obj has at least one child
+            if (obj.transform.childCount == 0)
+            {
+                Debug.LogError($"{obj.name} has no children.");
+                continue;
+            }
+
+            // Calculate the horizontal offset for this panel
+            Vector3 horizontalOffset = userCamera.right * panelSpacing * index;
+
+            // Calculate the position for this panel
+            Vector3 panelPosition = desiredPosition + horizontalOffset;
+
+            Debug.Log($"Nuova posizione per {obj.name}: {panelPosition}");
+#if !UNITY_EDITOR
+            UIhandles[index].transform.position = panelPosition;
+            anchorManager.AttachObjectToAnchor();
+#else
+            UIhandles[index].transform.position = panelPosition;
+#endif
+            index++;
+//RotationHandler.onChangeOrientation?.Invoke(this, EventArgs.Empty);
         }
-
-        // Check if obj has at least one child
-        if (obj.transform.childCount == 0)
-        {
-            Debug.LogError($"{obj.name} has no children.");
-            continue;
-        }
-
-        // Get the first child
-        Transform firstChild = obj.transform.GetChild(0);
-        Debug.Log("figlio raccolto"+firstChild.name);
-        if (firstChild == null)
-        {
-            Debug.LogError($"First child of {obj.name} is null.");
-            continue;
-        }
-
-        // Find "TableOffset"
-        Transform tableOffset = firstChild.Find("TableOffset");
-        if (tableOffset == null)
-        {
-            Debug.LogError($"'TableOffset' not found under {firstChild.name}.");
-            continue;
-        }
-
-        // Get TransformSync component
-        var handle = tableOffset.GetComponent<TransformSync>();
-        if (handle == null)
-        {
-            Debug.LogError($"TransformSync component not found on {tableOffset.name}.");
-            continue;
-        }
-
-        handle.enabled = false;
-
-       
-
-        #if !UNITY_EDITOR
-        obj.transform.position = desiredPosition;
-        anchorManager.AttachObjectToAnchor();
-        #else
-        obj.transform.position = desiredPosition;
-        #endif
-
-        handle.enabled = true;
     }
-}
-
+   private IEnumerator WaitForCameraAndCenterPanels()
+   { 
+       yield return new WaitForSeconds(3);
+    
+       // Ora la camera dovrebbe essere inizializzata, puoi chiamare CenterPanels()
+       CenterPanels();
+   }
+   
     public void HidePanels()
     {
         foreach (var obj in UIPanels)

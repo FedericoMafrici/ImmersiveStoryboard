@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BoundingBox
   - Object
+  - UIPanel
   layers:
   - Default
   - TransparentFX

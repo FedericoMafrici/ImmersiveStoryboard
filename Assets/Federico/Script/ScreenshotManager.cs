@@ -48,10 +48,11 @@ public class ScreenshotManager : MonoBehaviour
             screenshotsTexture.Add(new Texture2D(Size.x, Size.y, TextureFormat.RGBA32, 1, false));
        }
     }
-
+    /*
     public void TakeScreenshot()
     {
         panelHandler.HidePanels();
+        // yield return new WaitForSeconds(1);
         if (_screenCaptureTextureManager == null)
         {
             Debug.LogError("Errore capturetexturemanager non trovato");
@@ -72,7 +73,46 @@ public class ScreenshotManager : MonoBehaviour
         screenShotTaken.Invoke(this,EventArgs.Empty);
         panelHandler.ShowNotHiddenPanels();
     }
+    */
+    public void TakeScreenshot()
+    {
+        // Avvia la coroutine che gestisce l'attesa e lo screenshot
+        StartCoroutine(TakeScreenshotCoroutine());
+    }
 
+    private IEnumerator TakeScreenshotCoroutine()
+    {
+        panelHandler.HidePanels();
+        yield return new WaitForSeconds(1); // Attende 1 secondo
+
+        if (_screenCaptureTextureManager == null)
+        {
+            Debug.LogError("Errore: _screenCaptureTextureManager non trovato");
+            yield break; // Esce dalla coroutine se c'è un errore
+        }
+
+        // Informazioni utili per lo screenshot
+        _code = _outputGenerator.sceneCode;
+        _screenCaptureTextureManager.ScreenShotButtonPressed(_screenshots[_screenshotCounter], screenshotsTexture[_screenshotCounter]);
+        _screenshots[_screenshotCounter].name = $"{_code}_img{_simulationManager.GetScreenshotCount()}";
+
+        // Aggiorna i valori tabulati
+        _currActionTime = _simulationManager.GetTime();
+        AddActionTime(_simulationManager.GetScreenshotCount().ToString(), _currActionTime);
+
+        // Genera le condizioni necessarie
+        _simulationManager.GenerateCondition();
+        AddNewValue(_simulationManager.GetScreenshotCount().ToString(), _focalLength);
+
+        // Incrementa il counter degli screenshot
+        _screenshotCounter++;
+        _simulationManager.screenshotCount++;
+
+        // Invoca l'evento se ci sono sottoscrittori
+        screenShotTaken?.Invoke(this, EventArgs.Empty);
+
+        panelHandler.ShowNotHiddenPanels();
+    }
     public void DeleteScreenshot()
     {
         if (_screenshotCounter > 0)
