@@ -16,7 +16,7 @@ public class RotationHandler : MonoBehaviour
     [SerializeField] private float distanceFromUser = 1.0f; // Distanza desiderata dal pannello all'utente
 
     private Vector3 initialPosition; // Posizione iniziale del pannello
-    public bool enableRotationUpdate = false;
+    public bool enableRotationUpdate = true;
 
     public static EventHandler<EventArgs> onChangeOrientation;
     void Awake()
@@ -48,10 +48,10 @@ public class RotationHandler : MonoBehaviour
             Debug.LogError("_handleUI non è assegnato!");
         }
 
-        onChangeOrientation += OrientTowardsUserForEvent;
+     //   onChangeOrientation += OrientTowardsUserForEvent;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if(enableRotationUpdate)
         {     OrientTowardsUser();}
@@ -131,6 +131,8 @@ public class RotationHandler : MonoBehaviour
 
     private void AdjustPosition(object obj, EventArgs e)
     {
+        Debug.Log("Adjust position chiamata");
+        enableRotationUpdate = false;
         if (_handleUI != null && posizioneCorrispondente != null)
         {
             _handleUI.transform.position = posizioneCorrispondente.position;
@@ -141,11 +143,13 @@ public class RotationHandler : MonoBehaviour
         {
             Debug.LogError("Assicurati che _handleUI e posizioneCorrispondente siano assegnati.");
         }
+
+        enableRotationUpdate = true;
     }
     
     public void OrientTowardsUser()
     {
-        initialPosition = _handleUI.transform.position;
+        //initialPosition = _handleUI.transform.position;
         if (_handleUI == null)
         {
             Debug.LogError("_handleUI non è assegnato!");

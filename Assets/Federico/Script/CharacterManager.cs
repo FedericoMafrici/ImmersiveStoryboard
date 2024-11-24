@@ -36,6 +36,8 @@ public class CharacterManager : MonoBehaviour
     private GameObject CursorVisual;
     public static EventHandler<EventArgs> OnDestinationReached;
     public bool isBoundingBox=false;
+
+    private Vector3 destination = Vector3.zero;
     // Start is called before the first frame update
     void Start()
     {
@@ -74,7 +76,7 @@ public class CharacterManager : MonoBehaviour
                         OnDestinationReached?.Invoke(this,EventArgs.Empty);
                         StopWalking();
                        characterInteractionManagerAddOn.characterAnchorManager.AttachObjectToAnchor();
-                       characterInteractionManagerAddOn.DisableNavMeshAgent();
+                        //  characterInteractionManagerAddOn.DisableNavMeshAgent();
                     }
                 }
             }
@@ -148,6 +150,7 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.Log("Destinazione trovata, inizio a far muovere il personaggio");
             agent.SetDestination(hit.position);
+            destination = hit.position;
             this.GetComponent<Animator>().SetBool("walking", true);
             isWalking = true;  // Assicurati che questo valore sia impostato correttamente
             simulationManager.MoveAlert("room","room");
@@ -170,7 +173,9 @@ public class CharacterManager : MonoBehaviour
         this.GetComponent<Animator>().SetBool("walking", false);  // Ferma l'animazione
         isWalking = false;
         checkDestination = false;  // Disabilita il controllo sulla destinazione
+        destination = Vector3.zero;
         Debug.Log("Personaggio fermato");
+        
     }
 
   
@@ -182,28 +187,39 @@ public class CharacterManager : MonoBehaviour
 
         if (animator.speed != 0)
         {
-            // Ferma l'animazione
+            Debug.Log("Agent stopped, speed set to 0");
+            // Stop the animation
             animator.speed = 0;
 
-            // Ferma anche il NavMeshAgent se è in movimento
+            // Stop the NavMeshAgent
             if (agent != null && agent.hasPath)
             {
-                agent.isStopped = true;  // Ferma il movimento del NavMeshAgent
+                Debug.Log("Agent isStopped set to true");
+                agent.isStopped = true;        // Stop the agent's movement
+                agent.velocity = Vector3.zero; // Immediately halt movement
+                 //  agent.ResetPath();             // Clear the current path
             }
 
-            // Disabilita qualsiasi parametro di animazione che potrebbe causare il movimento
+            // Disable any animation parameter that may cause movement
             animator.SetBool("walking", false);
         }
         else
         {
-            // Riavvia l'animazione
-            animator.speed = 1;
+            
+               // agent.SetDestination(destination);
+                Debug.Log("Agent resumes walking, speed set to 1");
+                // Restart the animation
+                animator.speed = 1;
 
-            // Se desideri che l'agente riprenda a muoversi, puoi gestirlo qui
-            if (agent != null && agent.isStopped)
-            {
-                agent.isStopped = false;  // Riavvia il movimento del NavMeshAgent
-            }
+                // Restart the NavMeshAgent
+                if (agent != null)
+                {
+                    Debug.Log("Agent isStopped set to false");
+                    agent.isStopped = false; // Resume agent's movement
+                    animator.SetBool("walking", true);
+                    // Optionally, you might need to set a new destination here
+                }
+            
         }
     }
   

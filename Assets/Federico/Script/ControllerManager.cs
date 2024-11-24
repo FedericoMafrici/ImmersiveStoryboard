@@ -98,12 +98,11 @@ public class ControllerManager : MonoBehaviour
         OnBoundingBoxPlaneEdit += AllowEditPlane;
         StopBoundingBoxPlaneEdit += DenyEditPlane;
         OnPanelsSpawned += AllowRecenteringOfPanels;
-       
-        SetUpForLeftHanded();
         if (debuggingTool)
         {
             OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
             OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
+            SetUpForLeftHanded();
         }
     }
 
@@ -344,7 +343,9 @@ public class ControllerManager : MonoBehaviour
      }
      public void Bpressed(InputAction.CallbackContext ctx)
      {
-         allowPanelsRecentering = true;
+        
+         /*
+         //allowPanelsRecentering = true;
          if (allowPanelsRecentering)
          {
              Debug.Log("Ho ricentrato i pannelli");
@@ -355,6 +356,7 @@ public class ControllerManager : MonoBehaviour
          {
              Debug.Log("La variabile è false quindi non puoi ricentrare i panenlli");
          }
+         */
          
      }
      public async void SpawnAnchor() 
