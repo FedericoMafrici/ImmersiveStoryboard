@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
@@ -25,11 +26,13 @@ public class MenuManager : MonoBehaviour
     //SCRIPT 
     public int currentPage = 0;
     public int totalPageNumber=0;
-    public List<Texture> imagesTexture = new List<Texture>();
+    public bool firstScriptDisplayed = true;
+    public List<Texture> activeImagesTextureList = new List<Texture>();
+    public List<Texture> firstScript = new List<Texture>();
+    public List<Texture> secondScript = new List<Texture>();
     [SerializeField] private RawImage currentImage;
-
     [SerializeField] private GameObject previousButton;
-
+    [SerializeField] private GameObject showScriptButton;
     [SerializeField] private GameObject nextButton;
     // Start is called before the first frame update
     void Start()
@@ -49,11 +52,15 @@ public class MenuManager : MonoBehaviour
                myDictionary.Add(keys[i], values[i]);
            }
        }
-       SetSceneObjects();
-       //SetTableTop();
+
+       activeImagesTextureList = firstScript;
+       totalPageNumber=activeImagesTextureList.Count;
+       //SetSceneObjects();
+       SetShowSscript();
       // SelectObject("Woman");
        ResetPageNumber();
-       totalPageNumber=imagesTexture.Count;
+      
+       
     }
 
     public void SetSceneObjects()
@@ -87,7 +94,7 @@ public class MenuManager : MonoBehaviour
         nextButton.SetActive(false);
         
     }
-    public void SetTableTop()
+    public void SetShowSscript()
     {
         
         sceneObjectPanel.SetActive(false);
@@ -117,13 +124,13 @@ public class MenuManager : MonoBehaviour
     public void ResetPageNumber()
     {
         currentPage = 0;
-        currentImage.texture = imagesTexture[currentPage];
+        currentImage.texture = activeImagesTextureList[currentPage];
     }
     public void NextPage()
     {
         if(currentPage<totalPageNumber-1)
         {currentPage++;}
-        currentImage.texture = imagesTexture[currentPage];
+        currentImage.texture = activeImagesTextureList[currentPage];
         
         
     }
@@ -133,7 +140,24 @@ public class MenuManager : MonoBehaviour
         {
             currentPage--;
         }
-        
-        currentImage.texture = imagesTexture[currentPage];
+        currentImage.texture = activeImagesTextureList[currentPage];
+    }
+
+    public void ChangeScript()
+    {
+        if (firstScriptDisplayed)
+        {
+            activeImagesTextureList = secondScript;
+            firstScriptDisplayed = false;
+            currentPage = 0;
+            currentImage.texture = activeImagesTextureList[currentPage];
+        }
+        else
+        {
+            activeImagesTextureList = firstScript;
+            currentPage = 0;
+            currentImage.texture = activeImagesTextureList[currentPage];
+            firstScriptDisplayed = true;
+        }
     }
 }

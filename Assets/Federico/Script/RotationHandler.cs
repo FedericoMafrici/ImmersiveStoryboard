@@ -84,6 +84,7 @@ public class RotationHandler : MonoBehaviour
         if (this.CompareTag("Player"))
         {
             CharacterManager.OnDestinationReached += AdjustPosition;
+            AnimaPersonaggio.onCharactersitted += AdjustPosition;
         }
 
         enableRotationUpdate = true;
@@ -94,6 +95,7 @@ public class RotationHandler : MonoBehaviour
         if (this.CompareTag("Player"))
         {
             CharacterManager.OnDestinationReached -= AdjustPosition;
+            AnimaPersonaggio.onCharactersitted += AdjustPosition;
         }
 
         enableRotationUpdate = false;

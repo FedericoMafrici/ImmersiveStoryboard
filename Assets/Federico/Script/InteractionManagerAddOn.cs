@@ -74,7 +74,7 @@ public class InteractionManagerAddOn : MonoBehaviour
        if (characterAnchorManager == null)
        {
            Debug.LogError(" il componenete character Anchor Manager del personaggio non è stato configurato");
-           debuggingWindow.SetText("componenete characterAnchorManager non trovato per l'oggetto"+this.gameObject.name);
+        //   debuggingWindow.SetText("componenete characterAnchorManager non trovato per l'oggetto"+this.gameObject.name);
        }
        else
        {

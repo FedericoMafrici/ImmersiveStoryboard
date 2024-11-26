@@ -25,6 +25,15 @@
             ]
         },
         {
+                    "name": "coffe machine",
+                    "transitions": [
+                        "broken>fix>fixed"
+                    ],
+                    "S_A": [
+                        "broken:fix"
+                    ]
+                },
+        {
             "name": "fireplace",
             "transitions": [
                 "extinct>light>burning",
@@ -170,9 +179,31 @@
                                           "transitions": [    
                                           ],
                                           "S_A": [
-                                              "standing:standing"
+                                              "standing:standing,sit",
+                                              "sitting>stand up>standing"
                                           ]
         }, 
+        {
+                                      "name": "wednesday",
+                                                  "transitions": [    
+                                                  "standing>sit>sitting",
+                                                  "sitting>stand up>standing"
+                                                  ],
+                                                  "S_A": [
+                                                      "standing:dodge,fix,kick",
+                                                      "sitting:stand up"
+                                                  ]
+        }, 
+        {
+                                              "name": "tyler",
+                                                          "transitions": [],
+                                                          "S_A": []
+        },
+         {
+                                              "name": "lucas",
+                                              "transitions": [],
+                                              "S_A": []
+         },
         {
             "name": "zombie",
             "transitions": [

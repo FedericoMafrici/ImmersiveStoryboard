@@ -103,6 +103,9 @@ public class ControllerManager : MonoBehaviour
             OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
             OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
             SetUpForLeftHanded();
+            _SimulationManager.status = 1;
+            SimulationManager.startStoryboarding?.Invoke(this,EventArgs.Empty);
+            
         }
     }
 

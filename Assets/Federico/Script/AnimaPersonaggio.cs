@@ -34,8 +34,8 @@ public class AnimaPersonaggio : MonoBehaviour
     [SerializeField] private GameObject ObjectMenu;
 
     [SerializeField] public GameObject hiddenCharacter;
-   
-    
+
+    public static EventHandler<EventArgs> onCharactersitted;
     
     // Start is called before the first frame update
     void Start()
@@ -394,7 +394,7 @@ public class AnimaPersonaggio : MonoBehaviour
         {
             //notifica il simulation manager di avviare animazione del personaggio attivo
              _simulationManager.PlayActiveCharacterAnimation(action);
-             phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.transform.GetChild(0).name, _character.GetComponent<CharacterManager>().type, _self);
+             phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
              if (action != "sit" && action!="is tied" && action != "stand up" && action != "is freed" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
              {
                  //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato
@@ -575,13 +575,15 @@ public class AnimaPersonaggio : MonoBehaviour
           }
 
           _simulationManager.activeCharacter.transform.position = targetPoint.position + Vector3.down * 0.45f;
+       
       }
 
       // Allinea il personaggio alla direzione di forward del targetPoint
       Quaternion rot = Quaternion.LookRotation(targetPoint.right, Vector3.up);
         Debug.Log("rotazione di "+ rot);
         _simulationManager.activeCharacter.transform.rotation = rot;
-
+        onCharactersitted?.Invoke(this,EventArgs.Empty);
+        
   }
 
   public void WalkMode(bool walk)

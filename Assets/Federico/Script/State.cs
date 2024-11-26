@@ -179,11 +179,12 @@ public void ChangeState(string action) {
             {
                 if (Oldstate != initialState)
                 {
+                    Debug.Log($"{Oldstate} settato a false");
                     animator.SetBool(Oldstate, false);
                 }
+                Debug.Log($"{newState} settato a false");
                 animator.SetBool(newState, true);
                 _simulationManager.activeCharacter.GetComponent<Animator>().speed = 0.5f;
-
             }
         }
         
