@@ -103,8 +103,8 @@ public class ControllerManager : MonoBehaviour
             OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
             OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
             SetUpForLeftHanded();
-            _SimulationManager.status = 1;
-            SimulationManager.startStoryboarding?.Invoke(this,EventArgs.Empty);
+            //_SimulationManager.status = 1;
+            //SimulationManager.startStoryboarding?.Invoke(this,EventArgs.Empty);
             
         }
     }
@@ -346,7 +346,8 @@ public class ControllerManager : MonoBehaviour
      }
      public void Bpressed(InputAction.CallbackContext ctx)
      {
-        
+         Debug.Log("B pressed");
+         centerUIPanel.ShowNotHiddenPanels();
          /*
          //allowPanelsRecentering = true;
          if (allowPanelsRecentering)

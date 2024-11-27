@@ -208,7 +208,7 @@ public class SimulationManager : MonoBehaviour
             {
                 status = 1;
                 startStoryboarding?.Invoke(this, new EventArgs());
-                toggleSaveStoryboard.isOn = true;
+               // toggleSaveStoryboard.isOn = true;
                 consoleDebuggin.SetText("Storyboarding Avviato" + status);
                 Debug.Log("Start Storyboarding avviato personaggio attivo" + activeCharacter);
                 if (activeCharacter != null)
@@ -227,7 +227,7 @@ public class SimulationManager : MonoBehaviour
             {
                 status = 0;
                 pauseStoryboarding?.Invoke(this, new EventArgs());
-                toggleSaveStoryboard.isOn = false;
+              //  toggleSaveStoryboard.isOn = false;
                 if (activeCharacter != null)
                 {
                     characterAnimationManager.HideActions();
@@ -318,7 +318,7 @@ public class SimulationManager : MonoBehaviour
                 }
                 else
                 {
-                    consoleDebuggin.SetText(activeCharacter.name +" oggetto:"+ obj.name);
+                    //consoleDebuggin.SetText(activeCharacter.name +" oggetto:"+ obj.name);
                     characterAnimationManager.GetComponent<AnimaPersonaggio>().SetCharacter(obj.gameObject);
                 }
                

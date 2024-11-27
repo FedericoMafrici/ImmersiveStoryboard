@@ -35,6 +35,10 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject showScriptButton;
     [SerializeField] private GameObject nextButton;
     // Start is called before the first frame update
+    //lista di oggetti: 
+    public int totalObjectListPageNumber = 2;
+    public int currentObjectListPageNumber = 0;
+    [SerializeField] List<GameObject> objectListPages = new List<GameObject>();
     void Start()
     {
        /*
@@ -114,6 +118,7 @@ public class MenuManager : MonoBehaviour
         GameObject prefab;
         if(myDictionary.TryGetValue(obj,out  prefab))
         {
+            Debug.Log("valore trovato oggetto"+prefab.name);
             controllerManager.SetObjectToSpawn(prefab);
         }
         else
@@ -131,16 +136,16 @@ public class MenuManager : MonoBehaviour
         if(currentPage<totalPageNumber-1)
         {currentPage++;}
         currentImage.texture = activeImagesTextureList[currentPage];
-        
-        
+        currentImage.GetComponent<AutoResizeRawImage>().UpdateImage(currentImage.texture);
     }
     public void PreviousPage()
     {
-        if (currentPage!=0)
+        if (currentPage > 0)
         {
             currentPage--;
         }
         currentImage.texture = activeImagesTextureList[currentPage];
+        currentImage.GetComponent<AutoResizeRawImage>().UpdateImage(currentImage.texture);
     }
 
     public void ChangeScript()
@@ -158,6 +163,49 @@ public class MenuManager : MonoBehaviour
             currentPage = 0;
             currentImage.texture = activeImagesTextureList[currentPage];
             firstScriptDisplayed = true;
+        }
+    }
+
+    public void NextObjectsListPage()
+    {
+        if (currentObjectListPageNumber<totalObjectListPageNumber-1)
+        {
+            currentObjectListPageNumber++;
+            int index = 0;
+            foreach(var obj in objectListPages)
+            {
+                if (index != currentObjectListPageNumber)
+                {
+                    obj.SetActive(false);
+                }
+                else
+                {
+                    obj.SetActive(true);
+                }
+
+                index++;
+            }
+        }
+    }
+    public void PreviousObjectListPage()
+    {
+        if (currentObjectListPageNumber>0)
+        {
+            currentObjectListPageNumber--;
+            int index = 0;
+            foreach(var obj in objectListPages)
+            {
+                if (index != currentObjectListPageNumber)
+                {
+                    obj.SetActive(false);
+                }
+                else
+                {
+                    obj.SetActive(true);
+                }
+
+                index++;
+            }
         }
     }
 }

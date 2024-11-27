@@ -155,13 +155,15 @@ public class PhraseGenerator : MonoBehaviour
 
             if (type == name)
             {
+                /*
                 //Prende sinonimo del soggetto
                 if (name != "man")
                 {
                     name = wordnet.GetSyn(name, "Noun");
                 }
-
-                sub = "the " + name;
+                */
+           //   sub = "the " + name;
+                sub = "" + name;
             }
             if (complementType == complementName)
             {
@@ -171,8 +173,8 @@ public class PhraseGenerator : MonoBehaviour
                     //Prende sinonimo del complemento
                     complementName = wordnet.GetSyn(complementName, "Noun");
                 }
-
-                com = "the " + complementName;
+                //com = "the " + complementName;
+                com = "" + complementName;
             }
 
             //Se il verbo � riflessivo non c'� il complemento (perch� coincide con il soggetto)
@@ -187,6 +189,10 @@ public class PhraseGenerator : MonoBehaviour
                 {
                     phrase.text += sub + " " + ac + " on " + com + ". ";
                 }
+                else if (ac=="talks")
+                {
+                    phrase.text += sub + " " + ac +" to" + " " + com + ". ";
+                }
                 else
                 {
                     phrase.text += sub + " " + ac + " " + com + ". ";
@@ -197,7 +203,7 @@ public class PhraseGenerator : MonoBehaviour
                     phrase.text += sub + " " + "is locked up" + " inside the " + "wardrobe" + ". ";
                 }
             }
-
+            
             if (ac != "talks to") //altriemnti mette nel buffer ad es.: First, Paola talks to Sofia. First, Paola talks to Sofia. �Ciao Ciao.� Perch� buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text); � chimato anche in GenerateDialogue()
             {
                  buffer.Add(simulationManager.GetScreenshotCount() + "_" + phrase.text + "_" + simulationManager.GetScreenshotCountUndo());
@@ -241,14 +247,17 @@ public class PhraseGenerator : MonoBehaviour
         {
             if (place == "room")
             {
-                phrase.text += "The " + name + " walks. ";
+               // phrase.text += "The " + name + " walks. ";
+                phrase.text += "" + name + " walks. ";
             }
             else
             {
-                phrase.text += "The " + name + " walks towards ";
+                phrase.text += "" + name + " walks towards ";
+                //phrase.text += "The " + name + " walks towards ";
                 if (place == placeType)
                 {
-                    phrase.text += "the " + place + ". ";
+                    phrase.text += "" + place + ". ";
+                  //  phrase.text += "the " + place + ". ";
                 }
                 else
                 {

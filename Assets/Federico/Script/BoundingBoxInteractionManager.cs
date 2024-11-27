@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -96,19 +97,25 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         List<String> possibleStates = new List<String>();
             
         List<ObjectType> objects = new List<ObjectType>();
-             
+        
         //chair 
         possibleStates.Add("lifted");
         possibleStates.Add("fallen");
-        objects.Add(new ObjectType("chair", possibleStates, "lifted"));
+        objects.Add(new ObjectType("chair", possibleStates.ToList(), "lifted"));
         possibleStates.Clear();
         ObjectsMap.Add("chair",objects[0]);
         //wardrobe
         possibleStates.Add("closed");
         possibleStates.Add("open");
-        objects.Add(new ObjectType("wardrobe", possibleStates, "closed"));
+        objects.Add(new ObjectType("wardrobe", possibleStates.ToList(), "closed"));
         possibleStates.Clear();
         ObjectsMap.Add("wardrobe",objects[1]);
+        //coffe machine
+        possibleStates.Add("broken");
+        possibleStates.Add("fixed");
+        objects.Add(new ObjectType("coffe machine", possibleStates.ToList(), "broken"));
+        ObjectsMap.Add("coffe machine",objects[2]);
+        possibleStates.Clear();
         //gestione ancore
         _characterAnchorManager = this.GetComponent<CharacterAnchorManager>();
              if (_characterAnchorManager == null)
@@ -117,7 +124,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              }
         _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
         _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
-        
+        SetLabel("coffe machine");
     }
 
     public void HideCurrentLabel()

@@ -121,6 +121,7 @@ public class CenterUIPanel : MonoBehaviour
 
     public void ShowNotHiddenPanels()
     {
+        Debug.Log("show not hidden panels chiamata");
         // Usa un HashSet per velocizzare il controllo di appartenenza
         HashSet<string> hiddenPanelNames = new HashSet<string>();
 

@@ -101,7 +101,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     }
     public void DisableMoving(object sender, EventArgs obj)
     {
-        
+          
         if (this.name != null)
         {
             Debug.Log("l'oggetto" + this.name + "è pronto per la fase di storyboarding");
@@ -185,11 +185,8 @@ public class InteractionManagerAddOn : MonoBehaviour
     public void EnableMoving(object sender, EventArgs obj)
     {
         // debuggingWindow.SetText("Sto prendendo il componente grabbable di" + this.name);
-        if (this.transform.parent != null)
-        {
-            XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
 
-
+        XRGrabInteractable _xrInt = this.GetComponentInParent<SnapToPlane>();
             if (_xrInt != null)
             {
                 if (_xrInt != null)
@@ -200,33 +197,91 @@ public class InteractionManagerAddOn : MonoBehaviour
                 }
                 DisableNavMeshAgent();
             }
-        }
+        
     }
     // Deve essere void per poter essere visualizzata nell'Inspector
     public void onSelectionEnter(SelectEnterEventArgs args)
     {
-        #if !UNITY_EDITOR
-     //  debuggingWindow.SetText("Oggetto selezionato ho distrutto l'ancora"); 
-        characterAnchorManager.DetachFromAnchor();
-        #endif
-        if (!interactionEnabled)
+        if (args.interactableObject != null)
         {
-            Debug.Log("hai selezionato l'oggetto: " + this.gameObject.name);
             _currSelectedObj = args.interactableObject.transform.gameObject;
-            
+            Debug.Log("Oggetto selezionato: " + _currSelectedObj.name);
         }
         else
         {
-            onObjectSelected.Invoke(this,EventArgs.Empty);
-            _currSelectedObj = args.interactableObject.transform.gameObject;
-            Debug.Log("Set Active character chiamata nome oggetto"+_currSelectedObj.gameObject.name + "\n figli:"+_currSelectedObj.transform.GetChild(0).name);
-           _SimulationManager.SetActiveCharacter(_currSelectedObj);
-       }
+            Debug.LogError("args.interactableObject è null.");
+        }
+        
+#if !UNITY_EDITOR
+    Debug.Log("Verifica: characterAnchorManager = " + (characterAnchorManager != null));
+    if (characterAnchorManager != null)
+    {
+        characterAnchorManager.DetachFromAnchor();
+    }
+    else
+    {
+        Debug.LogError("characterAnchorManager è NULL!");
+    }
+#endif
+
+        if (!interactionEnabled)
+        {
+            Debug.Log("hai selezionato l'oggetto: " + this.gameObject.name);
+            if (args.interactableObject != null)
+            {
+                _currSelectedObj = args.interactableObject.transform?.gameObject;
+                Debug.Log("Oggetto selezionato: " + _currSelectedObj?.name);
+            }
+            else
+            {
+                Debug.LogError("args.interactableObject è NULL!");
+            }
+        }
+        else
+        {
+            Debug.Log("Interaction enabled, procedo con l'invocazione.");
+            if (onObjectSelected != null)
+            {
+                onObjectSelected.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                Debug.LogError("onObjectSelected è NULL!");
+            }
+
+            if (args.interactableObject != null)
+            {
+                _currSelectedObj = args.interactableObject.transform?.gameObject;
+                Debug.Log("Set Active Character chiamato per: " + _currSelectedObj?.name);
+                if (_SimulationManager != null)
+                {
+                    _SimulationManager.SetActiveCharacter(_currSelectedObj);
+                }
+                else
+                {
+                    Debug.LogError("_SimulationManager è NULL!");
+                }
+            }
+            else
+            {
+                Debug.LogError("args.interactableObject è NULL!");
+            }
+        }
     }
     
     
     public void OnSelectionExit(SelectExitEventArgs args)
     {
+        if (args.interactableObject != null)
+        {
+            _currSelectedObj = args.interactableObject.transform.gameObject;
+            Debug.Log("Oggetto selezionato: " + _currSelectedObj.name);
+        }
+        else
+        {
+            Debug.LogError("args.interactableObject è null.");
+        }
+        
 #if !UNITY_EDITOR
         characterAnchorManager.AttachObjectToAnchor();
       //  debuggingWindow.SetText("Ancora instanziata nuovamente");

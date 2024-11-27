@@ -204,7 +204,17 @@
                                               "transitions": [],
                                               "S_A": []
          },
-        {
+         {
+                                                       "name": "carter",
+                                                       "transitions": [],
+                                                       "S_A": []
+         },
+         {
+                                                                "name": "jonah",
+                                                                "transitions": [],
+                                                                "S_A": []
+         }, 
+         {
             "name": "zombie",
             "transitions": [
                 "standing>sit>sitting",
