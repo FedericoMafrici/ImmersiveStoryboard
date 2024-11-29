@@ -224,7 +224,7 @@ MonoBehaviour:
   m_SmoothRotation: 1
   m_SmoothRotationAmount: 8
   m_TightenRotation: 0.1
-  m_TrackScale: 1
+  m_TrackScale: 0
   m_SmoothScale: 1
   m_SmoothScaleAmount: 0.8
   m_TightenScale: 0.4

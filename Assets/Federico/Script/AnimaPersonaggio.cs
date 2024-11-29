@@ -394,7 +394,20 @@ public class AnimaPersonaggio : MonoBehaviour
         {
             //notifica il simulation manager di avviare animazione del personaggio attivo
              _simulationManager.PlayActiveCharacterAnimation(action);
-             phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name, _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name, _character.GetComponent<CharacterManager>().type, _self);
+             var boundingBox = _character.GetComponent<BoundingBoxInteractionManager>();
+             if (boundingBox != null)
+             {
+                 phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name,
+                     _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.GetComponent<CharacterManager>().type,
+                     _character.GetComponent<CharacterManager>().type, _self);
+             }
+             else
+             {
+                 phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.name,
+                     _simulationManager.activeCharacter.GetComponent<CharacterManager>().type, action, _character.name,
+                     _character.GetComponent<CharacterManager>().type, _self);
+             }
+
              if (action != "sit" && action!="is tied" && action != "stand up" && action != "is freed" && action != "play" && action != "stop play" && action != "dance" && action != "stop dance" && action != "work out" && action != "stop work out")
              {
                  //notifica lo State del gameobject la cui azione � stata cliccata per effettuare un controllo di cambio di stato

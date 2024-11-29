@@ -207,6 +207,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             objectState.state.Add(obj.currentState);
             objectState.possibleStates.Clear();
             objectState.possibleStates = obj.possibleStates ;
+            Debug.Log("Etichetta configurata con successo");
         }
         
         if (isPlaneNeeded(text.ToLower())&& boundingBoxplane!=null)

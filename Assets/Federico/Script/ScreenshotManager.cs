@@ -110,8 +110,8 @@ public class ScreenshotManager : MonoBehaviour
 
         // Invoca l'evento se ci sono sottoscrittori
         screenShotTaken?.Invoke(this, EventArgs.Empty);
-
-        panelHandler.ShowNotHiddenPanels();
+            panelHandler.ShowPanels();
+    //    panelHandler.ShowNotHiddenPanels();
     }
     public void DeleteScreenshot()
     {

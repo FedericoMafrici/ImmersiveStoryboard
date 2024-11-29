@@ -60,6 +60,8 @@ public class ControllerManager : MonoBehaviour
 
     public bool debuggingTool = false;
     public bool isFirstTimeSettingUpController = true;
+    // manipolazione della posa del personaggio 
+    private InteractionManagerAddOn _characterSelected;
     
     //eventi
     private void OnDisable()
@@ -102,9 +104,9 @@ public class ControllerManager : MonoBehaviour
         {
             OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
             OnBoundingBoxFounded?.Invoke(this,EventArgs.Empty);
-            SetUpForLeftHanded();
-            //_SimulationManager.status = 1;
-            //SimulationManager.startStoryboarding?.Invoke(this,EventArgs.Empty);
+            SetUpForLeftHanded(); 
+            _SimulationManager.status = 1;
+            SimulationManager.startStoryboarding?.Invoke(this,EventArgs.Empty);
             
         }
     }
@@ -214,34 +216,18 @@ public class ControllerManager : MonoBehaviour
         Debug.Log("Analog Rilevato");
       //  _ConsoleDebugger.SetText("hai premuto l'analog, valori rilevati: " + analogValue.x + " " + analogValue.y);
         // Controlla se l'analogico è inclinato a destra e l'azione non è stata ancora eseguita
+       //analogValue.x > 0.5f && !analogIsTilted
         if (analogValue.x > 0.5f && !analogIsTilted)
         {
-            _ConsoleDebugger.SetText("hai premuto l'analog a destra, valori rilevati: " + analogValue.x + " " + analogValue.y);
-
-            Debug.Log("Hai premuto l'analog verso destra bravo!");
-            if (boundingBoxSelected != null)
-            {
-                Debug.Log("hai selezionato una bounding box ?" + boundingBoxSelected.gameObject.name);
-                _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
-            }
-
-            if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
-            {
-                boundingBoxSelected.RotatePlane(1);
-            }
-            analogIsTilted = true; // Segna l'analogico come inclinato
+            TryRotateBoundingBoxRight();
+            TryRotateCharacterRight();
         }
         // Controlla se l'analogico è inclinato a sinistra e l'azione non è stata ancora eseguita
-        else if (analogValue.x < -0.5f && !analogIsTilted)
+       //analogValue.x < -0.5f && !analogIsTilted
+        else if (analogValue.x > 0.5f && !analogIsTilted )
         {
-            Debug.Log("Hai premuto l'analog verso sinistra bravissimo!");
-            _ConsoleDebugger.SetText("hai premuto l'analog a sinistra , valori rilevati: " + analogValue.x + " " + analogValue.y);
-            _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
-            if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
-            {
-                boundingBoxSelected.RotatePlane(-1);
-            }
-            analogIsTilted = true; // Segna l'analogico come inclinato
+            TryRotateBoundingBoxLeft();
+            TryRotateCharacterLeft();
         }
         // Resetta lo stato se l'analogico è tornato al centro
         else if (Mathf.Abs(analogValue.x) < 0.5f)
@@ -249,7 +235,52 @@ public class ControllerManager : MonoBehaviour
             analogIsTilted = false;
         }
     }
+
+    public void TryRotateCharacterRight()
+    {
+        if (_characterSelected == null || !_characterSelected.characterCanRotate)
+        {
+            Debug.LogError("Il personaggio selezionato è risultato nullo o la rotazione non è stata abiltiata correttamente");
+            return;
+        }
+
+        _characterSelected.RotatePlane(1);
+    }
+    public void TryRotateCharacterLeft()
+    {
+        if (_characterSelected == null || !_characterSelected.characterCanRotate)
+        {
+            Debug.LogError("Il personaggio selezionato è risultato nullo o la rotazione non è stata abiltiata correttamente");
+            return;
+        }
+        _characterSelected.RotatePlane(-1);
+    }
+    public void TryRotateBoundingBoxRight()
+    {
+        Debug.Log("Hai premuto l'analog verso destra bravo!");
+        if (boundingBoxSelected != null)
+        {
+            Debug.Log("hai selezionato una bounding box ?" + boundingBoxSelected.gameObject.name);
+            _ConsoleDebugger.SetText(_ConsoleDebugger.gameObject.name);
+        }
+
+        if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
+        {
+            boundingBoxSelected.RotatePlane(1);
+        }
+        analogIsTilted = true; // Segna l'analogico come inclinato
+    }
+
+    public void TryRotateBoundingBoxLeft()
+    {
+        Debug.Log("Hai premuto l'analog verso sinistra bravissimo!");
+        if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
+        {
+            boundingBoxSelected.RotatePlane(-1);
+        }
+        analogIsTilted = true; // Segna l'analogico come inclinato
     
+    }
     public void Ypressed(InputAction.CallbackContext ctx)
     {
 
@@ -347,7 +378,7 @@ public class ControllerManager : MonoBehaviour
      public void Bpressed(InputAction.CallbackContext ctx)
      {
          Debug.Log("B pressed");
-         centerUIPanel.ShowNotHiddenPanels();
+         // centerUIPanel.ShowNotHiddenPanels();
          /*
          //allowPanelsRecentering = true;
          if (allowPanelsRecentering)
@@ -480,6 +511,24 @@ public class ControllerManager : MonoBehaviour
                     _ConsoleDebugger.SetText("Piano colpito con successo può essere ruotato");
                 }
             }
+            //caso in cui invece colpisca un oggetto player per ruotarlo 
+            if (hit.transform.CompareTag("Player"))
+            {
+                //impedisco la rotazione del personaggio precedente
+                if (_characterSelected != null)
+                {
+                    _characterSelected.SetCharacterRotationBool(false);
+                }
+                // abilito la rotazione del nuovo personaggio
+                Debug.Log("hai colpito un personaggio ne abilito la rotazione");
+                _characterSelected=hit.transform.GetComponent<InteractionManagerAddOn>();
+                if (_characterSelected != null)
+                {
+                    _characterSelected.SetCharacterRotationBool(true);
+                }
+            }
+            
+            
         }
     }
     

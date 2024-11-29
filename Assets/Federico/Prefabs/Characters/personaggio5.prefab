@@ -1035,7 +1035,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e9c364d4f0ca24029a887b98d477667d, type: 3}
       propertyPath: m_Name
-      value: tyler1
+      value: tyler
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e9c364d4f0ca24029a887b98d477667d, type: 3}
       propertyPath: m_Layer

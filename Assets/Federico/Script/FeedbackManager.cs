@@ -26,6 +26,9 @@ public class FeedbackManager : MonoBehaviour
    [SerializeField] public Image boundingBoxDetectedImage;
    [SerializeField] public TextMeshProUGUI boundingBoxDetectedText;
    
+   
+   // GESTIONE AUDIO
+   [SerializeField] public AudioSource genericFeedbackClip;
     private XROrigin _arSessionOrigin;
     private void Start()
     {
@@ -98,21 +101,24 @@ public class FeedbackManager : MonoBehaviour
     
     public void ScreenShotTaken(object sender, EventArgs obj)
     {
-        
-        StartCoroutine(FadeOut(ScreenShotTakenBackground,ScreenShotTakenText,fadeDuration));
+        genericFeedbackClip.Play();
+        //StartCoroutine(FadeOut(ScreenShotTakenBackground,ScreenShotTakenText,fadeDuration));
     }
 
     public void StoryboardSavedFeedback(object sender, EventArgs obj)
     {
-        StartCoroutine(FadeOut(StoryboardSavedBackground, StoryboardSavedText, fadeDuration));
+        genericFeedbackClip.Play();
+        //StartCoroutine(FadeOut(StoryboardSavedBackground, StoryboardSavedText, fadeDuration));
     }
  private void OnObjectPlaced(object sender, EventArgs e)
     {
-        StartCoroutine(FadeOut(ObjectPlacedBackground, ObjectPlacedText, fadeDuration));
+        genericFeedbackClip.Play();
+     //   StartCoroutine(FadeOut(ObjectPlacedBackground, ObjectPlacedText, fadeDuration));
     }
 
     public void BoundingBoxFounded(object sender, EventArgs e)
     {
-        StartCoroutine(FadeOut(boundingBoxDetectedImage, boundingBoxDetectedText, fadeDuration));
+        genericFeedbackClip.Play();
+      //  StartCoroutine(FadeOut(boundingBoxDetectedImage, boundingBoxDetectedText, fadeDuration));
     }
 }

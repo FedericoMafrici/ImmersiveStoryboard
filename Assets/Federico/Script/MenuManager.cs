@@ -156,6 +156,7 @@ public class MenuManager : MonoBehaviour
             firstScriptDisplayed = false;
             currentPage = 0;
             currentImage.texture = activeImagesTextureList[currentPage];
+            totalPageNumber = activeImagesTextureList.Count;
         }
         else
         {
@@ -163,6 +164,7 @@ public class MenuManager : MonoBehaviour
             currentPage = 0;
             currentImage.texture = activeImagesTextureList[currentPage];
             firstScriptDisplayed = true;
+            totalPageNumber = activeImagesTextureList.Count;
         }
     }
 

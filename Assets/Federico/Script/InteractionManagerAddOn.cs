@@ -28,6 +28,9 @@ public class InteractionManagerAddOn : MonoBehaviour
     public static EventHandler<EventArgs> onObjectSelected;
     // Start is called before the first frame update
 
+    
+    // GESTIONE ROTAZIONE DELLA POSA DEL PERSONAGGIO: 
+    public bool characterCanRotate = false;
     private void OnEnable()
     {
         SimulationManager.startStoryboarding += DisableMoving;
@@ -298,7 +301,26 @@ public class InteractionManagerAddOn : MonoBehaviour
         }
         menuManager.SelectObject(txt.text);
     }
-    
-    
-    
+    // ROTAZIONE DEL PERSONAGGIO
+    public void SetCharacterRotationBool(bool value)
+    {
+        characterCanRotate = value;
+    }
+    public void RotatePlane(int rot)
+    {
+        float rotationAmount = 25f; // Angolo di rotazione incrementale
+
+        // Determina la direzione della rotazione
+        if (rot < 0)
+        {
+            rotationAmount = -rotationAmount;
+        }
+
+        // Aggiunge la rotazione incrementale sull'asse Y
+        this.transform.rotation = Quaternion.Euler(
+            this.transform.rotation.eulerAngles.x,
+            this.transform.rotation.eulerAngles.y + rotationAmount,
+            this.transform.rotation.eulerAngles.z
+        );
+    }
 }

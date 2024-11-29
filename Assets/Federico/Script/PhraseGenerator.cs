@@ -171,7 +171,7 @@ public class PhraseGenerator : MonoBehaviour
                 if (complementName != "man")
                 {
                     //Prende sinonimo del complemento
-                    complementName = wordnet.GetSyn(complementName, "Noun");
+                   // complementName = wordnet.GetSyn(complementName, "Noun");
                 }
                 //com = "the " + complementName;
                 com = "" + complementName;
