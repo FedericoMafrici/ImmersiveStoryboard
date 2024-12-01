@@ -22,9 +22,10 @@ public class ValueVisualizer : MonoBehaviour
         if (_slider.value != _prevValue)
         {
             onActionTimeChanged.Invoke(this,new ActionTimeChangedEventArgs( _slider.value));
+            _prevValue = _slider.value;
         }
 
-        _prevValue = _slider.value;
+       
     }
     
 }

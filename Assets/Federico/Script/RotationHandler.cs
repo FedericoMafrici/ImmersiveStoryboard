@@ -85,6 +85,7 @@ public class RotationHandler : MonoBehaviour
         {
             CharacterManager.OnDestinationReached += AdjustPosition;
             AnimaPersonaggio.onCharactersitted += AdjustPosition;
+            AnimaPersonaggio.onCharacterSelected += AdjustPosition;
         }
 
         enableRotationUpdate = true;
@@ -96,6 +97,7 @@ public class RotationHandler : MonoBehaviour
         {
             CharacterManager.OnDestinationReached -= AdjustPosition;
             AnimaPersonaggio.onCharactersitted += AdjustPosition;
+            AnimaPersonaggio.onCharacterSelected -= AdjustPosition;
         }
 
         enableRotationUpdate = false;

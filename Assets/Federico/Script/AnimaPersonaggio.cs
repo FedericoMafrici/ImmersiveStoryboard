@@ -37,6 +37,8 @@ public class AnimaPersonaggio : MonoBehaviour
 
     public static EventHandler<EventArgs> onCharactersitted;
     
+    public static EventHandler<EventArgs> onCharacterSelected;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -174,7 +176,7 @@ public class AnimaPersonaggio : MonoBehaviour
           
             // TODO possibilità di cambiare colore in base ai bottoni ma si vede dopo 
         }
-        
+        AnimaPersonaggio.onCharacterSelected?.Invoke(this,EventArgs.Empty);
     }
     
     
@@ -211,7 +213,7 @@ public class AnimaPersonaggio : MonoBehaviour
             var newElement= CreateElement(s,container);
             // TODO possibilità di cambiare colore in base ai bottoni ma si vee dopo 
         }
-        
+        AnimaPersonaggio.onCharacterSelected?.Invoke(this,EventArgs.Empty);
     }
 
     public void HideActions()

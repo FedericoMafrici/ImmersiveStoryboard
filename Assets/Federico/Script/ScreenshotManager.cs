@@ -98,7 +98,7 @@ public class ScreenshotManager : MonoBehaviour
 
         // Aggiorna i valori tabulati
         _currActionTime = _simulationManager.GetTime();
-        AddActionTime(_simulationManager.GetScreenshotCount().ToString(), _currActionTime);
+        AddActionTime(_simulationManager.GetScreenshotCount().ToString(), _simulationManager.GetTime());
 
         // Genera le condizioni necessarie
         _simulationManager.GenerateCondition();

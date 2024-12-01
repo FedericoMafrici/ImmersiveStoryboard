@@ -267,8 +267,7 @@ public class SimulationManager : MonoBehaviour
     }
     public int GetTime() 
     {
-        
-      return actionTime ; //TODO da rimuovere e ripristinare con quello sopra
+        return actionTime ; //TODO da rimuovere e ripristinare con quello sopra
     }
     public void ControlCamera(){ }
 
