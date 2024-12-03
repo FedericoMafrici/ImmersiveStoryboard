@@ -64,6 +64,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         SimulationManager.startStoryboarding -= DisableMoving;
         ControllerManager.OnBoundingBoxPlaneEdit -= AllowEditPlane;
         ControllerManager.StopBoundingBoxPlaneEdit -= StopEditPlane;
+        SimulationManager.startStoryboarding -=DontShowLabelOnHovering;
+        SimulationManager.pauseStoryboarding -= ShowLabelOnHovering;
     }
 
     public void Awake()
@@ -74,7 +76,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         SimulationManager.startStoryboarding += DisableMoving;
         ControllerManager.OnBoundingBoxPlaneEdit += AllowEditPlane;
         ControllerManager.StopBoundingBoxPlaneEdit += StopEditPlane;
-        
+        SimulationManager.startStoryboarding+=DontShowLabelOnHovering;
+        SimulationManager.pauseStoryboarding += ShowLabelOnHovering;
         // ACQUISIZIONE DEI COMPONENTI PRINCIPALI
 
         _snapToPlaneComponent = this.GetComponent<SnapToPlane>();
@@ -124,7 +127,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              }
         _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
         _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
-        SetLabel("coffe machine");
+        //SetLabel("chair");
     }
 
     public void HideCurrentLabel()
@@ -139,6 +142,16 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     }
 
+    public void ShowLabelOnHovering(object sender,EventArgs e)
+    {
+        _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
+        _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
+    }
+    public void DontShowLabelOnHovering(object sender,EventArgs e)
+    {
+        _snapToPlaneComponent.hoverEntered.RemoveListener(ObjectHoveredEntered);
+        _snapToPlaneComponent.hoverExited.RemoveListener(ObjectHoveredExited);
+    }
     public void ShowCurrentLabel()
     {
         if (labelUI == null)
@@ -195,7 +208,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public void SetLabel(string text)
     {
         Text label= labelUI.transform.Find("Scrollview Canvas/Pannello/Viewport/Content/Scroll View Item/Text").GetComponent<Text>();
-        label.text = text;
+        label.text = text.ToUpper();
         //assegnazione del tipo
         this.GetComponent<CharacterManager>().type = text.ToLower() ;
         State objectState = this.GetComponent<State>();
@@ -277,7 +290,6 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             Debug.Log("componente navmesh obstacle abilitato");
             navmeshObstacle.enabled = false;
         }
-
         interactionEnabled = true;
     }
     public void EnableMoving(object sender,EventArgs e)
@@ -296,7 +308,6 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         {
             navmeshObstacle.enabled = false;
         }
-
         interactionEnabled = false;
     }
     public void EnablePlaneRotation()

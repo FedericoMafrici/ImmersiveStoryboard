@@ -207,6 +207,10 @@ public class ControllerManager : MonoBehaviour
         
     }
 
+    public void StartPressed(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Start button pressed");
+    }
     private bool analogIsTilted = false; // Variabile di stato per monitorare l'inclinazione
 
     public void AnalogTouched(InputAction.CallbackContext ctx)
@@ -224,7 +228,7 @@ public class ControllerManager : MonoBehaviour
         }
         // Controlla se l'analogico è inclinato a sinistra e l'azione non è stata ancora eseguita
        //analogValue.x < -0.5f && !analogIsTilted
-        else if (analogValue.x > 0.5f && !analogIsTilted )
+        else if (analogValue.x < 0.5f && !analogIsTilted )
         {
             TryRotateBoundingBoxLeft();
             TryRotateCharacterLeft();

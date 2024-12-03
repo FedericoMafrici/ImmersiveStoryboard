@@ -71,6 +71,15 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""start"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad6e3e1a-2b17-47fd-8bbb-9503d41e53ea"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -225,6 +234,28 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Analog"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c8284ec-4c35-4e3e-a782-f7b1fb70ee3f"",
+                    ""path"": ""<QuestProTouchController>/isTracked"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""start"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7da9960-528c-4206-8541-d4d5f13365b5"",
+                    ""path"": ""<XRSimulatedController>/menuButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""start"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -475,6 +506,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         m_Left_Grip = m_Left.FindAction("Grip", throwIfNotFound: true);
         m_Left_Fire = m_Left.FindAction("Fire", throwIfNotFound: true);
         m_Left_Analog = m_Left.FindAction("Analog", throwIfNotFound: true);
+        m_Left_start = m_Left.FindAction("start", throwIfNotFound: true);
         // Right
         m_Right = asset.FindActionMap("Right", throwIfNotFound: true);
         m_Right_B = m_Right.FindAction("B", throwIfNotFound: true);
@@ -558,6 +590,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Left_Grip;
     private readonly InputAction m_Left_Fire;
     private readonly InputAction m_Left_Analog;
+    private readonly InputAction m_Left_start;
     public struct LeftActions
     {
         private @ButtonController m_Wrapper;
@@ -567,6 +600,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         public InputAction @Grip => m_Wrapper.m_Left_Grip;
         public InputAction @Fire => m_Wrapper.m_Left_Fire;
         public InputAction @Analog => m_Wrapper.m_Left_Analog;
+        public InputAction @start => m_Wrapper.m_Left_start;
         public InputActionMap Get() { return m_Wrapper.m_Left; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -591,6 +625,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Analog.started += instance.OnAnalog;
             @Analog.performed += instance.OnAnalog;
             @Analog.canceled += instance.OnAnalog;
+            @start.started += instance.OnStart;
+            @start.performed += instance.OnStart;
+            @start.canceled += instance.OnStart;
         }
 
         private void UnregisterCallbacks(ILeftActions instance)
@@ -610,6 +647,9 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
             @Analog.started -= instance.OnAnalog;
             @Analog.performed -= instance.OnAnalog;
             @Analog.canceled -= instance.OnAnalog;
+            @start.started -= instance.OnStart;
+            @start.performed -= instance.OnStart;
+            @start.canceled -= instance.OnStart;
         }
 
         public void RemoveCallbacks(ILeftActions instance)
@@ -758,6 +798,7 @@ public partial class @ButtonController: IInputActionCollection2, IDisposable
         void OnGrip(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnAnalog(InputAction.CallbackContext context);
+        void OnStart(InputAction.CallbackContext context);
     }
     public interface IRightActions
     {

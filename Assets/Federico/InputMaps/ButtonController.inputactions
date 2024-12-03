@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "start",
+                    "type": "Button",
+                    "id": "ad6e3e1a-2b17-47fd-8bbb-9503d41e53ea",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -203,6 +212,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Analog",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c8284ec-4c35-4e3e-a782-f7b1fb70ee3f",
+                    "path": "<QuestProTouchController>/isTracked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7da9960-528c-4206-8541-d4d5f13365b5",
+                    "path": "<XRSimulatedController>/menuButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "start",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
