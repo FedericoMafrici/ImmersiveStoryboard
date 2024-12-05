@@ -129,7 +129,9 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.LogError("L'interactionmanagerAddon collegato al personaggio è risultato nullo");
         }
+        #if !UNITY_EDITOR
         characterInteractionManagerAddOn.characterAnchorManager.DetachFromAnchor();
+        #endif
         var agent = this.GetComponent<NavMeshAgent>();
         
         if (agent == null)
@@ -197,13 +199,12 @@ public class CharacterManager : MonoBehaviour
                 Debug.Log("Agent isStopped set to true");
                 agent.isStopped = true;        // Stop the agent's movement
                 agent.velocity = Vector3.zero; // Immediately halt movement
-                 //  agent.ResetPath();             // Clear the current path
             }
 
             // Disable any animation parameter that may cause movement
             animator.SetBool("walking", false);
         }
-        else
+        else if(agent.hasPath)
         {
             
                // agent.SetDestination(destination);
@@ -219,6 +220,18 @@ public class CharacterManager : MonoBehaviour
                     animator.SetBool("walking", true);
                     // Optionally, you might need to set a new destination here
                 }
+            
+        }
+        else
+        {
+            if (charAnim.speed == 0)
+            {
+                charAnim.speed = 1;
+            }
+            else
+            {
+                charAnim.speed = 0;
+            }
             
         }
     }

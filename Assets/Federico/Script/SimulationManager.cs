@@ -51,6 +51,8 @@ public class SimulationManager : MonoBehaviour
     [Header("Componenti UI ")]
     
     [SerializeField]  private Toggle toggleContemporaryAction;
+    [SerializeField]  private Color activatedToggle;
+    [SerializeField]  private Color notActivatedToggle;
 
     [SerializeField] private Toggle toggleSaveStoryboard;
 
@@ -147,9 +149,9 @@ public class SimulationManager : MonoBehaviour
                 if (activeCharacter != null)
                 {
                     characterAnimationManager.HideActions();
-                    DestroyParticles();
-                    DestroyParticlesActive();
-                    DestroyParticlesComplement();
+                    //DestroyParticles();
+                    //DestroyParticlesActive();
+                    //DestroyParticlesComplement();
                 }
 
                 activeCharacter = null;
@@ -186,9 +188,6 @@ public class SimulationManager : MonoBehaviour
                 if (activeCharacter != null)
                 {
                     characterAnimationManager.HideActions();
-                    DestroyParticles();
-                    DestroyParticlesActive();
-                    DestroyParticlesComplement();
                 }
 
                 activeCharacter = null;
@@ -231,9 +230,6 @@ public class SimulationManager : MonoBehaviour
                 if (activeCharacter != null)
                 {
                     characterAnimationManager.HideActions();
-                    DestroyParticles();
-                    DestroyParticlesActive();
-                    DestroyParticlesComplement();
                 }
                 activeCharacter = null;
                 characterAnimationManager._character = null;
@@ -278,11 +274,17 @@ public class SimulationManager : MonoBehaviour
         var txt=   toggleContemporaryAction.transform.Find("Image/Text").GetComponent<Text>();
         if (contemporaryAction)
         {
-            txt.text = "attivata";
+            ColorBlock toggleColorBlock = toggleContemporaryAction.colors;
+            toggleColorBlock.normalColor = activatedToggle;
+            toggleContemporaryAction.colors = toggleColorBlock;
+            txt.text = "activated";
         }
         else
         { 
-            txt.text = "disattivata";
+            txt.text = "deactivated";
+            ColorBlock toggleColorBlock = toggleContemporaryAction.colors;
+            toggleColorBlock.normalColor = notActivatedToggle;
+            toggleContemporaryAction.colors = toggleColorBlock;
         }
         characterAnimationManager.ChangeWalker(); 
     }
@@ -326,8 +328,8 @@ public class SimulationManager : MonoBehaviour
                 if (activeCharacter != null && activeCharacter.GetComponent<Animator>() != null)
                 {
                     activeCharacterAnimator = activeCharacter.GetComponent<Animator>();
-                    DestroyParticles();
-                    CreateParticleActive(activeCharacter);
+                //    DestroyParticles();
+                 //   CreateParticleActive(activeCharacter);
                 }
                 //sfondoTitolo.SetActive(false);
                 //animaPersonaggio.PosizioneTasti();
@@ -351,11 +353,12 @@ public class SimulationManager : MonoBehaviour
     
     public void SetupMovement()
     {
-       //setUpMovement.Invoke(this,new EventArgs());
+        //setUpMovement.Invoke(this,new EventArgs());
        var charManager = activeCharacter.GetComponent<CharacterManager>();
        if (charManager != null)
        {
            charManager.EnableCharacterMovement();
+           this.GetComponent<ControllerManager>().ActivateLaser();
        }
        else
        {
@@ -394,8 +397,8 @@ public class SimulationManager : MonoBehaviour
 //                GetControlButton.SetActive(false); not really important at the moment
                 if (activeCharacter.GetComponent<Animator>() != null)
                     activeCharacterAnimator = activeCharacter.GetComponent<Animator>();
-                DestroyParticles();
-                CreateParticleActive(activeCharacter);
+               // DestroyParticles();
+               // CreateParticleActive(activeCharacter);
 
                 
 

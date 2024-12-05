@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private List<string> keys = new List<string>();
     [SerializeField] private List<GameObject> values = new List<GameObject>();
     [SerializeField] public Dictionary<string, GameObject> myDictionary = new Dictionary<string, GameObject >();
-    
+
+    [SerializeField] public Image BackGroundPanelScript;
+    [SerializeField] public Image BackGroundPanelObject;
     //SCRIPT 
     public int currentPage = 0;
     public int totalPageNumber=0;
@@ -36,6 +39,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject nextButton;
     // Start is called before the first frame update
     //lista di oggetti: 
+    [SerializeField] private Color SelectionColor;
+    [SerializeField] private Color NotSelectedColor;
+    /*
+    [SerializeField] private String SelectionColor = "1870B6";
+    [SerializeField] private String NotSelectedColor = "9A9A9A";
+    */
     public int totalObjectListPageNumber = 2;
     public int currentObjectListPageNumber = 0;
     [SerializeField] List<GameObject> objectListPages = new List<GameObject>();
@@ -59,8 +68,8 @@ public class MenuManager : MonoBehaviour
 
        activeImagesTextureList = firstScript;
        totalPageNumber=activeImagesTextureList.Count;
-       //SetSceneObjects();
-       SetShowSscript();
+       SetSceneObjects();
+       //SetShowSscript();
       // SelectObject("Woman");
        ResetPageNumber();
       
@@ -69,15 +78,26 @@ public class MenuManager : MonoBehaviour
 
     public void SetSceneObjects()
     {
-        boundingBoxesPanel.SetActive(false);
-        boundingBoxesPanelOutline.SetActive(false);
+//        boundingBoxesPanel.SetActive(false);
+//        boundingBoxesPanelOutline.SetActive(false);
        
         tableTopObjectsPanel.SetActive(false);
-        tableTopObjectsPanelOutline.SetActive(false);
+       // tableTopObjectsPanelOutline.SetActive(false);
       
         sceneObjectPanel.SetActive(true);
         sceneObjectPanelOutline.SetActive(true);
-     
+        
+       
+            // Assegna il colore al componente Image
+            BackGroundPanelObject.color = SelectionColor;
+        
+        
+        
+            // Assegna il colore al componente Image
+            BackGroundPanelScript.color = NotSelectedColor;
+        
+        
+        
         previousButton.SetActive(false);
         nextButton.SetActive(false);
         ResetPageNumber();
@@ -91,8 +111,8 @@ public class MenuManager : MonoBehaviour
         tableTopObjectsPanel.SetActive(false);
         tableTopObjectsPanelOutline.SetActive(false);
       
-        boundingBoxesPanel.SetActive(true);
-        boundingBoxesPanelOutline.SetActive(true);
+  //      boundingBoxesPanel.SetActive(true);
+  //      boundingBoxesPanelOutline.SetActive(true);
         ResetPageNumber();
         previousButton.SetActive(false);
         nextButton.SetActive(false);
@@ -104,11 +124,20 @@ public class MenuManager : MonoBehaviour
         sceneObjectPanel.SetActive(false);
         sceneObjectPanelOutline.SetActive(false);
        
-        boundingBoxesPanel.SetActive(false);
-        boundingBoxesPanelOutline.SetActive(false);
+  //      boundingBoxesPanel.SetActive(false);
+  //      boundingBoxesPanelOutline.SetActive(false);
       
         tableTopObjectsPanel.SetActive(true);
         tableTopObjectsPanelOutline.SetActive(true);
+        Color newColor;
+        
+            // Assegna il colore al componente Image
+            BackGroundPanelScript.color = SelectionColor;
+        
+            
+            BackGroundPanelObject.color = NotSelectedColor;
+            
+
         ResetPageNumber();
         previousButton.SetActive(true);
         nextButton.SetActive(true);

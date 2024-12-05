@@ -369,6 +369,7 @@ public class PhraseGenerator : MonoBehaviour
         proxim = "";
         walking = "";
         forward = "";
+        phrase.text = "";
     }
 
     public void  DeleteLastSentence()

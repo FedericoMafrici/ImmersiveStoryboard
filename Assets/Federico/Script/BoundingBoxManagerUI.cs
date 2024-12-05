@@ -24,12 +24,14 @@ public class BoundingBoxManagerUI : MonoBehaviour
     public static EventHandler<EventArgs> OnTutorialFirstPartCompleted;
     public static EventHandler<EventArgs> OnBoundingBoxPlacement;
     public static EventHandler<EventArgs> OnBoundingBoxPlacementCompleted;
+    public static EventHandler<EventArgs> OnBoundingBoxAllowLabel;
     public static EventHandler<EventArgs> e;
     public static EventHandler<EventArgs> OnSceneInizializationCompleted;
+    public static EventHandler<EventArgs> OnShowScriptPanel;    
     [SerializeField] public GameObject leftHandButton;
     [SerializeField] public GameObject rightHandButton;
     private bool isActive = true;
-
+    private bool firstTimeHandlingPlane = true;
     public bool isLeftHanded = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,6 +44,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
         textHandMenu.text = "Hide";
         _simulationManager = FindObjectOfType<SimulationManager>();
         hideButton.SetActive(false);
+        BoundingBoxInteractionManager.onPlaneSpawned += HandleTutorialAfterObjectWithPlaneSpawned;
     }
 
     // Update is called once per frame
@@ -50,6 +53,25 @@ public class BoundingBoxManagerUI : MonoBehaviour
         
     }
 
+    private void OnDestroy()
+    {
+        
+    }
+
+    public void HandleTutorialAfterObjectWithPlaneSpawned(object ender, EventArgs e)
+    {
+        if (firstTimeHandlingPlane)
+        {
+            ShowTutorial();
+            MoveToNextPanel();
+            firstTimeHandlingPlane = false;
+        }
+        else
+        {
+            BoundingBoxInteractionManager.onPlaneSpawned -= HandleTutorialAfterObjectWithPlaneSpawned;
+            
+        }
+    }
     public void SetLeftHanded()
     {
         isLeftHanded = true;
@@ -82,7 +104,6 @@ public class BoundingBoxManagerUI : MonoBehaviour
             {
                 textHandMenu.text = "Show";
                 HideTutorial();
-
             }
         
     }
@@ -98,13 +119,17 @@ public class BoundingBoxManagerUI : MonoBehaviour
             TextMeshProUGUI text;
             switch (_currCardCounter)
             {
-                case 2:
+                case 1:
                     leftHandButton.SetActive(false);
                     rightHandButton.SetActive(false);
                     break;
-                case 3:
+                case 2:
                     leftHandButton.SetActive(true);
                     rightHandButton.SetActive(true);
+                    break;
+                case 3:
+                    leftHandButton.SetActive(false);
+                    rightHandButton.SetActive(false);
                     break;
                 case 4:
                     leftHandButton.SetActive(false);
@@ -156,7 +181,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
                         text.text=text.text.Replace("X/A", "A");
                         text.text=text.text.Replace("Y/B", "B");
                     }
-                        
+                  
                     break;
                 case 12:
                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
@@ -203,27 +228,31 @@ public class BoundingBoxManagerUI : MonoBehaviour
             TextMeshProUGUI text;
             switch (_currCardCounter)
             {
+                case 0:
+                    OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
+                    break;
                 case 1:
+                    OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
                     hideButton.SetActive(true);
                     leftHandButton.SetActive(false); 
                     rightHandButton.SetActive(false); 
                     break;
                 case 2: 
-                     leftHandButton.SetActive(false); 
-                     rightHandButton.SetActive(false); 
-                     break;
-                 case 3: 
                      leftHandButton.SetActive(true); 
                      rightHandButton.SetActive(true); 
+                     break;
+                 case 3: 
+                     leftHandButton.SetActive(false); 
+                     rightHandButton.SetActive(false); 
                      break;
                  case 4: 
                      leftHandButton.SetActive(false); 
                      rightHandButton.SetActive(false); 
                      break;
                  case 5: 
-                    Debug.Log("Non è più possibile spostare le bounding Box");
-                    OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
-                     break;
+                    Debug.Log("Ora è possibile etichettare le bounding box");
+                    OnBoundingBoxAllowLabel?.Invoke(this,EventArgs.Empty);
+                    break;
                  case 6:
                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                     if (text != null && isLeftHanded)
@@ -265,7 +294,10 @@ public class BoundingBoxManagerUI : MonoBehaviour
                         text.text=text.text.Replace("Y/B", "B");
                         text.text=text.text.Replace("X/B", "A");
                     }
-                        
+                    break;
+                 case 11:
+                    Debug.Log("QUI VIENE MOSTRATO IL PANNELLO  SCRIPT");
+                    OnShowScriptPanel?.Invoke(this,EventArgs.Empty);
                     break;
                  case 12:
                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
@@ -293,13 +325,13 @@ public class BoundingBoxManagerUI : MonoBehaviour
                        
                     }
                     break;
-                 case 16:
-                     _currCardCounter = 0;
-                     currActiveCard.SetActive(false);
-                     currActiveCard = Cards[_currCardCounter];
-                     currActiveCard.SetActive(true);
-                     HideTutorial();
-                     break;
+                 case 22:
+                    _currCardCounter = 0;
+                    currActiveCard.SetActive(false);
+                    currActiveCard = Cards[_currCardCounter];
+                    currActiveCard.SetActive(true);
+                    HideTutorial();
+                    break;
                 default: 
                     break;
             }

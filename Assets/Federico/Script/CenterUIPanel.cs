@@ -13,6 +13,8 @@ public class CenterUIPanel : MonoBehaviour
     [SerializeField] private List<GameObject> currentHiddenPanels;
     [SerializeField] private List<GameObject> UIhandles;
     [SerializeField] private float panelSpacing = 2.0f; // Distanza tra i pannelli
+    [SerializeField] private List<GameObject> notHiddenPanels; // Lista per salvare i pannelli attivi prima di nasconderli
+   
     void Start()
     {
         if (userCamera == null)
@@ -23,6 +25,25 @@ public class CenterUIPanel : MonoBehaviour
         
         // Avvia la coroutine che attende l'inizializzazione della camera
         StartCoroutine(WaitForCameraAndCenterPanels());
+        BoundingBoxManagerUI.OnShowScriptPanel += ShowScriptPanel;
+        SimulationManager.pauseStoryboarding += ShowObjectMenu;
+    }
+
+    private void ShowScriptPanel(object sender, EventArgs e)
+    {
+       GameObject  menuOggetti= ShowSpecificPanel(0);
+       menuOggetti.GetComponentInChildren<MenuManager>().SetShowSscript();
+    }
+
+    private void ShowObjectMenu(object sender, EventArgs e)
+    {
+        GameObject  menuOggetti= ShowSpecificPanel(0);
+        menuOggetti.GetComponentInChildren<MenuManager>().SetSceneObjects();
+    }
+
+    private void OnDisable()
+    {
+        BoundingBoxManagerUI.OnShowScriptPanel -= ShowScriptPanel;
     }
 
     public void CenterPanels()
@@ -91,13 +112,25 @@ public class CenterUIPanel : MonoBehaviour
        CenterPanels();
    }
    
-    public void HidePanels()
-    {
-        foreach (var obj in UIPanels)
-        {
-           obj.SetActive(false);
-        }
-    }
+   public void HidePanels()
+   {
+       // Inizializza o svuota la lista dei pannelli non nascosti
+       notHiddenPanels = new List<GameObject>();
+
+       foreach (var obj in UIPanels)
+       {
+           if (obj != null)
+           {
+               // Se il pannello era attivo, lo aggiungiamo alla lista
+               if (obj.activeSelf)
+               {
+                   notHiddenPanels.Add(obj);
+               }
+               obj.SetActive(false);
+           }
+       }
+   }
+   
     public void ShowPanels()
     {
         foreach (var obj in UIPanels)
@@ -121,27 +154,24 @@ public class CenterUIPanel : MonoBehaviour
 
     public void ShowNotHiddenPanels()
     {
-        Debug.Log("show not hidden panels chiamata");
-        // Usa un HashSet per velocizzare il controllo di appartenenza
-        HashSet<string> hiddenPanelNames = new HashSet<string>();
-
-        // Popola l'HashSet con i nomi dei pannelli attualmente nascosti
-        foreach (var hiddenPanel in currentHiddenPanels)
+        Debug.Log("ShowNotHiddenPanels chiamata");
+        foreach (var panel in notHiddenPanels)
         {
-            if (hiddenPanel != null)
-            {
-                hiddenPanelNames.Add(hiddenPanel.name);
-            }
-        }
-
-        // Attiva tutti i pannelli che non sono nella lista dei nascosti
-        foreach (var panel in UIPanels)
-        {
-            if (panel != null && !hiddenPanelNames.Contains(panel.name))
+            if (panel != null)
             {
                 panel.SetActive(true);
             }
         }
+        // Svuotiamo la lista dopo aver mostrato i pannelli
+        notHiddenPanels.Clear();
     }
 
+    public GameObject ShowSpecificPanel(int index)
+    {
+        var panel= UIPanels[index];
+        panel.SetActive(true);
+        return panel;
+
+    }
 }
+

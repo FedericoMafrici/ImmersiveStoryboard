@@ -7,11 +7,12 @@ public class FrameSender : MonoBehaviour
 {
     private TcpClient client;
     private NetworkStream stream;
-    public string serverIP = "192.168.1.100"; //IP DEL PROPRIO PC
+    public string serverIP = "192.168.235.138"; //IP DEL PROPRIO PC
     public int serverPort = 5000; // PORTA DEL PROPRIO SERVER 
     public float sendInterval = 0.5f; // INTERVALLO DI TEMPO TRA UN FRAME E L'ALTRO
     private float nextSendTime = 0f;
-
+    [SerializeField]
+    private Texture2D textureToSend;
     private QuestScreenCaptureTextureManager captureManager;
 
     private bool isConnecting = false;
@@ -110,6 +111,61 @@ public class FrameSender : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+       /*
+        if (Time.time >= nextSendTime)
+        {
+            nextSendTime = Time.time + sendInterval;
+
+            if (isConnected)
+            {
+                SendTextureToServer(textureToSend);
+            }
+            else
+            {
+                ConnectToServer();
+            }
+        }
+        */
+    }
+    private void SendTextureToServer(Texture2D texture)
+    {
+        if (stream == null || !stream.CanWrite)
+        {
+            isConnected = false;
+            Debug.LogWarning("Stream non disponibile, tentativo di riconnessione...");
+            ConnectToServer();
+            return;
+        }
+
+        if (texture == null)
+        {
+            Debug.LogWarning("Nessuna Texture2D specificata per l'invio.");
+            return;
+        }
+
+        // Converti la texture in JPG o PNG
+        byte[] imageBytes = texture.EncodeToPNG(); // Usa PNG o JPG a seconda delle esigenze
+
+        // Invia la lunghezza dell'immagine (4 byte)
+        byte[] lengthPrefix = BitConverter.GetBytes(imageBytes.Length);
+        try
+        {
+            stream.Write(lengthPrefix, 0, lengthPrefix.Length);
+            // Invia l'immagine
+            stream.Write(imageBytes, 0, imageBytes.Length);
+            stream.Flush();
+            Debug.Log("Texture inviata al server.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Errore durante l'invio della texture al server: " + e.Message);
+            isConnected = false;
+            // Tenta di riconnetterti
+            ConnectToServer();
+        }
+    }
     private void OnNewFrame()
     {
         // Controlla se è il momento di inviare il prossimo frame
@@ -123,14 +179,29 @@ public class FrameSender : MonoBehaviour
             ConnectToServer();
             return;
         }
-
+        
         // Recupera il frame corrente
         Texture2D texture = captureManager.ScreenCaptureTexture;
+        // Verifica se la texture è leggibile e in un formato supportato
+        if (!texture.isReadable || !IsTextureFormatSupported(texture.format))
+        {
+            // Crea una copia leggibile e non compressa della texture
+            Texture2D readableTexture = CreateReadableTexture(texture);
 
-        // Invia il frame al server
-        SendFrameToServer(texture);
+            // Invia il frame al server
+            SendFrameToServer(readableTexture);
+
+            // Rilascia la texture temporanea per evitare perdite di memoria
+            Destroy(readableTexture);
+        }
+        else
+        {
+            // La texture è già leggibile e in un formato supportato
+            // Invia il frame al server
+            SendFrameToServer(texture);
+        }
     }
-
+    
     private void SendFrameToServer(Texture2D texture)
     {
         if (stream == null || !stream.CanWrite)
@@ -161,5 +232,84 @@ public class FrameSender : MonoBehaviour
             // Tenta di riconnetterti
             ConnectToServer();
         }
+    }
+    private void SendTestMessageToServer()
+    {
+        if (stream == null || !stream.CanWrite)
+        {
+            Debug.LogWarning("Stream non disponibile, impossibile inviare il messaggio.");
+            return;
+        }
+
+        try
+        {
+            string message = "Ciao dal client!";
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
+
+            // Invia la lunghezza del messaggio (4 byte)
+            byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
+            stream.Write(lengthPrefix, 0, lengthPrefix.Length);
+
+            // Invia il messaggio
+            stream.Write(data, 0, data.Length);
+            stream.Flush();
+
+            Debug.Log("Messaggio di test inviato al server.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Errore durante l'invio del messaggio al server: " + e.Message);
+            isConnected = false;
+            ConnectToServer();
+        }
+    }
+    private bool IsTextureFormatSupported(TextureFormat format)
+    {
+        switch (format)
+        {
+            case TextureFormat.ARGB32:
+            case TextureFormat.RGBA32:
+            case TextureFormat.RGB24:
+            case TextureFormat.Alpha8:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+// Crea una texture leggibile e non compressa
+    private Texture2D CreateReadableTexture(Texture2D texture)
+    {
+        // Crea una RenderTexture temporanea
+        RenderTexture tempRT = RenderTexture.GetTemporary(
+            texture.width,
+            texture.height,
+            0,
+            RenderTextureFormat.Default,
+            RenderTextureReadWrite.Linear);
+
+        // Copia la texture originale nella RenderTexture
+        Graphics.Blit(texture, tempRT);
+
+        // Salva la RenderTexture corrente
+        RenderTexture previous = RenderTexture.active;
+
+        // Imposta la RenderTexture attiva
+        RenderTexture.active = tempRT;
+
+        // Crea una nuova Texture2D leggibile e non compressa
+        Texture2D readableTexture = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+
+        // Copia i pixel dalla RenderTexture alla nuova Texture2D
+        readableTexture.ReadPixels(new Rect(0, 0, tempRT.width, tempRT.height), 0, 0);
+        readableTexture.Apply();
+
+        // Ripristina la RenderTexture attiva
+        RenderTexture.active = previous;
+
+        // Rilascia la RenderTexture temporanea
+        RenderTexture.ReleaseTemporary(tempRT);
+
+        return readableTexture;
     }
 }

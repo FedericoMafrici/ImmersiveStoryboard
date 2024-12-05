@@ -803,6 +803,10 @@ PrefabInstance:
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 9177510695127067588, guid: 7e7a34ecfe6274301b6bae02a698afc4, type: 3}
+      propertyPath: m_Text
+      value: Move Characters
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1289,6 +1293,8 @@ MonoBehaviour:
   characterAnchorManager: {fileID: 0}
   debuggingWindow: {fileID: 0}
   interactionEnabled: 0
+  span: {fileID: 0}
+  characterCanRotate: 0
 --- !u!114 &6598501047412480559
 MonoBehaviour:
   m_ObjectHideFlags: 0

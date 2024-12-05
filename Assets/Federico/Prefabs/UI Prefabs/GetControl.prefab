@@ -1971,7 +1971,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7156da348548f4fdb84a87b561c13bf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transformSyncPersonaggioAttivo: {fileID: 5583095153053648822}
+  _handleUI: {fileID: 0}
+  posizioneCorrispondente: {fileID: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
+  distanceFromUser: 1
+  enableRotationUpdate: 1
 --- !u!1 &4934467673843158999
 GameObject:
   m_ObjectHideFlags: 0

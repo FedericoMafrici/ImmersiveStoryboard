@@ -28,6 +28,8 @@ public class ScreenshotManager : MonoBehaviour
     public static EventHandler<EventArgs> screenShotTaken;
 
     public static readonly Vector2Int Size = new(1024, 1024);
+
+    public bool firstScreenshotForThatScreenshotCount = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -100,18 +102,34 @@ public class ScreenshotManager : MonoBehaviour
         _currActionTime = _simulationManager.GetTime();
         AddActionTime(_simulationManager.GetScreenshotCount().ToString(), _simulationManager.GetTime());
 
-        // Genera le condizioni necessarie
-        _simulationManager.GenerateCondition();
+        
         AddNewValue(_simulationManager.GetScreenshotCount().ToString(), _focalLength);
 
-        // Incrementa il counter degli screenshot
-        _screenshotCounter++;
-        _simulationManager.screenshotCount++;
+       
 
         // Invoca l'evento se ci sono sottoscrittori
         screenShotTaken?.Invoke(this, EventArgs.Empty);
-            panelHandler.ShowPanels();
-    //    panelHandler.ShowNotHiddenPanels();
+        //  panelHandler.ShowPanels();
+        panelHandler.ShowNotHiddenPanels();
+        firstScreenshotForThatScreenshotCount = false;
+    }
+
+    public void MoveToTheNextPanel()
+    {
+        if (!firstScreenshotForThatScreenshotCount)
+        {
+            // Genera le condizioni necessarie
+            _simulationManager.GenerateCondition();
+
+            // Incrementa il counter degli screenshot
+            _screenshotCounter++;
+            _simulationManager.screenshotCount++;
+            firstScreenshotForThatScreenshotCount = true;
+        }
+    
+        
+            
+        
     }
     public void DeleteScreenshot()
     {

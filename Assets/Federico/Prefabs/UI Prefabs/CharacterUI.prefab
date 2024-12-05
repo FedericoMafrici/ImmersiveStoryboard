@@ -2754,7 +2754,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7156da348548f4fdb84a87b561c13bf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transformSyncPersonaggioAttivo: {fileID: 5078888390047590260}
+  _handleUI: {fileID: 0}
+  posizioneCorrispondente: {fileID: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
+  distanceFromUser: 1
+  enableRotationUpdate: 1
 --- !u!1 &4790641884970067864
 GameObject:
   m_ObjectHideFlags: 0
@@ -3980,7 +3984,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Muovi Personaggio
+  m_Text: Move Character
 --- !u!1 &8318385165884714819
 GameObject:
   m_ObjectHideFlags: 0

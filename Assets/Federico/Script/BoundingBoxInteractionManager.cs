@@ -35,7 +35,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     private CharacterAnchorManager _characterAnchorManager;
 
     private SnapToPlane _snapToPlaneComponent;
-    
+
+    public static EventHandler<EventArgs> onPlaneSpawned; 
     //[SerializeField] private BoundingBoxInteractionManager interactionManagerAddOn;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -59,8 +60,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public void OnDestroy()
     {
         BoundingBoxManagerUI.OnBoundingBoxPlacement -= AllowMoving;
-        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted -= AllowLabeling;
-        BoundingBoxManagerUI.OnSceneInizializationCompleted -= StopShowingLabeling;
+        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted -= DisableMoving;
+        BoundingBoxManagerUI.OnBoundingBoxAllowLabel -= AllowLabeling;
         SimulationManager.startStoryboarding -= DisableMoving;
         ControllerManager.OnBoundingBoxPlaneEdit -= AllowEditPlane;
         ControllerManager.StopBoundingBoxPlaneEdit -= StopEditPlane;
@@ -71,9 +72,11 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public void Awake()
     {
         BoundingBoxManagerUI.OnBoundingBoxPlacement += AllowMoving;
-        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += AllowLabeling;
-        BoundingBoxManagerUI.OnSceneInizializationCompleted += StopShowingLabeling;
+        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += DisableMoving;
+        BoundingBoxManagerUI.OnBoundingBoxAllowLabel += AllowLabeling;
+      //  BoundingBoxManagerUI.OnSceneInizializationCompleted += StopShowingLabeling;
         SimulationManager.startStoryboarding += DisableMoving;
+        SimulationManager.startStoryboarding += AllowLabeling;
         ControllerManager.OnBoundingBoxPlaneEdit += AllowEditPlane;
         ControllerManager.StopBoundingBoxPlaneEdit += StopEditPlane;
         SimulationManager.startStoryboarding+=DontShowLabelOnHovering;
@@ -127,7 +130,7 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              }
         _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
         _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
-        //SetLabel("chair");
+        SetLabel("coffe machine");
     }
 
     public void HideCurrentLabel()
@@ -144,11 +147,17 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     public void ShowLabelOnHovering(object sender,EventArgs e)
     {
+        this.transform.Find("Front").gameObject.SetActive(false);
+        this.GetComponent<SnapToPlane>().selectEntered.AddListener(DisplayLabeling);
+        
         _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
         _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
     }
     public void DontShowLabelOnHovering(object sender,EventArgs e)
     {
+        this.transform.Find("Front").gameObject.SetActive(false);
+        this.GetComponent<SnapToPlane>().selectEntered.RemoveListener(DisplayLabeling);
+        
         _snapToPlaneComponent.hoverEntered.RemoveListener(ObjectHoveredEntered);
         _snapToPlaneComponent.hoverExited.RemoveListener(ObjectHoveredExited);
     }
@@ -226,6 +235,13 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         if (isPlaneNeeded(text.ToLower())&& boundingBoxplane!=null)
         {
             boundingBoxplane.SetActive(true);
+            // spawn del piano ? chiamo l'evento per far ricomparire il tutorial 
+            onPlaneSpawned?.Invoke(this,EventArgs.Empty);
+            
+        }
+        else
+        {
+            boundingBoxplane.SetActive(false);
         }
         this.transform.Find("Front").gameObject.SetActive(false);
         _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
@@ -247,15 +263,17 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         EnableMoving(this,EventArgs.Empty);
         _snapToPlaneComponent.selectEntered.RemoveListener(DisplayLabeling);
     }    
-
+    
     public void AllowLabeling(object  sender,EventArgs obj)
     { 
       
         DisableMoving(this,EventArgs.Empty);
         _snapToPlaneComponent.selectEntered.AddListener(DisplayLabeling);
         
+    }public void OnAllowLabelingEvent(object sender, EventArgs obj)
+    {
+        _snapToPlaneComponent.selectEntered.AddListener(DisplayLabeling);
     }
-
     
     public void DisplayLabeling(SelectEnterEventArgs args)
     {

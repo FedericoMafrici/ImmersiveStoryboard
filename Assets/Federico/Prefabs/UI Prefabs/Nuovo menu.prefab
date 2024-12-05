@@ -941,7 +941,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &6985320115755129892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1009,6 +1009,8 @@ MonoBehaviour:
   - {fileID: 5339716254724288594, guid: f30b330ad92f74a79930bc468c80f105, type: 3}
   - {fileID: 1108223557570454245, guid: 99b89c8236ecb4827a6b5498eb114b55, type: 3}
   - {fileID: 6574735797710231955, guid: c939843aae0b943b4b66dd38f2df4d19, type: 3}
+  BackGroundPanelScript: {fileID: 0}
+  BackGroundPanelObject: {fileID: 0}
   currentPage: 0
   totalPageNumber: 0
   firstScriptDisplayed: 1
@@ -1019,6 +1021,11 @@ MonoBehaviour:
   previousButton: {fileID: 0}
   showScriptButton: {fileID: 0}
   nextButton: {fileID: 0}
+  SelectionColor: {r: 0, g: 0, b: 0, a: 0}
+  NotSelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  totalObjectListPageNumber: 2
+  currentObjectListPageNumber: 0
+  objectListPages: []
 --- !u!1 &8681780040380140111
 GameObject:
   m_ObjectHideFlags: 0

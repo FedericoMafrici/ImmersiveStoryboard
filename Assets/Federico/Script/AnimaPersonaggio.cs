@@ -95,14 +95,10 @@ public class AnimaPersonaggio : MonoBehaviour
        
        //TODO  qui si potrebbe inserire la funzionalità per la casella del nome, per ora non è necessario
        
-       _simulationManager.DestroyParticlesComplement();
-       _simulationManager.CreateParticleComplement(_character);
    
 
        if (obj.CompareTag("Player") && _simulationManager.activeCharacter == obj)
        { 
-           if (GameObject.Find("ParticleActive") == false)
-           { _simulationManager.CreateParticleActive(_simulationManager.activeCharacter); }
            _self = true; // per ora lo mettimao non sono sicuro serva a qualcosa 
            Debug.Log(obj.name);
            debuggingWindow.SetText("oggetto attivo"+obj.gameObject.name);
@@ -346,7 +342,11 @@ public class AnimaPersonaggio : MonoBehaviour
 
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastAction = action;
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastTimeAction = _simulationManager.GetScreenshotCount();
-       
+
+        if (action == "fix")
+        {
+         InteractionManagerAddOn interactionManagerAddOn = _simulationManager.activeCharacter.GetComponent<InteractionManagerAddOn>();
+        }
 
         if (action == "smile")
         {
@@ -382,9 +382,8 @@ public class AnimaPersonaggio : MonoBehaviour
            
 
             //distruggi particelle
-            _simulationManager.DestroyParticlesActive();
+
             //crea particlle
-            _simulationManager.CreateParticleActive(_simulationManager.activeCharacter);
             phraseGenerator.GenerateSimplePhrase(_simulationManager.activeCharacter.GetComponent<CharacterManager>().name,_simulationManager.activeCharacter.GetComponent<CharacterManager>().type ,action,_interactionObject.name,_interactionObject.GetComponent<CharacterManager>().type,false);
             //notifica lo state di avviare l'eventuale animazione dell'oggetto che subisce l'azione
             _character.GetComponent<State>().PlayAnimation(action);
@@ -510,17 +509,11 @@ public class AnimaPersonaggio : MonoBehaviour
             }
             else
             {
-                //distruggi particelle
-               _simulationManager.DestroyParticlesActive();
-                //crea particlle
-                _simulationManager.CreateParticleActive(_simulationManager.activeCharacter);
             }
             Debug.Log("Action: " + action);
             if (action == "locked in")
             {
                 hiddenCharacter = _simulationManager.activeCharacter;
-                _simulationManager.DestroyParticlesActive();
-                _simulationManager.DestroyParticles();
                 if (hiddenCharacter != null)
                 {
                     hiddenCharacter.SetActive(false);

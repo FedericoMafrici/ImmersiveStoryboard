@@ -612,6 +612,7 @@ public class ControllerManager : MonoBehaviour
     public void SetObjectToSpawn(GameObject prefab)
     {
         objectToSpawn = prefab;
+        ActivateLaser();
     }
 
     
@@ -665,7 +666,7 @@ public class ControllerManager : MonoBehaviour
               _SimulationManager.spawnedGameObjects.Add(spawnedObject);
 
               OnObjectPlaced.Invoke(this, EventArgs.Empty);
-          
+          DeactivateLaser();
           
      }
      else
