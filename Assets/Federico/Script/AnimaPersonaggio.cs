@@ -54,7 +54,13 @@ public class AnimaPersonaggio : MonoBehaviour
         phraseGenerator = FindObjectOfType<PhraseGenerator>();
         if(phraseGenerator==null)
             Debug.LogError("Phrase Generator di Anima personaggio non trovato +"+ gameObject.name);
+        
+        ScreenshotManager.OnHidePanels += HandleHidePanels;
+        ScreenshotManager.screenShotTaken += HandleShowActions;
     }
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -76,6 +82,27 @@ public class AnimaPersonaggio : MonoBehaviour
     /*
      *  Selezione dell'oggetto ad attivo 
      */
+    private void HandleHidePanels(object sender, EventArgs e)
+    {
+        if (_interactionObject != null)
+        {
+            HideGetControlPanel(_interactionObject);
+        }
+
+        HideActions();
+    }
+    private void HandleShowActions(object sender, EventArgs e)
+    {
+       if (_interactionObject != null)
+        {
+            ShowGetControlPanel(_interactionObject);
+        }
+
+        if (_simulationManager.activeCharacter != null)
+        {
+            SetCharacter(_simulationManager.activeCharacter);
+        }
+    }
     public void SetCharacter(GameObject obj)
     {
         if (debuggingWindow == null)
@@ -214,6 +241,8 @@ public class AnimaPersonaggio : MonoBehaviour
 
     public void HideActions()
     {
+        if (  _simulationManager.activeCharacter == null || _character==null || !_simulationManager.activeCharacter.CompareTag("Player"))
+            return;
         HideGetControlPanel( _simulationManager.activeCharacter);
         var ui =  _simulationManager.activeCharacter.transform.parent.Find("CharacterUI").gameObject;
         if (ui == null)
@@ -239,7 +268,7 @@ public class AnimaPersonaggio : MonoBehaviour
 
     public void HideGetControlPanel(GameObject obj)
     {
-        if (obj.CompareTag("Player"))
+        if (obj!=null && obj.CompareTag("Player"))
         {
             obj.transform.parent.Find("GetControl").gameObject.SetActive(false);
         }
@@ -248,6 +277,19 @@ public class AnimaPersonaggio : MonoBehaviour
             Debug.LogError("Attenzione oggetto non player nome:"+obj.gameObject.name);
         }
     }
+
+    public void ShowGetControlPanel(GameObject obj)
+    {
+         if (obj!=null && obj.CompareTag("Player"))
+        {
+            obj.transform.parent.Find("GetControl").gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("Attenzione oggetto non player nome:"+obj.gameObject.name);
+        }
+    }
+    
       public void StopOldLongAnimation()
     {
         if (!_simulationManager.contemporaryAction)
@@ -342,13 +384,26 @@ public class AnimaPersonaggio : MonoBehaviour
 
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastAction = action;
         _simulationManager.activeCharacter.GetComponent<CharacterManager>().lastTimeAction = _simulationManager.GetScreenshotCount();
-
+            
         if (action == "fix")
         {
-         InteractionManagerAddOn interactionManagerAddOn = _simulationManager.activeCharacter.GetComponent<InteractionManagerAddOn>();
+            InteractionManagerAddOn interactionManagerAddOn =
+                _simulationManager.activeCharacter.GetComponent<InteractionManagerAddOn>();
+            interactionManagerAddOn.ShowSpan();
         }
+        else if (action=="hit" && _simulationManager.activeCharacter.GetComponent<CharacterManager>().type == "rapunzel" )
+            {
+              _simulationManager.activeCharacter.transform.LookAt(_interactionObject.transform);
+                InteractionManagerAddOn interactionManagerAddOn =_simulationManager.activeCharacter.GetComponent<InteractionManagerAddOn>();
+                interactionManagerAddOn.ShowSpan();
+            }
+     else
+     {
+         InteractionManagerAddOn interactionManagerAddOn =_simulationManager.activeCharacter.GetComponent<InteractionManagerAddOn>();
+         interactionManagerAddOn.HideSpan();
+     }
 
-        if (action == "smile")
+if (action == "smile")
         {
             _simulationManager.activeCharacter.GetComponent<Animator>().speed = 0.5f;
         }
@@ -376,6 +431,8 @@ public class AnimaPersonaggio : MonoBehaviour
 
         if (action == "talk" || action == "talk to")
         {
+            
+            _simulationManager.activeCharacter.transform.LookAt(_interactionObject.transform);
             //phraseGenerator.StartSpeech();
             //per configurare il testo da dichiarare 
             // SetKeyboardForDictaction(true);
@@ -416,9 +473,7 @@ public class AnimaPersonaggio : MonoBehaviour
              }
              else
              {
-                
                  _simulationManager.activeCharacter.GetComponent<State>().ChangeState(action);
-
              }
 
              
@@ -514,12 +569,15 @@ public class AnimaPersonaggio : MonoBehaviour
             if (action == "locked in")
             {
                 hiddenCharacter = _simulationManager.activeCharacter;
+                HideActions();
                 if (hiddenCharacter != null)
                 {
                     hiddenCharacter.SetActive(false);
                 }
 
                 _simulationManager.activeCharacter = null;
+                _interactionObject = null;
+                
             }
             if (action == "free")
             {

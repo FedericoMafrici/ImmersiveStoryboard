@@ -126,6 +126,12 @@ public class CenterUIPanel : MonoBehaviour
                {
                    notHiddenPanels.Add(obj);
                }
+            /*
+               if (obj.name == "Controlli")
+               {
+                   obj.transform.Find("controlli").GetComponent<Canvas>().enabled=false;
+               }
+            */
                obj.SetActive(false);
            }
        }
@@ -136,11 +142,24 @@ public class CenterUIPanel : MonoBehaviour
         foreach (var obj in UIPanels)
         {
             obj.SetActive(true);
+           /*
+            if (obj.name == "Controlli")
+            {
+                obj.transform.Find("controlli").GetComponent<Canvas>().enabled=true;
+            }
+             */
+          
         }
     }
     public void AddHiddenPanel(GameObject panel)
     {
         currentHiddenPanels.Add(panel);
+       /*
+        if (panel.name == "Controlli")
+        {
+            panel.transform.Find("controlli").GetComponent<Canvas>().enabled=false;
+        }
+        */
         panel.SetActive(false);
     }
     public void ShowHiddenPanels()
@@ -160,6 +179,12 @@ public class CenterUIPanel : MonoBehaviour
             if (panel != null)
             {
                 panel.SetActive(true);
+             /*
+                if (panel.name == "Controlli")
+                {
+                    panel.transform.Find("controlli").GetComponent<Canvas>().enabled=true;
+                }
+            */
             }
         }
         // Svuotiamo la lista dopo aver mostrato i pannelli

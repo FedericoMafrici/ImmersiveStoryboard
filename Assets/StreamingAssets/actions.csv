@@ -52,9 +52,9 @@ man-bench,sit
 flyn-self,faint,stand up,is freed 
 flyn-chair,is tied
 flyn-rapunzel,talk 
-rapunzel-flyn,talk to,hit
+rapunzel-flyn,talk,hit
 flyn-wardrobe,locked in
-rapunzel-wardrobe,open,close,free
+rapunzel-wardrobe,free
 rapunzel-bag,search
 wednesday-self,dodge,stand up
 wednesday-coffe machine,fix

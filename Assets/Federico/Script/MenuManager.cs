@@ -157,7 +157,9 @@ public class MenuManager : MonoBehaviour
     }
     public void ResetPageNumber()
     {
+       
         currentPage = 0;
+      if(activeImagesTextureList!=null)
         currentImage.texture = activeImagesTextureList[currentPage];
     }
     public void NextPage()

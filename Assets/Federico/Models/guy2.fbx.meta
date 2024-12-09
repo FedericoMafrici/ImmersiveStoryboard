@@ -118,7 +118,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: talk
+      name: mock
       takeName: Armature.004|talk
       internalID: -2176190817888846168
       firstFrame: 0

@@ -129,6 +129,7 @@ public class FrameSender : MonoBehaviour
         }
         */
     }
+    
     private void SendTextureToServer(Texture2D texture)
     {
         if (stream == null || !stream.CanWrite)
@@ -187,7 +188,9 @@ public class FrameSender : MonoBehaviour
         {
             // Crea una copia leggibile e non compressa della texture
             Texture2D readableTexture = CreateReadableTexture(texture);
-
+            // **Flip della texture prima di inviare**
+            //FlipTextureVertically(readableTexture);
+            
             // Invia il frame al server
             SendFrameToServer(readableTexture);
 
@@ -196,6 +199,9 @@ public class FrameSender : MonoBehaviour
         }
         else
         {
+            // **Flip della texture prima di inviare**
+          //  FlipTextureVertically(texture);
+
             // La texture è già leggibile e in un formato supportato
             // Invia il frame al server
             SendFrameToServer(texture);
@@ -312,4 +318,24 @@ public class FrameSender : MonoBehaviour
 
         return readableTexture;
     }
+    // Funzione per ruotare verticalmente una texture
+    private void FlipTextureVertically(Texture2D texture)
+    {
+        int w = texture.width;
+        int h = texture.height;
+        Color[] pixels = texture.GetPixels();
+        Color[] flippedPixels = new Color[pixels.Length];
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                flippedPixels[(h - 1 - y) * w + x] = pixels[y * w + x];
+            }
+        }
+
+        texture.SetPixels(flippedPixels);
+        texture.Apply();
+    }
+    
 }

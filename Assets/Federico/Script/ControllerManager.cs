@@ -36,7 +36,7 @@ public class ControllerManager : MonoBehaviour
     private Vector3 currentScale; // Scala corrente durante la manipolazione
     private bool possibleInteraction = false;
     public GameObject currSelectedObject;
-    
+    private bool analogIsTilted = false; // Variabile di stato per monitorare l'inclinazione
     public static EventHandler<EventArgs> OnObjectPlaced;
     public static EventHandler<EventArgs> OnObjectsSpawnable; //da invocare
     public static EventHandler<EventArgs> OnBoundingBoxPlaneEdit;
@@ -63,6 +63,9 @@ public class ControllerManager : MonoBehaviour
     // manipolazione della posa del personaggio 
     private InteractionManagerAddOn _characterSelected;
     
+    
+    // gestione raycast mdoe 
+    public bool laserState = true;
     //eventi
     private void OnDisable()
     {
@@ -100,6 +103,7 @@ public class ControllerManager : MonoBehaviour
         OnBoundingBoxPlaneEdit += AllowEditPlane;
         StopBoundingBoxPlaneEdit += DenyEditPlane;
         OnPanelsSpawned += AllowRecenteringOfPanels;
+        BoundingBoxInteractionManager.onPlaneSpawned += HandleLaser;
         if (debuggingTool)
         {
             OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
@@ -111,8 +115,12 @@ public class ControllerManager : MonoBehaviour
         }
     }
 
-   
-
+    
+    private void HandleLaser(object sender, EventArgs e)
+    {
+        ActivateLaser();
+    }
+    
     public void SetUpForLeftHanded()
     {
         if (isFirstTimeSettingUpController)
@@ -133,6 +141,7 @@ public class ControllerManager : MonoBehaviour
             controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
 
             controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
+            controlli.Right.Analog.performed += ctx => AnalogTouched(ctx);
             activeControllerRay = leftControllerRay;
             DeactivateLaser();
             isFirstTimeSettingUpController = false;
@@ -164,6 +173,7 @@ public class ControllerManager : MonoBehaviour
             controlli.Keyboard.Enable();
             controlli.Keyboard.Keyboard.performed += ctx => KeyboardPressed(ctx);
 
+            controlli.Left.Analog.performed += ctx => AnalogTouched(ctx);
             controlli.Right.Analog.performed += ctx => AnalogTouched(ctx);
             activeControllerRay = rightControllerRay;
             DeactivateLaser();
@@ -183,6 +193,7 @@ public class ControllerManager : MonoBehaviour
     private void DenyEditPlane(object sender,EventArgs e)
     {
         canRotatePlane = false;
+        allowPanelsRecentering = false;
     }
     private void AllowObjectSpawn(object sender, EventArgs e)
     {
@@ -211,24 +222,19 @@ public class ControllerManager : MonoBehaviour
     {
         Debug.Log("Start button pressed");
     }
-    private bool analogIsTilted = false; // Variabile di stato per monitorare l'inclinazione
+    
 
     public void AnalogTouched(InputAction.CallbackContext ctx)
     {
         Vector2 analogValue = ctx.action.ReadValue<Vector2>();
         
         Debug.Log("Analog Rilevato");
-      //  _ConsoleDebugger.SetText("hai premuto l'analog, valori rilevati: " + analogValue.x + " " + analogValue.y);
-        // Controlla se l'analogico è inclinato a destra e l'azione non è stata ancora eseguita
-       //analogValue.x > 0.5f && !analogIsTilted
         if (analogValue.x > 0.5f && !analogIsTilted)
         {
             TryRotateBoundingBoxRight();
             TryRotateCharacterRight();
         }
-        // Controlla se l'analogico è inclinato a sinistra e l'azione non è stata ancora eseguita
-       //analogValue.x < -0.5f && !analogIsTilted
-        else if (analogValue.x < 0.5f && !analogIsTilted )
+        else if (analogValue.x < -0.5f && !analogIsTilted )
         {
             TryRotateBoundingBoxLeft();
             TryRotateCharacterLeft();
@@ -242,6 +248,7 @@ public class ControllerManager : MonoBehaviour
 
     public void TryRotateCharacterRight()
     {
+    
         if (_characterSelected == null || !_characterSelected.characterCanRotate)
         {
             Debug.LogError("Il personaggio selezionato è risultato nullo o la rotazione non è stata abiltiata correttamente");
@@ -261,6 +268,9 @@ public class ControllerManager : MonoBehaviour
     }
     public void TryRotateBoundingBoxRight()
     {
+        if (boundingBoxSelected == null)
+            return;
+        
         Debug.Log("Hai premuto l'analog verso destra bravo!");
         if (boundingBoxSelected != null)
         {
@@ -277,6 +287,9 @@ public class ControllerManager : MonoBehaviour
 
     public void TryRotateBoundingBoxLeft()
     {
+        if (boundingBoxSelected == null)
+            return;
+        
         Debug.Log("Hai premuto l'analog verso sinistra bravissimo!");
         if (boundingBoxSelected != null && boundingBoxSelected.planeRotation)
         {
@@ -495,11 +508,12 @@ public class ControllerManager : MonoBehaviour
     private void OnGripHold(InputAction.CallbackContext context)
     {
         // Controlla se il ray interactor sta selezionando il piano
-        if (activeControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit))
+        if (activeControllerRay.gameObject.activeSelf &&  activeControllerRay.TryGetCurrent3DRaycastHit(out RaycastHit hit) )
         {
             
-            if (hit.transform.name=="Plane")
+            if (laserState && hit.transform.name=="Plane" && hit.transform!=null)
             {
+                _characterSelected = null;
                 planeTransform = hit.transform;
                 initialPlaneLocalPosition = planeTransform.localPosition;
                 boundingBoxSize = hit.transform.GetComponent<BoundingBoxReference>().GetBoundingBoxSize();
@@ -518,6 +532,7 @@ public class ControllerManager : MonoBehaviour
             //caso in cui invece colpisca un oggetto player per ruotarlo 
             if (hit.transform.CompareTag("Player"))
             {
+                boundingBoxSelected = null;
                 //impedisco la rotazione del personaggio precedente
                 if (_characterSelected != null)
                 {
@@ -561,7 +576,7 @@ public class ControllerManager : MonoBehaviour
     public void ActivateLaser()
     {
         possibleInteraction = true;
-
+        laserState = true;
         // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato
         leftControllerRay.enabled = true;
         rightControllerRay.enabled = true;
@@ -576,12 +591,14 @@ public class ControllerManager : MonoBehaviour
         GameObject lint = leftXRController.transform.Find("Near-Far Interactor").gameObject;
         rint.SetActive(false); 
         lint.SetActive(false);
-
+        
+        AllowObjectSpawn(this,EventArgs.Empty);
     }
 
     public void DeactivateLaser()
     {
         Debug.Log("Y button pressed");
+        laserState = false;
         possibleInteraction = false;
 
         // Alterna lo stato del raggio e del LineRenderer tra abilitato e disabilitato
@@ -599,6 +616,11 @@ public class ControllerManager : MonoBehaviour
        
         rint.SetActive(true); 
         lint.SetActive(true);
+        DenyObjectSpawn(this,EventArgs.Empty);
+       
+        boundingBoxSelected = null;
+        _characterSelected = null;
+        StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
     }
     
     

@@ -26,7 +26,7 @@ public class ScreenshotManager : MonoBehaviour
     private QuestScreenCaptureTextureManager _screenCaptureTextureManager;
 
     public static EventHandler<EventArgs> screenShotTaken;
-
+    public static EventHandler<EventArgs> OnHidePanels;
     public static readonly Vector2Int Size = new(1024, 1024);
 
     public bool firstScreenshotForThatScreenshotCount = true;
@@ -79,12 +79,14 @@ public class ScreenshotManager : MonoBehaviour
     public void TakeScreenshot()
     {
         // Avvia la coroutine che gestisce l'attesa e lo screenshot
+       if(_simulationManager.status==1)
         StartCoroutine(TakeScreenshotCoroutine());
     }
 
     private IEnumerator TakeScreenshotCoroutine()
     {
         panelHandler.HidePanels();
+        OnHidePanels?.Invoke(this,EventArgs.Empty);
         yield return new WaitForSeconds(1); // Attende 1 secondo
 
         if (_screenCaptureTextureManager == null)
@@ -105,12 +107,8 @@ public class ScreenshotManager : MonoBehaviour
         
         AddNewValue(_simulationManager.GetScreenshotCount().ToString(), _focalLength);
 
-       
-
-        // Invoca l'evento se ci sono sottoscrittori
-        screenShotTaken?.Invoke(this, EventArgs.Empty);
-        //  panelHandler.ShowPanels();
         panelHandler.ShowNotHiddenPanels();
+        screenShotTaken?.Invoke(this, EventArgs.Empty);
         firstScreenshotForThatScreenshotCount = false;
     }
 

@@ -15,7 +15,7 @@ public class InteractionManagerAddOn : MonoBehaviour
     [SerializeField] public Material selectMaterial;
     [SerializeField] public SimulationManager _SimulationManager;
     [SerializeField] public MenuManager menuManager;
-
+    
     public CharacterAnchorManager characterAnchorManager;
     public ConsoleDebugger debuggingWindow;
 
@@ -38,12 +38,13 @@ public class InteractionManagerAddOn : MonoBehaviour
     {
         SimulationManager.startStoryboarding += DisableMoving;
         SimulationManager.pauseStoryboarding += EnableMoving;
+       
     }
-
     private void OnDisable()
     {
         SimulationManager.startStoryboarding -= DisableMoving;
         SimulationManager.pauseStoryboarding -= EnableMoving;
+   
     }
 
     private void OnDestroy()
@@ -343,12 +344,31 @@ public class InteractionManagerAddOn : MonoBehaviour
 
     public void ShowSpan()
     {
+        if (span == null)
+            return;
         span.SetActive(true);
     }
 
     public void HideSpan()
     {
+        if (span == null)
+            return;
         span.SetActive(false);
     }
+   /*
+    public void HidePanels(object sender, EventArgs e)
+    {
+        personaggioAttivo.SetActive(false);
+        characterUI.SetActive(false);
+        getControl.SetActive(false);
+    }
 
+    public void ShowPanels(object sender, EventArgs e)
+    {
+        personaggioAttivo.SetActive(true);
+        characterUI.SetActive(true);
+        getControl.SetActive(true);
+    }
+    */
+    
 }

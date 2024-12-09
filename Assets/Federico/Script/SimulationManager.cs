@@ -58,6 +58,7 @@ public class SimulationManager : MonoBehaviour
 
     [SerializeField] private Toggle passtrough;
 
+    [SerializeField] private Toggle PlaneEditToggle;
     private bool usingToggle = true;
     
     
@@ -94,6 +95,7 @@ public class SimulationManager : MonoBehaviour
     {
         
     }
+    
     public void DebuggingStartStoryBoarding( )
     {
         if (status == 0)
@@ -252,7 +254,34 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    public void ChangeBoundingBoxToggle()
+    {
+        if (PlaneEditToggle.isOn)
+        {
+            PlaneEditToggle.isOn = false;
+        }
+        else
+        {
+            PlaneEditToggle.isOn = true;
+        }
+    }
 
+    public void StartStopPlaneEditMode()
+    {
+        if (status == 1)
+            return;
+        
+        if (PlaneEditToggle.isOn)
+        {
+            Debug.Log("plane edit abilitato");
+            ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+        }
+        else
+        {
+            Debug.Log("plane edit disabilitato");
+            ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this, EventArgs.Empty);
+        }
+    }
     public void ChangeMaxTime() { }
     public void ChangeCurrentTime() { }
     public void ChangeCurrentTimeManual() { }

@@ -36,7 +36,9 @@ public class BoundingBoxInteractionManager : MonoBehaviour
 
     private SnapToPlane _snapToPlaneComponent;
 
-    public static EventHandler<EventArgs> onPlaneSpawned; 
+    public static EventHandler<EventArgs> onPlaneSpawned;
+
+    public Material featheredPlane;
     //[SerializeField] private BoundingBoxInteractionManager interactionManagerAddOn;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -60,19 +62,21 @@ public class BoundingBoxInteractionManager : MonoBehaviour
     public void OnDestroy()
     {
         BoundingBoxManagerUI.OnBoundingBoxPlacement -= AllowMoving;
-        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted -= DisableMoving;
+       //  BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted -= DisableMoving;
         BoundingBoxManagerUI.OnBoundingBoxAllowLabel -= AllowLabeling;
         SimulationManager.startStoryboarding -= DisableMoving;
         ControllerManager.OnBoundingBoxPlaneEdit -= AllowEditPlane;
         ControllerManager.StopBoundingBoxPlaneEdit -= StopEditPlane;
         SimulationManager.startStoryboarding -=DontShowLabelOnHovering;
         SimulationManager.pauseStoryboarding -= ShowLabelOnHovering;
+        ScreenshotManager.OnHidePanels -= HideBoundingBoxMaterial;
+        ScreenshotManager.screenShotTaken -= ShowBoundingBoxMaterial; 
     }
 
     public void Awake()
     {
         BoundingBoxManagerUI.OnBoundingBoxPlacement += AllowMoving;
-        BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += DisableMoving;
+      //  BoundingBoxManagerUI.OnBoundingBoxPlacementCompleted += DisableMoving;
         BoundingBoxManagerUI.OnBoundingBoxAllowLabel += AllowLabeling;
       //  BoundingBoxManagerUI.OnSceneInizializationCompleted += StopShowingLabeling;
         SimulationManager.startStoryboarding += DisableMoving;
@@ -81,6 +85,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
         ControllerManager.StopBoundingBoxPlaneEdit += StopEditPlane;
         SimulationManager.startStoryboarding+=DontShowLabelOnHovering;
         SimulationManager.pauseStoryboarding += ShowLabelOnHovering;
+        ScreenshotManager.OnHidePanels += HideBoundingBoxMaterial;
+        ScreenshotManager.screenShotTaken += ShowBoundingBoxMaterial; 
         // ACQUISIZIONE DEI COMPONENTI PRINCIPALI
 
         _snapToPlaneComponent = this.GetComponent<SnapToPlane>();
@@ -130,9 +136,70 @@ public class BoundingBoxInteractionManager : MonoBehaviour
              }
         _snapToPlaneComponent.hoverEntered.AddListener(ObjectHoveredEntered);
         _snapToPlaneComponent.hoverExited.AddListener(ObjectHoveredExited);
-        SetLabel("coffe machine");
+       // SetLabel("wardrobe");
+       DisableMoving(this,EventArgs.Empty);
     }
 
+    private void HideBoundingBoxMaterial(object sender, EventArgs e)
+    {
+        if (featheredPlane != null)
+        {
+            // Assicurati che il nome della proprietà sia corretto
+            string propertyName = "_TexTintColor"; // Modifica il nome della proprietà se necessario
+
+            if (featheredPlane.HasProperty(propertyName))
+            {
+                // Ottieni il colore attuale
+                Color currentColor = featheredPlane.GetColor(propertyName);
+
+                // Modifica l'alpha del colore
+                currentColor.a = 0;
+
+                // Assegna il colore aggiornato al materiale
+                featheredPlane.SetColor(propertyName, currentColor);
+
+                Debug.Log($"La trasparenza del materiale è stata impostata a 0 per la proprietà {propertyName}.");
+            }
+            else
+            {
+                Debug.LogError($"La proprietà {propertyName} non è presente nel materiale.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Il materiale featheredPlane non è assegnato.");
+        }
+    }
+    private void ShowBoundingBoxMaterial(object sender, EventArgs e)
+    {
+        if (featheredPlane != null)
+        {
+            // Assicurati che il nome della proprietà sia corretto
+            string propertyName = "_TexTintColor"; // Modifica il nome della proprietà se necessario
+
+            if (featheredPlane.HasProperty(propertyName))
+            {
+                // Ottieni il colore attuale
+                Color currentColor = featheredPlane.GetColor(propertyName);
+
+                // Modifica l'alpha del colore
+                currentColor.a = 1.0f;
+
+                // Assegna il colore aggiornato al materiale
+                featheredPlane.SetColor(propertyName, currentColor);
+
+                Debug.Log($"La trasparenza del materiale è stata impostata a 0 per la proprietà {propertyName}.");
+            }
+            else
+            {
+                Debug.LogError($"La proprietà {propertyName} non è presente nel materiale.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Il materiale featheredPlane non è assegnato.");
+        }
+    }
     public void HideCurrentLabel()
     {
         if (labelUI == null)
@@ -237,7 +304,8 @@ public class BoundingBoxInteractionManager : MonoBehaviour
             boundingBoxplane.SetActive(true);
             // spawn del piano ? chiamo l'evento per far ricomparire il tutorial 
             onPlaneSpawned?.Invoke(this,EventArgs.Empty);
-            
+            this.transform.Find("Front").gameObject.SetActive(false);
+            ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
         }
         else
         {

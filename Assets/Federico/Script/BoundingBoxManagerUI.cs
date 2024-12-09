@@ -18,6 +18,8 @@ public class BoundingBoxManagerUI : MonoBehaviour
     [SerializeField] private TutorialSecondPart _tutorialSecondPart;
     [SerializeField] private GameObject hideButton;
     [SerializeField] private Button  _showTutorialButton;
+    [SerializeField] private GameObject TutorialHandle;
+    
     private int _cardCounter = 0;
     private int _currCardCounter=0;
     private GameObject currActiveCard;
@@ -45,6 +47,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
         _simulationManager = FindObjectOfType<SimulationManager>();
         hideButton.SetActive(false);
         BoundingBoxInteractionManager.onPlaneSpawned += HandleTutorialAfterObjectWithPlaneSpawned;
+        
     }
 
     // Update is called once per frame
@@ -63,7 +66,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
         if (firstTimeHandlingPlane)
         {
             ShowTutorial();
-            MoveToNextPanel();
+            MoveToSpecificPanel(6);
             firstTimeHandlingPlane = false;
         }
         else
@@ -83,12 +86,14 @@ public class BoundingBoxManagerUI : MonoBehaviour
     }
     public void HideTutorial()
     {
+        TutorialHandle.SetActive(false);
         _tutorial.SetActive(false);
         textHandMenu.text = "Show";
     }
 
     public void ShowTutorial()
     {
+        TutorialHandle.SetActive(true);
         _tutorial.SetActive(true);
         textHandMenu.text = "Hide";
     }
@@ -165,9 +170,11 @@ public class BoundingBoxManagerUI : MonoBehaviour
                         text.text = text.text.Replace("Y/B", "B");
                     }
                     Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
-                    ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    _simulationManager.ChangeBoundingBoxToggle();
                     break;
                 case 7:
+                    Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
+                    _simulationManager.ChangeBoundingBoxToggle();
                     break;
                 case 10:
                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
@@ -207,6 +214,146 @@ public class BoundingBoxManagerUI : MonoBehaviour
                         text.text=text.text.Replace("B/Y", "Y");
                        
                     }
+                    break;
+                default: 
+                    break;
+            }
+        }
+    }
+    public void MoveToSpecificPanel(int index)
+    {
+        if (index < _cardCounter)
+        {
+            currActiveCard.SetActive(false);
+            _currCardCounter=index;
+            if (_currCardCounter < _cardCounter)
+            {
+                currActiveCard = Cards[_currCardCounter];
+                currActiveCard.SetActive(true);
+            }
+
+             TextMeshProUGUI text;
+            switch (_currCardCounter)
+            {
+                case 0:
+                    OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
+                    break;
+                case 1:
+                    OnBoundingBoxPlacementCompleted?.Invoke(this,EventArgs.Empty);
+                    hideButton.SetActive(true);
+                    leftHandButton.SetActive(false); 
+                    rightHandButton.SetActive(false); 
+                    break;
+                case 2: 
+                     leftHandButton.SetActive(true); 
+                     rightHandButton.SetActive(true); 
+                     break;
+                 case 3: 
+                     leftHandButton.SetActive(false); 
+                     rightHandButton.SetActive(false); 
+                     break;
+                 case 4: 
+                     leftHandButton.SetActive(false); 
+                     rightHandButton.SetActive(false); 
+                     break;
+                 case 5: 
+                    Debug.Log("Ora è possibile etichettare le bounding box");
+                    OnBoundingBoxAllowLabel?.Invoke(this,EventArgs.Empty);
+                    break;
+                 case 6:
+                    text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    if (text != null && isLeftHanded)
+                    {
+                        text.text = text.text.Replace("Y/B", "Y");
+                        text.text = text.text.Replace("X/A", "X");
+                    }
+                    else if( text!=null && !isLeftHanded)
+                    {
+                        text.text = text.text.Replace("Y/B", "B");
+                        text.text=text.text.Replace("X/A", "A");
+                        
+                    }
+                    firstTimeHandlingPlane = false;
+                    Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
+                  //  ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    _simulationManager.ChangeBoundingBoxToggle();
+                    enviroment.FadeSkybox(true);
+                    _simulationManager.changePasstroughToggle();
+                    break;
+                 case 7:
+                    Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");
+                   // ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                  //  _simulationManager.ChangeBoundingBoxToggle();
+                    break;
+                 case 9:
+                     OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
+                     ControllerManager.OnObjectsSpawnable?.Invoke(this,EventArgs.Empty);
+                     ControllerManager.OnPanelsSpawned?.Invoke(this,EventArgs.Empty);
+                     break;
+                 case 10:
+                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                     if (text!=null &&isLeftHanded)
+                    {
+                        text.text=text.text.Replace("X/A", "X");
+                        text.text=text.text.Replace("Y/B", "Y");
+                        text.text=text.text.Replace("X/B", "X");
+                    }
+                     else if( text!=null && !isLeftHanded)
+                    {
+                        text.text=text.text.Replace("X/A", "A");
+                        text.text=text.text.Replace("Y/B", "B");
+                        text.text=text.text.Replace("X/B", "A");
+                    }
+                    break;
+                 case 12:
+                    Debug.Log("QUI VIENE MOSTRATO IL PANNELLO  SCRIPT");
+                    OnShowScriptPanel?.Invoke(this,EventArgs.Empty);
+                    break;
+                 case 13:
+                    text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    if (text!=null &&isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/X", "B");
+                        
+                    }
+                    else if( text!=null && !isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/X", "X");
+                       
+                    }
+                    break;
+                case 14:
+                    text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    if (text!=null &&isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/Y", "B");
+                        
+                    }
+                    else if( text!=null && !isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/Y", "Y");
+                       
+                    }
+                    break;
+                case 19:
+                    text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    if (text!=null &&isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/X", "B");
+                        
+                    }
+                    else if( text!=null && !isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/X", "X");
+                       
+                    }
+                    break;
+                 case 23:
+                    _currCardCounter = 0;
+                    currActiveCard.SetActive(false);
+                    currActiveCard = Cards[_currCardCounter];
+                    currActiveCard.SetActive(true);
+                    HideTutorial();
                     break;
                 default: 
                     break;
@@ -266,14 +413,14 @@ public class BoundingBoxManagerUI : MonoBehaviour
                         text.text=text.text.Replace("X/A", "A");
                         
                     }
-                     Debug.Log("è possibile gestire il piano di seduta delle bounding Box");
-                    ControllerManager.OnBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                    firstTimeHandlingPlane = false;
                     enviroment.FadeSkybox(true);
                     _simulationManager.changePasstroughToggle();
                     break;
                  case 7:
                     Debug.Log("Non è più posisbile Gestire il piano di seduta delle bounding box, termine inizializzazione scena");
-                    ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                   // ControllerManager.StopBoundingBoxPlaneEdit?.Invoke(this,EventArgs.Empty);
+                  //  _simulationManager.ChangeBoundingBoxToggle();
                     break;
                  case 9:
                      OnSceneInizializationCompleted?.Invoke(this,EventArgs.Empty); 
@@ -295,11 +442,11 @@ public class BoundingBoxManagerUI : MonoBehaviour
                         text.text=text.text.Replace("X/B", "A");
                     }
                     break;
-                 case 11:
+                 case 12:
                     Debug.Log("QUI VIENE MOSTRATO IL PANNELLO  SCRIPT");
                     OnShowScriptPanel?.Invoke(this,EventArgs.Empty);
                     break;
-                 case 12:
+                 case 13:
                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                     if (text!=null &&isLeftHanded)
                     {
@@ -312,7 +459,7 @@ public class BoundingBoxManagerUI : MonoBehaviour
                        
                     }
                     break;
-                case 13:
+                case 14:
                     text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                     if (text!=null &&isLeftHanded)
                     {
@@ -325,7 +472,20 @@ public class BoundingBoxManagerUI : MonoBehaviour
                        
                     }
                     break;
-                 case 22:
+                case 19:
+                    text = currActiveCard.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    if (text!=null &&isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/X", "B");
+                        
+                    }
+                    else if( text!=null && !isLeftHanded)
+                    {
+                        text.text=text.text.Replace("B/X", "X");
+                       
+                    }
+                    break;
+                 case 23:
                     _currCardCounter = 0;
                     currActiveCard.SetActive(false);
                     currActiveCard = Cards[_currCardCounter];
@@ -337,5 +497,4 @@ public class BoundingBoxManagerUI : MonoBehaviour
             }
         }
     }
-    
 }

@@ -83,7 +83,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: talk to 0 0
+  m_Name: talk 1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -164,7 +164,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: talk to
+  m_Name: talk
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -999,7 +999,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: talk to 0
+  m_Name: talk 0
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
