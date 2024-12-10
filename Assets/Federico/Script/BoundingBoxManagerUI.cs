@@ -265,10 +265,12 @@ public class BoundingBoxManagerUI : MonoBehaviour
                     if (text != null && isLeftHanded)
                     {
                         text.text = text.text.Replace("Y/B", "Y");
+                        text.text = text.text.Replace("Y/B", "Y");
                         text.text = text.text.Replace("X/A", "X");
                     }
                     else if( text!=null && !isLeftHanded)
                     {
+                        text.text = text.text.Replace("Y/B", "B");
                         text.text = text.text.Replace("Y/B", "B");
                         text.text=text.text.Replace("X/A", "A");
                         
@@ -405,10 +407,12 @@ public class BoundingBoxManagerUI : MonoBehaviour
                     if (text != null && isLeftHanded)
                     {
                         text.text = text.text.Replace("Y/B", "Y");
+                        text.text = text.text.Replace("Y/B", "Y");
                         text.text = text.text.Replace("X/A", "X");
                     }
                     else if( text!=null && !isLeftHanded)
                     {
+                        text.text = text.text.Replace("Y/B", "B");
                         text.text = text.text.Replace("Y/B", "B");
                         text.text=text.text.Replace("X/A", "A");
                         
